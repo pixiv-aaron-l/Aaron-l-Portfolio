@@ -1,3 +1,111 @@
 {
-    "albums": []
+    "albums": [
+        {
+            "title": "touhou artworks",
+            "folder": "touhou-artworks",
+            "date": "2026 - now",
+            "description": "artworks featuring characters from Touhou Project",
+            "cover": "",
+            "artworks": []
+        },
+        {
+            "title": "first year of drawing",
+            "folder": "first-year-of-drawing",
+            "date": "2025 - 2026",
+            "description": "the pictures from when I started art",
+            "cover": "",
+            "artworks": [
+                {
+                    "title": "Orin",
+                    "file": "orin",
+                    "display": "1 ~ orin.jpg",
+                    "original": "1 ~ orin.jpg",
+                    "number": 1,
+                    "date": "28/07/2025",
+                    "time_spent": "1 hour",
+                    "notes": "this is the earliest drawing in my pc, I decided to start art on that day and posted it on my pixiv account. a simple paper touhou piece inspired by Waita Uziga 's artstyle"
+                },
+                {
+                    "title": "Mokou",
+                    "file": "mokou",
+                    "display": "2 ~ mokou.jpg",
+                    "original": "2 ~ mokou.jpg",
+                    "number": 2,
+                    "date": "14/08/2025",
+                    "time_spent": "1 hour",
+                    "notes": "this art was my first drawing of Mokou, the immortal girls are my favorite characters in Touhou"
+                },
+                {
+                    "title": "Going postal",
+                    "file": "going-postal",
+                    "display": "3 ~ going postal.jpg",
+                    "original": "3 ~ going postal.png",
+                    "number": 3,
+                    "date": "20/08/2025",
+                    "time_spent": "1 hour",
+                    "notes": "this is the postal dude from postal 2, dark humor old games and movie from back then"
+                },
+                {
+                    "title": "Mokou",
+                    "file": "mokou2",
+                    "display": "4 ~ mokou.jpg",
+                    "original": "4 ~ mokou.jpg",
+                    "number": 4,
+                    "date": "20/08/2025",
+                    "time_spent": "2 hours",
+                    "notes": "this is my first time using Krita, when I began to draw with my laptop and mouse"
+                },
+                {
+                    "title": "R-18G Mokou",
+                    "file": "r-18g-mokou",
+                    "display": "5 ~ r18g mokou.jpg",
+                    "original": "5 ~ r18g mokou.png",
+                    "number": 5,
+                    "date": "28/08/2025",
+                    "time_spent": "4 hours",
+                    "notes": "here is my first R-18G piece. it is very poor quality and inspired by Shimo's work, I was still learning my tools here"
+                },
+                {
+                    "title": "Bullet hell rebel",
+                    "file": "bullet-hell-rebel",
+                    "display": "7 ~ bullet hell rebel.jpg",
+                    "original": "7 ~ bullet hell rebel.png",
+                    "number": 6,
+                    "date": "21/09/2025",
+                    "time_spent": "15 hours",
+                    "notes": "a Touhou scene where Seija is getting arrested by the Yamazanadu. I don't know how but it seems I have spent 15 hours on Krita for this one"
+                },
+                {
+                    "title": "The two people beyond boundaries",
+                    "file": "the-two-people-beyond-boundaries",
+                    "display": "8 ~ the two beyond the boundarie.jpg",
+                    "original": "8 ~ the two beyond the boundarie.png",
+                    "number": 7,
+                    "date": "24/09/2025",
+                    "time_spent": "5 hours 40",
+                    "notes": "this is inspired by the touhou fan theory (紫=メリー説) which says that yukari is maribel but a thousand years older, I like it but I don't believe in it"
+                },
+                {
+                    "title": "Orange fumo",
+                    "file": "orange-fumo",
+                    "display": "9 ~ orange fumo .jpg",
+                    "original": "9 ~ orange fumo .png",
+                    "number": "8",
+                    "date": "25/09/2025",
+                    "time_spent": "1 hour",
+                    "notes": "this was my first pixiv profile picture, pretty terrible looking but that was the beggining for me"
+                },
+                {
+                    "title": "Koishi's passion",
+                    "file": "koishi's-passion",
+                    "display": "",
+                    "original": "",
+                    "number": 9,
+                    "date": "",
+                    "time_spent": "",
+                    "notes": ""
+                }
+            ]
+        }
+    ]
 }

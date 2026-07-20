@@ -229,6 +229,10 @@ def generate_arts():
 {album.get('description','')}
 </p>
 
+<p class="album-date">
+{album.get('date','')}
+</p>
+
 <p class="album-count">
 {len(album.get('artworks',[]))} artworks
 </p>
@@ -326,10 +330,24 @@ def generate_albums():
         grid = ""
 
 
-        for artwork in album.get(
-            "artworks",
-            []
-        ):
+        artworks = sorted(
+
+            album.get(
+                "artworks",
+                []
+            ),
+
+            key=lambda x: int(
+                x.get(
+                    "number",
+                    0
+                )
+            )
+
+        )
+
+
+        for artwork in artworks:
 
 
             grid += f"""
@@ -342,11 +360,13 @@ def generate_albums():
 
 </div>
 
+
 <div class="artwork-info">
 
 <h3>
 {artwork.get('title','')}
 </h3>
+
 
 <div class="artwork-info-bottom">
 
@@ -354,9 +374,11 @@ def generate_albums():
 #{artwork.get('number','')}
 </span>
 
+
 <span class="artwork-date">
 {artwork.get('date','')}
 </span>
+
 
 </div>
 
@@ -393,8 +415,6 @@ def generate_albums():
             html
 
         )
-
-
 
 
 
@@ -610,6 +630,65 @@ def generate_attachments(attachments):
 
 
 
+def format_post_content(content):
+
+    if not content:
+
+        return ""
+
+
+    lines = content.splitlines()
+
+
+    html = ""
+
+
+    paragraph = []
+
+
+    for line in lines:
+
+        line = line.strip()
+
+
+        if line:
+
+            paragraph.append(
+                line
+            )
+
+
+        else:
+
+            if paragraph:
+
+                html += f"""
+
+<p>
+{" ".join(paragraph)}
+</p>
+
+"""
+
+                paragraph = []
+
+
+
+    if paragraph:
+
+        html += f"""
+
+<p>
+{" ".join(paragraph)}
+</p>
+
+"""
+
+
+    return html
+
+
+
 
 
 
@@ -647,6 +726,7 @@ def generate_posts():
 """
 
 
+
     html = html.replace(
         "{{POST_LIST}}",
         cards
@@ -671,9 +751,11 @@ def generate_posts():
     )
 
 
+
     template = read_template(
         "post_template.html"
     )
+
 
 
     for post in posts.get(
@@ -682,31 +764,45 @@ def generate_posts():
     ):
 
 
+
         page = replace_values(
 
             template,
 
             {
 
+
                 "{{POST_TITLE}}":
+
                     post.get(
                         "title",
                         ""
                     ),
 
+
+
                 "{{POST_DATE}}":
+
                     post.get(
                         "date",
                         ""
                     ),
 
+
+
                 "{{POST_CONTENT}}":
-                    post.get(
-                        "content",
-                        ""
+
+                    format_post_content(
+                        post.get(
+                            "content",
+                            ""
+                        )
                     ),
 
+
+
                 "{{ATTACHMENTS}}":
+
                     generate_attachments(
                         post.get(
                             "attachments",
@@ -714,12 +810,17 @@ def generate_posts():
                         )
                     ),
 
+
+
                 "{{LAST_UPDATED}}":
+
                     get_last_updated()
+
 
             }
 
         )
+
 
 
         write_file(
@@ -742,8 +843,6 @@ def generate_posts():
             page
 
         )
-
-
 
 
 
