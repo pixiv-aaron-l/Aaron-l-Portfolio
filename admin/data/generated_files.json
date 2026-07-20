@@ -1,8 +1,7 @@
 {
     "files": [
-        "arts.html",
-        "albums/test.html",
         "index.html",
-        "posts.html"
+        "posts.html",
+        "arts.html"
     ]
 }
