@@ -2,6 +2,7 @@
     "files": [
         "index.html",
         "posts.html",
-        "arts.html"
+        "arts.html",
+        "albums/test-!.html"
     ]
 }
