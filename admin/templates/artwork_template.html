@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{{ARTWORK_TITLE}}</title>
+
+<link rel="stylesheet" href="../style.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+
+<a class="site-title" href="../index.html">
+
+Aaron-l Gallery
+
+</a>
+
+
+
+<nav>
+
+<a href="../index.html">
+ABOUT ME
+</a>
+
+<a href="../arts.html" class="active">
+ARTS
+</a>
+
+<a href="../posts.html">
+POSTS
+</a>
+
+</nav>
+
+
+</header>
+
+
+
+
+
+<main>
+
+
+<section class="artwork-page">
+
+
+
+<div class="artwork-display">
+
+
+<img src="../images/albums/{{ALBUM_FOLDER}}/display/{{ARTWORK_DISPLAY}}" alt="{{ARTWORK_TITLE}}">
+
+
+</div>
+
+
+
+
+
+<div class="artwork-details">
+
+
+
+<h1>
+
+{{ARTWORK_TITLE}}
+
+</h1>
+
+
+
+
+
+<div class="artwork-meta">
+
+
+<p>
+
+Artwork number: #{{ARTWORK_NUMBER}}
+
+</p>
+
+
+<p>
+
+Date: {{ARTWORK_DATE}}
+
+</p>
+
+
+<p>
+
+Time spent: {{ARTWORK_TIME_SPENT}}
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div class="artwork-note">
+
+
+<h2>
+
+Notes
+
+</h2>
+
+
+<p>
+
+{{ARTWORK_NOTES}}
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<div class="artwork-navigation">
+
+
+
+<a href="{{PREVIOUS_ARTWORK}}">
+
+← Previous
+
+</a>
+
+
+
+
+<a href="../albums/{{ALBUM_FOLDER}}.html">
+
+Back to album
+
+</a>
+
+
+
+
+<a href="{{NEXT_ARTWORK}}">
+
+Next →
+
+</a>
+
+
+
+
+</div>
+
+
+
+
+
+</main>
+
+
+
+
+
+<footer>
+
+Last updated: {{LAST_UPDATED}}
+
+</footer>
+
+
+</body>
+
+</html>
