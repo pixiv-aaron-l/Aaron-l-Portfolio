@@ -38,6 +38,8 @@ ATTACHMENTS_FOLDER = os.path.join(
 
 
 
+
+
 class Page(QWidget):
 
     def __init__(self):
@@ -47,7 +49,9 @@ class Page(QWidget):
 
         layout = QHBoxLayout()
 
-        self.setLayout(layout)
+        self.setLayout(
+            layout
+        )
 
 
 
@@ -69,6 +73,7 @@ class Page(QWidget):
         )
 
 
+
         self.create_button = QPushButton(
             "Create Post"
         )
@@ -76,6 +81,16 @@ class Page(QWidget):
 
         self.delete_button = QPushButton(
             "Delete Post"
+        )
+
+
+        self.move_up_button = QPushButton(
+            "Move Up"
+        )
+
+
+        self.move_down_button = QPushButton(
+            "Move Down"
         )
 
 
@@ -87,6 +102,18 @@ class Page(QWidget):
         left.addWidget(
             self.delete_button
         )
+
+
+        left.addWidget(
+            self.move_up_button
+        )
+
+
+        left.addWidget(
+            self.move_down_button
+        )
+
+
 
 
 
@@ -245,7 +272,14 @@ class Page(QWidget):
         )
 
 
+        self.move_up_button.clicked.connect(
+            self.move_up
+        )
 
+
+        self.move_down_button.clicked.connect(
+            self.move_down
+        )
     def refresh(self):
 
         self.post_list.clear()
@@ -267,6 +301,8 @@ class Page(QWidget):
                     ""
                 )
             )
+
+
 
 
 
@@ -325,6 +361,8 @@ class Page(QWidget):
 
 
         self.refresh()
+
+
 
 
 
@@ -410,6 +448,100 @@ class Page(QWidget):
 
 
 
+
+
+    def move_up(self):
+
+        index = self.post_list.currentRow()
+
+
+        if index <= 0:
+
+            return
+
+
+
+        data = load_json(
+            "posts.json"
+        )
+
+
+        posts = data.get(
+            "posts",
+            []
+        )
+
+
+        posts[index - 1], posts[index] = (
+            posts[index],
+            posts[index - 1]
+        )
+
+
+        save_json(
+            "posts.json",
+            data
+        )
+
+
+        self.refresh()
+
+
+        self.post_list.setCurrentRow(
+            index - 1
+        )
+
+
+
+
+
+    def move_down(self):
+
+        index = self.post_list.currentRow()
+
+
+
+        data = load_json(
+            "posts.json"
+        )
+
+
+        posts = data.get(
+            "posts",
+            []
+        )
+
+
+
+        if index < 0 or index >= len(posts) - 1:
+
+            return
+
+
+
+        posts[index + 1], posts[index] = (
+            posts[index],
+            posts[index + 1]
+        )
+
+
+        save_json(
+            "posts.json",
+            data
+        )
+
+
+        self.refresh()
+
+
+        self.post_list.setCurrentRow(
+            index + 1
+        )
+
+
+
+
+
     def add_attachment(self):
 
         files, _ = QFileDialog.getOpenFileNames(
@@ -469,6 +601,8 @@ class Page(QWidget):
 
 
 
+
+
     def remove_attachment(self):
 
         row = self.attachments_list.currentRow()
@@ -479,6 +613,8 @@ class Page(QWidget):
             self.attachments_list.takeItem(
                 row
             )
+
+
 
 
 
@@ -512,6 +648,7 @@ class Page(QWidget):
         post["attachments"] = []
 
 
+
         for i in range(
             self.attachments_list.count()
         ):
@@ -540,6 +677,8 @@ class Page(QWidget):
             "Saved",
             "Post saved successfully."
         )
+
+
 
 
 
