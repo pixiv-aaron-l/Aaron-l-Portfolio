@@ -19,6 +19,7 @@ from ui.posts import Page as PostsPage
 
 
 from generator.website_generator import generate_website
+from tools.github_manager import publish_changes
 
 
 
@@ -83,7 +84,12 @@ class AdminWindow(QWidget):
 
 
         self.generate_button = QPushButton(
-            "Update Website"
+            "Generate Website"
+        )
+
+
+        self.publish_button = QPushButton(
+            "Publish Website"
         )
 
 
@@ -100,7 +106,9 @@ class AdminWindow(QWidget):
 
             self.posts_button,
 
-            self.generate_button
+            self.generate_button,
+
+            self.publish_button
 
         ]:
 
@@ -229,6 +237,13 @@ class AdminWindow(QWidget):
         )
 
 
+        self.publish_button.clicked.connect(
+            self.publish_website
+        )
+
+
+
+
 
 
 
@@ -243,9 +258,9 @@ class AdminWindow(QWidget):
 
                 self,
 
-                "Website Updated",
+                "Website Generated",
 
-                "Your website has been updated successfully."
+                "Website files have been updated locally."
 
             )
 
@@ -262,6 +277,54 @@ class AdminWindow(QWidget):
                 str(error)
 
             )
+
+
+
+
+
+
+
+    def publish_website(self):
+
+        try:
+
+            # Create latest website files
+
+            generate_website()
+
+
+
+            # Commit and push to GitHub
+
+            result = publish_changes()
+
+
+
+            QMessageBox.information(
+
+                self,
+
+                "Published",
+
+                result
+
+            )
+
+
+        except Exception as error:
+
+
+            QMessageBox.critical(
+
+                self,
+
+                "Publish Error",
+
+                str(error)
+
+            )
+
+
 
 
 
