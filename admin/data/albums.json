@@ -1,3 +1,12 @@
 {
-    "albums": []
+    "albums": [
+        {
+            "title": "test !",
+            "folder": "test-!",
+            "date": "07/07/2007",
+            "description": "hi !",
+            "cover": "",
+            "artworks": []
+        }
+    ]
 }
