@@ -13,15 +13,15 @@
             "folder": "first-year-of-drawing",
             "date": "2025 - 2026",
             "description": "the pictures from when I started art",
-            "cover": "",
+            "cover": "18 ~ Mokou pp.jpg",
             "artworks": [
                 {
                     "title": "Orin",
                     "file": "orin",
                     "display": "1 ~ orin.jpg",
                     "original": "1 ~ orin.jpg",
-                    "number": 1,
-                    "date": "28/07/2025",
+                    "number": "1",
+                    "date": "28/07/25",
                     "time_spent": "1 hour",
                     "notes": "this is the earliest drawing in my pc, I decided to start art on that day and posted it on my pixiv account. a simple paper touhou piece inspired by Waita Uziga 's artstyle"
                 },
@@ -30,8 +30,8 @@
                     "file": "mokou",
                     "display": "2 ~ mokou.jpg",
                     "original": "2 ~ mokou.jpg",
-                    "number": 2,
-                    "date": "14/08/2025",
+                    "number": "2",
+                    "date": "14/08/25",
                     "time_spent": "1 hour",
                     "notes": "this art was my first drawing of Mokou, the immortal girls are my favorite characters in Touhou"
                 },
@@ -40,8 +40,8 @@
                     "file": "going-postal",
                     "display": "3 ~ going postal.jpg",
                     "original": "3 ~ going postal.png",
-                    "number": 3,
-                    "date": "20/08/2025",
+                    "number": "3",
+                    "date": "20/08/25",
                     "time_spent": "1 hour",
                     "notes": "this is the postal dude from postal 2, dark humor old games and movie from back then"
                 },
@@ -50,8 +50,8 @@
                     "file": "mokou2",
                     "display": "4 ~ mokou.jpg",
                     "original": "4 ~ mokou.jpg",
-                    "number": 4,
-                    "date": "20/08/2025",
+                    "number": "4",
+                    "date": "20/08/25",
                     "time_spent": "2 hours",
                     "notes": "this is my first time using Krita, when I began to draw with my laptop and mouse"
                 },
@@ -60,8 +60,8 @@
                     "file": "r-18g-mokou",
                     "display": "5 ~ r18g mokou.jpg",
                     "original": "5 ~ r18g mokou.png",
-                    "number": 5,
-                    "date": "28/08/2025",
+                    "number": "5",
+                    "date": "28/08/25",
                     "time_spent": "4 hours",
                     "notes": "here is my first R-18G piece. it is very poor quality and inspired by Shimo's work, I was still learning my tools here"
                 },
@@ -70,8 +70,8 @@
                     "file": "bullet-hell-rebel",
                     "display": "7 ~ bullet hell rebel.jpg",
                     "original": "7 ~ bullet hell rebel.png",
-                    "number": 6,
-                    "date": "21/09/2025",
+                    "number": "6",
+                    "date": "21/09/25",
                     "time_spent": "15 hours",
                     "notes": "a Touhou scene where Seija is getting arrested by the Yamazanadu. I don't know how but it seems I have spent 15 hours on Krita for this one"
                 },
@@ -80,8 +80,8 @@
                     "file": "the-two-people-beyond-boundaries",
                     "display": "8 ~ the two beyond the boundarie.jpg",
                     "original": "8 ~ the two beyond the boundarie.png",
-                    "number": 7,
-                    "date": "24/09/2025",
+                    "number": "7",
+                    "date": "24/09/25",
                     "time_spent": "5 hours 40",
                     "notes": "this is inspired by the touhou fan theory (紫=メリー説) which says that yukari is maribel but a thousand years older, I like it but I don't believe in it"
                 },
@@ -91,19 +91,459 @@
                     "display": "9 ~ orange fumo .jpg",
                     "original": "9 ~ orange fumo .png",
                     "number": "8",
-                    "date": "25/09/2025",
+                    "date": "25/09/25",
                     "time_spent": "1 hour",
                     "notes": "this was my first pixiv profile picture, pretty terrible looking but that was the beggining for me"
                 },
                 {
                     "title": "Koishi's passion",
                     "file": "koishi's-passion",
-                    "display": "",
-                    "original": "",
-                    "number": 9,
-                    "date": "",
-                    "time_spent": "",
-                    "notes": ""
+                    "display": "11 ~ koishi's passion.jpg",
+                    "original": "11 ~ koishi's passion.png",
+                    "number": "9",
+                    "date": "21/10/25",
+                    "time_spent": "11 hours 40",
+                    "notes": "another old attempt at drawing characters and bloody effect on my program"
+                },
+                {
+                    "title": "Yuyuko's ressurection",
+                    "file": "yuyuko's-ressurection",
+                    "display": "12 ~ yuyuko's ressurection.jpg",
+                    "original": "12 ~ yuyuko's ressurection.png",
+                    "number": "10",
+                    "date": "25/10/25",
+                    "time_spent": "10 hours",
+                    "notes": "this shows the ressurection of Yuyuko at the end of PCB, I remember enjoying drawing this picture"
+                },
+                {
+                    "title": "Mokou",
+                    "file": "mokou3",
+                    "display": "15 ~ Mokou.jpg",
+                    "original": "15 ~ Mokou.png",
+                    "number": "11",
+                    "date": "25/11/25",
+                    "time_spent": "6 hours 30",
+                    "notes": "Mokou is calmly drinking, it's not like the fire would hurt her"
+                },
+                {
+                    "title": "1998 Reimu",
+                    "file": "1998-reimu",
+                    "display": "16 ~ 1998 reimu.jpg",
+                    "original": "16 ~ 1998 reimu.png",
+                    "number": "12",
+                    "date": "29/11/25",
+                    "time_spent": "6 hours",
+                    "notes": "this picture is the \"old Reimu treatment\" I suppose, one must notice a reference to Logan Paul"
+                },
+                {
+                    "title": "Wizard",
+                    "file": "wizard",
+                    "display": "17 ~ Wizard.jpg",
+                    "original": "17 ~ Wizard.png",
+                    "number": "13",
+                    "date": "01/12/25",
+                    "time_spent": "1 hour",
+                    "notes": "this was an attempt at drawing a scary comic face, the wizard's model is a v-tuber avatar"
+                },
+                {
+                    "title": "Mokou pfp",
+                    "file": "mokou-pfp",
+                    "display": "18 ~ Mokou pp.jpg",
+                    "original": "18 ~ Mokou pp.png",
+                    "number": "14",
+                    "date": "06/12/25",
+                    "time_spent": "5 hours",
+                    "notes": "this is my 2nd pixiv profile picture, I really love how this Mokou ended up looking"
+                },
+                {
+                    "title": "Ice fairy quiet life",
+                    "file": "ice-fairy-quiet-life",
+                    "display": "19 ~ Ice Fairy Lonely Life.jpg",
+                    "original": "19 ~ Ice Fairy Lonely Life.png",
+                    "number": "15",
+                    "date": "08/12/25",
+                    "time_spent": "30 minutes",
+                    "notes": "this is a small drawing where I tried to represent the misty lake of EoSD"
+                },
+                {
+                    "title": "エリック girl",
+                    "file": "エリック-girl",
+                    "display": "20.1 ~ エリック girl.jpg",
+                    "original": "20.1 ~ エリック girl.png",
+                    "number": "16",
+                    "date": "08/12/25",
+                    "time_spent": "40 minutes",
+                    "notes": "quick fan-art of a guro artist 's OC, I did this as a training on anatomy"
+                },
+                {
+                    "title": "Mokou",
+                    "file": "mokou4",
+                    "display": "21 ~ Mokou.jpg",
+                    "original": "21 ~ Mokou.png",
+                    "number": "17",
+                    "date": "13/12/25",
+                    "time_spent": "5 hours",
+                    "notes": "this illustration of Mokou was done with a model in attempt to have more realistic proportions"
+                },
+                {
+                    "title": "Mamizou",
+                    "file": "mamizou",
+                    "display": "23 ~ mamizou.jpg",
+                    "original": "23 ~ mamizou.png",
+                    "number": "18",
+                    "date": "26/12/25",
+                    "time_spent": "7 hours",
+                    "notes": "this mamizou art was a success at drawing perspective"
+                },
+                {
+                    "title": "Happy Mokou",
+                    "file": "happy-mokou",
+                    "display": "25 ~ happy mokou.jpg",
+                    "original": "25 ~ happy mokou.png",
+                    "number": "19",
+                    "date": "01/01/26",
+                    "time_spent": "6 hours 30",
+                    "notes": "my first drawing of 2026! I wanted to make my Mokou look joyful for the new year"
+                },
+                {
+                    "title": "Ebola Chan",
+                    "file": "ebola-chan",
+                    "display": "26 ~ Ebola Chan.jpg",
+                    "original": "26 ~ Ebola Chan.png",
+                    "number": "20",
+                    "date": "04/01/26",
+                    "time_spent": "5 hours 50",
+                    "notes": "this girl is the gijinka design of the ebola diseace, she is standing on hemoglobin. However I don't think this drawing was well-done"
+                },
+                {
+                    "title": "Kkhta Mokou",
+                    "file": "kkhta-mokou",
+                    "display": "27 ~ kkhta mokou.jpg",
+                    "original": "27 ~ kkhta mokou.png",
+                    "number": "21",
+                    "date": "05/01/26",
+                    "time_spent": "3 hours",
+                    "notes": "this was an attempt at drawing the madness given to characters in KKHTA, sadly it looks awful in every points"
+                },
+                {
+                    "title": "Blowout meme",
+                    "file": "blowout-meme",
+                    "display": "28 ~ blowout meme.jpg",
+                    "original": "28 ~ blowout meme.png",
+                    "number": "22",
+                    "date": "06/01/26",
+                    "time_spent": "2 hours",
+                    "notes": "this picture is a Touhou version I did of the old \"blow-out soon\" meme"
+                },
+                {
+                    "title": "BoWaP",
+                    "file": "bowap",
+                    "display": "29 ~ BoWaP.jpg",
+                    "original": "29 ~ BoWaP.png",
+                    "number": "23",
+                    "date": "10/01/26",
+                    "time_spent": "4 hours 30",
+                    "notes": "here is a drawing of the Yukari's spellcard that I really enjoy, the border of wave and particle. I love how cute the Yukari is and the danmaku was a little long but funny to make"
+                },
+                {
+                    "title": "Mokou",
+                    "file": "mokou5",
+                    "display": "30 ~ mokou.jpg",
+                    "original": "30 ~ mokou.png",
+                    "number": "24",
+                    "date": "13/01/26",
+                    "time_spent": "3 hours 50",
+                    "notes": "the mirror behind is showing an alternative version of Mokou, it was an okay idea but ended up ugly"
+                },
+                {
+                    "title": "R-18G Mokou",
+                    "file": "r-18g-mokou2",
+                    "display": "31 ~ r18g mokou.jpg",
+                    "original": "31 ~ r18g mokou.png",
+                    "number": "25",
+                    "date": "15/01/26",
+                    "time_spent": "2 hours 30",
+                    "notes": "this is a redo of my r18g Mokou, this time way more sexy"
+                },
+                {
+                    "title": "The imperishable fight",
+                    "file": "the-imperishable-fight",
+                    "display": "32 ~ the  imperishable fight.jpg",
+                    "original": "32 ~ the  imperishable fight.jpeg",
+                    "number": "26",
+                    "date": "18/01/26",
+                    "time_spent": "5 hours 30",
+                    "notes": "beautiful illustration where the immortal girls are fighting in the sky! also the begining of my first ever art challenge which is to draw Mokou for the days of immortality (=24th day of every month)"
+                },
+                {
+                    "title": "Cruel Marisa",
+                    "file": "cruel-marisa",
+                    "display": "33 ~ cruel marisa☆.jpg",
+                    "original": "33 ~ cruel marisa☆.png",
+                    "number": "27",
+                    "date": "21/01/26",
+                    "time_spent": "5 hours 30",
+                    "notes": "it was inspired by this parody https://www.nicovideo.jp/watch/sm44832761 with cookie star characters of Marisa and Parsee, I would give you this as a resource for cookie : https://yukkuri.shiteitte.net/wiki_pages/cookie_(touhou)/ "
+                },
+                {
+                    "title": "Ariya",
+                    "file": "ariya",
+                    "display": "34 ~ ariya.jpg",
+                    "original": "34 ~ ariya.png",
+                    "number": "28",
+                    "date": "25/01/26",
+                    "time_spent": "9 hours 40",
+                    "notes": "this amazing character design is Ariya from FW, I used a pinterest reference (https://fr.pinterest.com/pin/281543726356358/) for her posture"
+                },
+                {
+                    "title": "Ressurection",
+                    "file": "ressurection",
+                    "display": "35 ~ ressurection.jpg",
+                    "original": "35 ~ ressurection.png",
+                    "number": "29",
+                    "date": "03/02/26",
+                    "time_spent": "4 hours 40",
+                    "notes": "this represents the ressurection non-spell of Fujiwara no Mokou"
+                },
+                {
+                    "title": "Sanae with grub",
+                    "file": "sanae-with-grub",
+                    "display": "36 ~ sanae with grub.jpg",
+                    "original": "36 ~ sanae with grub.png",
+                    "number": "30",
+                    "date": "10/02/26",
+                    "time_spent": "3 hours",
+                    "notes": "this tiny Sanae next to a grub is an old touhou jerk meme"
+                },
+                {
+                    "title": "Mokou meets Merry",
+                    "file": "mokou-meets-merry",
+                    "display": "37 ~ Mokou meet Merry.jpg",
+                    "original": "37 ~ Mokou meet Merry.png",
+                    "number": "31",
+                    "date": "15/02/26",
+                    "time_spent": "4 hours",
+                    "notes": "this is the scene of the 9th song of Changeability of Strange Dream (Touhou hifuu club story) where Merry who's getting more and more stuck in Gensokyo witnesses Mokou getting rid of a youkai in the bamboo forest"
+                },
+                {
+                    "title": "Hell or heaven",
+                    "file": "hell-or-heaven",
+                    "display": "38 ~ hell or heaven.jpg",
+                    "original": "38 ~ hell or heaven.png",
+                    "number": "32",
+                    "date": "23/02/26",
+                    "time_spent": "11 hours",
+                    "notes": "this is inspired by Cirno's conclusion in Touhou 9 and a french meme scenery ; the fairy's fate is uncertain, she aknowledges that she might stop existing and fears it"
+                },
+                {
+                    "title": "Yorihime",
+                    "file": "yorihime",
+                    "display": "39 ~ yorihime.jpg",
+                    "original": "39 ~ yorihime.png",
+                    "number": "33",
+                    "date": "25/02/26",
+                    "time_spent": "2 hours 50",
+                    "notes": "this drawing of Yorihime was inspired by Kam-S very old artstyle, an attempt to reproduce it"
+                },
+                {
+                    "title": "Shrine maiden duality",
+                    "file": "shrine-maiden-duality",
+                    "display": "40 ~ shrine maiden duality.jpg",
+                    "original": "40 ~ shrine maiden duality.png",
+                    "number": "34",
+                    "date": "26/02/26",
+                    "time_spent": "3 hours 30",
+                    "notes": "the duality between two shrine maidens\n>Sanae thinks the lunarian war was a bad thing\n; Reimu will do it again"
+                },
+                {
+                    "title": "Luna Child",
+                    "file": "luna-child",
+                    "display": "41 ~ luna child.jpg",
+                    "original": "41 ~ luna child.png",
+                    "number": "35",
+                    "date": "28/02/26",
+                    "time_spent": "5 hours",
+                    "notes": "this is the result of trying a 3D-looking fairy, Luna Child is the only fairy you can live with, even tho I'd like Star Sapphire~ this art hurts my eyes"
+                },
+                {
+                    "title": "Guro girl",
+                    "file": "guro-girl",
+                    "display": "illustrations censored_compressed.jpg",
+                    "original": "illustrations censored_compressed.png",
+                    "number": "36",
+                    "date": "01/03/26",
+                    "time_spent": "5 hours 40",
+                    "notes": "a new simple guro scene here, I did 3 panels that shows the girl's death. despite the good anatomu my art were not as arousing as I wanted, causing a break with the nsfw attempts"
+                },
+                {
+                    "title": "Kitsune and Kuda-Gitsune",
+                    "file": "kitsune-and-kuda-gitsune",
+                    "display": "43 ~ kitsune and kuda-gitsune.jpg",
+                    "original": "43 ~ kitsune and kuda-gitsune.png",
+                    "number": "37",
+                    "date": "08/03/26",
+                    "time_spent": "7 hours 30",
+                    "notes": "this is an actual peak of my drawing, I managed to draw the two fox-youkai girls well and this illustration made me proud of my art knowledge at the time"
+                },
+                {
+                    "title": "Mechabre Suwako",
+                    "file": "mechabre-suwako",
+                    "display": "44 ~ mechabre suwako.jpg",
+                    "original": "44 ~ mechabre suwako.png",
+                    "number": "38",
+                    "date": "10/03/26",
+                    "time_spent": "4 hours 30",
+                    "notes": "here is my first ever mechabre art, with this body horror Suwako concept. the frog is traced"
+                },
+                {
+                    "title": "Eternal existence",
+                    "file": "eternal-existence",
+                    "display": "45 ~ eternal existence.jpg",
+                    "original": "45 ~ eternal existence.png",
+                    "number": "39",
+                    "date": "22/03/26",
+                    "time_spent": "4 hours 50",
+                    "notes": "the history is repeating itself in front of her... this picture have a sequel version for pixiv (id 142678106)"
+                },
+                {
+                    "title": "Apocalypse",
+                    "file": "apocalypse",
+                    "display": "46 ~ apocalypse.jpg",
+                    "original": "46 ~ apocalypse.png",
+                    "number": "40",
+                    "date": "28/03/26",
+                    "time_spent": "9 hours",
+                    "notes": "I wanted to draw every single PC-98 Touhou antagonist on the same picture, it feels like an insane bullet hell is about to happen"
+                },
+                {
+                    "title": "Marisa plays Touhou",
+                    "file": "marisa-plays-touhou",
+                    "display": "47 ~ Marisa plays Touhou.jpg",
+                    "original": "47 ~ Marisa plays Touhou.png",
+                    "number": "41",
+                    "date": "28/03/2026",
+                    "time_spent": "4 hours",
+                    "notes": "Marisa is sitting on a sofa and playing video game, I did this with the big-eyes anime style because at the time I decided to try this path looking for art's beauty"
+                },
+                {
+                    "title": "Clowpiece",
+                    "file": "clowpiece",
+                    "display": "48 ~ clownpiece.jpg",
+                    "original": "48 ~ clownpiece.png",
+                    "number": "42",
+                    "date": "31/03/26",
+                    "time_spent": "4 hours",
+                    "notes": "Clownpiece hitting her pose on the moon, there is a second version with way more revealing outfit (pixiv id 142973845)"
+                },
+                {
+                    "title": "Meowbah",
+                    "file": "meowbah",
+                    "display": "50 ~ meowbah.jpg",
+                    "original": "50 ~ meowbah.png",
+                    "number": "43",
+                    "date": "08/04/26",
+                    "time_spent": "3 hours 20",
+                    "notes": "a quick fan-art of the meowbah character, who is a twitter troll 's OC"
+                },
+                {
+                    "title": "Cir-no-brain",
+                    "file": "cir-no-brain",
+                    "display": "51 ~ cir-no-brain.jpg",
+                    "original": "51 ~ cir-no-brain.png",
+                    "number": "44",
+                    "date": "16/04/26",
+                    "time_spent": "6 hours 30",
+                    "notes": "this funny illustration idea comes from this 2010 picture : https://www.pixiv.net/en/artworks/8767737"
+                },
+                {
+                    "title": "Doorbell chud",
+                    "file": "doorbell-chud",
+                    "display": "52 ~ doorbell chud.jpg",
+                    "original": "52 ~ doorbell chud.png",
+                    "number": "45",
+                    "date": "18/04/26",
+                    "time_spent": "4 hours 40",
+                    "notes": "that's a parody of the doorbell chud video but with Mokou instead, what a disturbing scene to look at"
+                },
+                {
+                    "title": "Koishi flicker",
+                    "file": "koishi-flicker",
+                    "display": "53 ~ koishi flicker.jpg",
+                    "original": "53 ~ koishi flicker.png",
+                    "number": "46",
+                    "date": "26/04/26",
+                    "time_spent": "4 hours",
+                    "notes": "this represents Koishi's sprite during her extra stage fight in Touhou 11"
+                },
+                {
+                    "title": "Sad kitten",
+                    "file": "sad-kitten",
+                    "display": "54 ~ the kitten.jpg",
+                    "original": "54 ~ the kitten.png",
+                    "number": "47",
+                    "date": "19/15/26",
+                    "time_spent": "7 hours",
+                    "notes": "the loss of a kitten to Chen, sadly this ended up very odd looking due to my unusual rendering attempt"
+                },
+                {
+                    "title": "Above Eientei",
+                    "file": "above-eientei",
+                    "display": "55 ~ above eientei.jpg",
+                    "original": "55 ~ above eientei.png",
+                    "number": "48",
+                    "date": "24/05/26",
+                    "time_spent": "4 hours",
+                    "notes": "Mokou is flying over Eientei, ready to take her revenge! sadly I couldn't finish this illustration in time for my challenge and decided to ignore the background"
+                },
+                {
+                    "title": "The shrine tank",
+                    "file": "the-shrine-tank",
+                    "display": "56 ~ shrine tank.jpg",
+                    "original": "56 ~ shrine tank.png",
+                    "number": "49",
+                    "date": "15/06/26",
+                    "time_spent": "8 hours",
+                    "notes": "this is an illustration with the SoEW shrine tank, I like how Touhou began with litteral tanks involved"
+                },
+                {
+                    "title": "Shion-pai",
+                    "file": "shion-pai",
+                    "display": "57 ~ shion-pai.jpg",
+                    "original": "57 ~ shion-pai.png",
+                    "number": "50",
+                    "date": "19/06/26",
+                    "time_spent": "3 hours 20",
+                    "notes": "quick nude illustration with Shion's breast- apparently it looks like an unnatural implant, I was focused on correct body rendering which is a success"
+                },
+                {
+                    "title": "Fight",
+                    "file": "fight",
+                    "display": "58 ~ fight.jpg",
+                    "original": "58 ~ fight.png",
+                    "number": "51",
+                    "date": "24/06/26",
+                    "time_spent": "8 hours 30",
+                    "notes": "drawing of Kaguya and Mokou fighting, I did this as an OC for my subreddit, first on paper and then locked in on my PC"
+                },
+                {
+                    "title": "Yuuma Clark",
+                    "file": "yuuma-clark",
+                    "display": "59 ~ yuuma clark.jpg",
+                    "original": "59 ~ yuuma clark.png",
+                    "number": "52",
+                    "date": "06/07/26",
+                    "time_spent": "6 hours",
+                    "notes": "this is a scene from the backroom movie! I love my rendering on this one, but how did Yuuma ended up in the backrooms?"
+                },
+                {
+                    "title": "Gravital",
+                    "file": "gravital",
+                    "display": "60 ~ gravital.jpg",
+                    "original": "60 ~ gravital.png",
+                    "number": "53",
+                    "date": "09/07/26",
+                    "time_spent": "6 hours",
+                    "notes": "this is a re-evolved ruin haunter woman from all tomorrows putting her children into an early gravital, I heavily inspired myself of Zenith's art for this one and believe my art is now good looking. it is after this piece that I began the code of my website, delayed by my laptop's screen breaking which made it unusable for a whole week"
                 }
             ]
         }

@@ -79,28 +79,58 @@ Aaron-l Gallery
 <h2>Links</h2>
 
 
-<section class="box links">
+<section class="box links-layout">
 
 
-<a href="{{PIXIV_LINK}}">
+<div class="links">
+
+
+<a href="{{PIXIV_LINK}}" target="_blank">
 
 Pixiv
 
 </a>
 
 
-<a href="{{REDDIT_LINK}}">
+<a href="{{REDDIT_LINK}}" target="_blank">
 
 Reddit
 
 </a>
 
 
-<a href="{{DISCORD_LINK}}">
+<a href="{{DISCORD_LINK}}" target="_blank">
 
 Discord
 
 </a>
+
+
+</div>
+
+
+
+
+<div class="visitor-panel">
+
+
+<div class="visitor-title">
+
+Visitors
+
+</div>
+
+
+
+<div id="visitor-count">
+
+Loading...
+
+</div>
+
+
+
+</div>
 
 
 </section>
@@ -114,11 +144,39 @@ Discord
 
 
 
+
 <footer>
 
 Last updated: {{LAST_UPDATED}}
 
 </footer>
+
+
+
+
+<script>
+
+fetch("https://api.countapi.xyz/hit/pixiv-aaron-l-portfolio-2026/visits")
+
+.then(response => response.json())
+
+.then(data => {
+
+    document.getElementById("visitor-count").textContent =
+        String(data.value).padStart(7, "0");
+
+})
+
+.catch(() => {
+
+    document.getElementById("visitor-count").textContent =
+        "-------";
+
+});
+
+
+</script>
+
 
 
 </body>
