@@ -1,0 +1,3 @@
+if you go in my code maybe your admin crashed over upload. open powershell in your project file (the one with admin and website folder) and you typer this and enter :
+
+git add . ; git commit -m "Manual website update" ; git push
