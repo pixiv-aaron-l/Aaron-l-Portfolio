@@ -630,6 +630,8 @@ def generate_attachments(attachments):
 
 
 
+import re
+
 def format_post_content(content):
 
     if not content:
@@ -637,11 +639,20 @@ def format_post_content(content):
         return ""
 
 
+    def convert_links(text):
+
+        pattern = r"(https?://[^\s<]+)"
+
+        return re.sub(
+            pattern,
+            r'<a href="\1" target="_blank">\1</a>',
+            text
+        )
+
+
     lines = content.splitlines()
 
-
     html = ""
-
 
     paragraph = []
 
@@ -650,13 +661,9 @@ def format_post_content(content):
 
         line = line.strip()
 
-
         if line:
 
-            paragraph.append(
-                line
-            )
-
+            paragraph.append(convert_links(line))
 
         else:
 
@@ -673,7 +680,6 @@ def format_post_content(content):
                 paragraph = []
 
 
-
     if paragraph:
 
         html += f"""
@@ -686,7 +692,6 @@ def format_post_content(content):
 
 
     return html
-
 
 
 
