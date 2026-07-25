@@ -81,50 +81,9 @@ def replace_values(html, values):
 
 def get_last_updated():
 
-    about = load_json(
-        "about.json"
+    return datetime.now().strftime(
+        "%d/%m/%Y"
     )
-
-    date = about.get(
-        "last_updated",
-        ""
-    )
-
-
-    if not date:
-
-        return ""
-
-
-    try:
-
-        parsed = datetime.fromisoformat(
-            date
-        )
-
-        return parsed.strftime(
-            "%d/%m/%Y"
-        )
-
-    except ValueError:
-
-        pass
-
-
-    try:
-
-        parsed = datetime.strptime(
-            date,
-            "%d/%m/%Y"
-        )
-
-        return parsed.strftime(
-            "%d/%m/%Y"
-        )
-
-    except ValueError:
-
-        return date
 
 
 
@@ -184,6 +143,15 @@ def generate_index():
 
         }
 
+    )
+
+
+    write_file(
+        os.path.join(
+            WEBSITE_FOLDER,
+            "index.html"
+        ),
+        html
     )
 
 
