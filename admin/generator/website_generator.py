@@ -324,7 +324,7 @@ def generate_albums():
 
 <div class="artwork-thumbnail">
 
-<img src="../images/albums/{album.get('folder','')}/display/{artwork.get('display','')}">
+<img src="../images/albums/{album.get('folder','')}/original/{artwork.get('original','')}">
 
 </div>
 
