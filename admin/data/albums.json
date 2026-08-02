@@ -5,8 +5,19 @@
             "folder": "touhou-artworks",
             "date": "2026 - now",
             "description": "artworks featuring characters from Touhou Project",
-            "cover": "",
-            "artworks": []
+            "cover": "62 ~ traces of Sariel.jpg",
+            "artworks": [
+                {
+                    "title": "traces of Sariel",
+                    "file": "traces-of-sariel",
+                    "display": "62 ~ traces of Sariel.jpg",
+                    "original": "62 ~ traces of Sariel.png",
+                    "number": "1",
+                    "date": "02/08/2026",
+                    "time_spent": "6 hours 10",
+                    "notes": "this is a design for Sariel inspired by the concept of traces of old gods in the Fear and Hunger video games"
+                }
+            ]
         },
         {
             "title": "first year of drawing",
@@ -420,8 +431,8 @@
                     "file": "marisa-plays-touhou",
                     "display": "47 ~ Marisa plays Touhou.jpg",
                     "original": "47 ~ Marisa plays Touhou.png",
-                    "number": 41,
-                    "date": "28/03/2026",
+                    "number": "41",
+                    "date": "28/03/26",
                     "time_spent": "4 hours",
                     "notes": "Marisa is sitting on a sofa and playing video game, I did this with the big-eyes anime style because at the time I decided to try this path looking for art's beauty"
                 },
