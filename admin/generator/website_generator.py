@@ -1,7 +1,7 @@
 import os
 import json
-import shutil
 import re
+import shutil
 from datetime import datetime
 
 from tools.json_manager import load_json
@@ -83,6 +83,10 @@ def get_last_updated():
     )
 
 
+# ============================================================
+# INDEX
+# ============================================================
+
 def generate_index():
 
     about = load_json(
@@ -94,8 +98,11 @@ def generate_index():
     )
 
     html = replace_values(
+
         html,
+
         {
+
             "{{ABOUT_INTRODUCTION}}":
                 about.get(
                     "introduction",
@@ -131,17 +138,26 @@ def generate_index():
 
             "{{LAST_UPDATED}}":
                 get_last_updated()
+
         }
+
     )
 
     write_file(
+
         os.path.join(
             WEBSITE_FOLDER,
             "index.html"
         ),
+
         html
+
     )
 
+
+# ============================================================
+# ARTS
+# ============================================================
 
 def generate_arts():
 
@@ -162,29 +178,31 @@ def generate_arts():
 
         cards += f"""
 
-<a class="album-card" href="albums/{album.get('folder','')}.html">
+<a class="album-card" href="albums/{album.get('folder', '')}.html">
 
 <div class="album-info">
 
-<h2>{album.get('title','')}</h2>
+<h2>
+{album.get('title', '')}
+</h2>
 
 <p>
-{album.get('description','')}
+{album.get('description', '')}
 </p>
 
 <p class="album-date">
-{album.get('date','')}
+{album.get('date', '')}
 </p>
 
 <p class="album-count">
-{len(album.get('artworks',[]))} artworks
+{len(album.get('artworks', []))} artworks
 </p>
 
 </div>
 
 <div class="album-cover">
 
-<img src="images/albums/{album.get('folder','')}/display/{album.get('cover','')}">
+<img src="images/albums/{album.get('folder', '')}/display/{album.get('cover', '')}">
 
 </div>
 
@@ -203,13 +221,20 @@ def generate_arts():
     )
 
     write_file(
+
         os.path.join(
             WEBSITE_FOLDER,
             "arts.html"
         ),
+
         html
+
     )
 
+
+# ============================================================
+# ALBUMS
+# ============================================================
 
 def generate_albums():
 
@@ -227,8 +252,11 @@ def generate_albums():
     ):
 
         html = replace_values(
+
             template,
+
             {
+
                 "{{ALBUM_TITLE}}":
                     album.get(
                         "title",
@@ -257,50 +285,56 @@ def generate_albums():
 
                 "{{LAST_UPDATED}}":
                     get_last_updated()
+
             }
+
         )
 
         grid = ""
 
         artworks = sorted(
+
             album.get(
                 "artworks",
                 []
             ),
+
             key=lambda x: int(
                 x.get(
                     "number",
                     0
                 )
             )
+
         )
 
         for artwork in artworks:
 
             grid += f"""
 
-<a class="artwork-card" href="../artworks/{artwork.get('file','')}.html">
+<a class="artwork-card"
+   href="../artworks/{artwork.get('file', '')}.html">
 
 <div class="artwork-thumbnail">
 
-<img src="../images/albums/{album.get('folder','')}/original/{artwork.get('original','')}">
+<img src="../images/albums/{album.get('folder', '')}/display/{artwork.get('display', '')}">
 
 </div>
 
 <div class="artwork-info">
 
 <h3>
-{artwork.get('title','')}
+{artwork.get('title', '')}
 </h3>
 
 <div class="artwork-info-bottom">
 
 <span class="artwork-number">
-#{artwork.get('number','')}
+#{artwork.get('number', '')}
 </span>
 
 <span class="artwork-date">
-{artwork.get('date','')}
+{artwork.get('date', '')}
 </span>
 
 </div>
@@ -317,17 +351,30 @@ def generate_albums():
         )
 
         write_file(
+
             os.path.join(
+
                 WEBSITE_FOLDER,
+
                 "albums",
+
                 album.get(
                     "folder",
                     "album"
-                ) + ".html"
+                )
+                +
+                ".html"
+
             ),
+
             html
+
         )
 
+
+# ============================================================
+# ARTWORK PAGES
+# ============================================================
 
 def generate_artworks():
 
@@ -344,9 +391,20 @@ def generate_artworks():
         []
     ):
 
-        artworks = album.get(
-            "artworks",
-            []
+        artworks = sorted(
+
+            album.get(
+                "artworks",
+                []
+            ),
+
+            key=lambda x: int(
+                x.get(
+                    "number",
+                    0
+                )
+            )
+
         )
 
         for index, artwork in enumerate(
@@ -354,8 +412,11 @@ def generate_artworks():
         ):
 
             html = replace_values(
+
                 template,
+
                 {
+
                     "{{ARTWORK_TITLE}}":
                         artwork.get(
                             "title",
@@ -406,15 +467,21 @@ def generate_artworks():
 
                     "{{LAST_UPDATED}}":
                         get_last_updated()
+
                 }
+
             )
 
+            # ------------------------------------------------
+            # PREVIOUS ARTWORK
+            # ------------------------------------------------
+
             previous = "#"
-            next_page = "#"
 
             if index > 0:
 
                 previous = (
+
                     "../artworks/"
                     +
                     artworks[index - 1].get(
@@ -423,11 +490,19 @@ def generate_artworks():
                     )
                     +
                     ".html"
+
                 )
+
+            # ------------------------------------------------
+            # NEXT ARTWORK
+            # ------------------------------------------------
+
+            next_page = "#"
 
             if index < len(artworks) - 1:
 
                 next_page = (
+
                     "../artworks/"
                     +
                     artworks[index + 1].get(
@@ -436,30 +511,58 @@ def generate_artworks():
                     )
                     +
                     ".html"
+
                 )
 
+            # ------------------------------------------------
+            # INSERT NAVIGATION LINKS
+            # ------------------------------------------------
+
             html = html.replace(
+
                 "{{PREVIOUS_ARTWORK}}",
+
                 previous
+
             )
 
             html = html.replace(
+
                 "{{NEXT_ARTWORK}}",
+
                 next_page
+
             )
+
+            # ------------------------------------------------
+            # WRITE ARTWORK PAGE
+            # ------------------------------------------------
 
             write_file(
+
                 os.path.join(
+
                     WEBSITE_FOLDER,
+
                     "artworks",
+
                     artwork.get(
                         "file",
                         "artwork"
-                    ) + ".html"
+                    )
+                    +
+                    ".html"
+
                 ),
+
                 html
+
             )
 
+
+# ============================================================
+# ATTACHMENTS
+# ============================================================
 
 def generate_attachments(attachments):
 
@@ -471,7 +574,9 @@ def generate_attachments(attachments):
 
 <section class="post-files-card">
 
-<h2>Attachments</h2>
+<h2>
+Attachments
+</h2>
 
 """
 
@@ -495,20 +600,32 @@ def generate_attachments(attachments):
         else:
 
             name = attachment
+
             file = attachment
 
         html += f"""
 
-<a class="download-button" href="../attachments/{file}">
+<a class="download-button"
+   href="../attachments/{file}">
+
 {name}
+
 </a>
 
 """
 
-    html += "</section>"
+    html += """
+
+</section>
+
+"""
 
     return html
 
+
+# ============================================================
+# POST CONTENT
+# ============================================================
 
 def format_post_content(content):
 
@@ -521,9 +638,13 @@ def format_post_content(content):
         pattern = r"(https?://[^\s<]+)"
 
         return re.sub(
+
             pattern,
+
             r'<a href="\1" target="_blank">\1</a>',
+
             text
+
         )
 
     lines = content.splitlines()
@@ -569,6 +690,10 @@ def format_post_content(content):
     return html
 
 
+# ============================================================
+# POSTS
+# ============================================================
+
 def generate_posts():
 
     posts = load_json(
@@ -588,11 +713,16 @@ def generate_posts():
 
         cards += f"""
 
-<a class="post-card" href="posts/{post.get('file','')}.html">
+<a class="post-card"
+   href="posts/{post.get('file', '')}.html">
 
-<h2>{post.get('title','')}</h2>
+<h2>
+{post.get('title', '')}
+</h2>
 
-<p>{post.get('date','')}</p>
+<p>
+{post.get('date', '')}
+</p>
 
 </a>
 
@@ -609,11 +739,14 @@ def generate_posts():
     )
 
     write_file(
+
         os.path.join(
             WEBSITE_FOLDER,
             "posts.html"
         ),
+
         html
+
     )
 
     template = read_template(
@@ -626,8 +759,11 @@ def generate_posts():
     ):
 
         page = replace_values(
+
             template,
+
             {
+
                 "{{POST_TITLE}}":
                     post.get(
                         "title",
@@ -658,28 +794,47 @@ def generate_posts():
 
                 "{{LAST_UPDATED}}":
                     get_last_updated()
+
             }
+
         )
 
         write_file(
+
             os.path.join(
+
                 WEBSITE_FOLDER,
+
                 "posts",
+
                 post.get(
                     "file",
                     "post"
-                ) + ".html"
+                )
+                +
+                ".html"
+
             ),
+
             page
+
         )
 
+
+# ============================================================
+# GENERATED FILE LIST
+# ============================================================
 
 def get_generated_files():
 
     files = [
+
         "index.html",
+
         "arts.html",
+
         "posts.html"
+
     ]
 
     albums = load_json(
@@ -699,13 +854,18 @@ def get_generated_files():
         if folder:
 
             files.append(
+
                 os.path.join(
+
                     "albums",
+
                     folder + ".html"
+
                 ).replace(
                     "\\",
                     "/"
                 )
+
             )
 
         for artwork in album.get(
@@ -721,13 +881,18 @@ def get_generated_files():
             if artwork_file:
 
                 files.append(
+
                     os.path.join(
+
                         "artworks",
+
                         artwork_file + ".html"
+
                     ).replace(
                         "\\",
                         "/"
                     )
+
                 )
 
             display = artwork.get(
@@ -738,16 +903,24 @@ def get_generated_files():
             if display and folder:
 
                 files.append(
+
                     os.path.join(
+
                         "images",
+
                         "albums",
+
                         folder,
+
                         "display",
+
                         display
+
                     ).replace(
                         "\\",
                         "/"
                     )
+
                 )
 
             original = artwork.get(
@@ -758,16 +931,24 @@ def get_generated_files():
             if original and folder:
 
                 files.append(
+
                     os.path.join(
+
                         "images",
+
                         "albums",
+
                         folder,
+
                         "original",
+
                         original
+
                     ).replace(
                         "\\",
                         "/"
                     )
+
                 )
 
         cover = album.get(
@@ -778,16 +959,24 @@ def get_generated_files():
         if cover and folder:
 
             files.append(
+
                 os.path.join(
+
                     "images",
+
                     "albums",
+
                     folder,
+
                     "display",
+
                     cover
+
                 ).replace(
                     "\\",
                     "/"
                 )
+
             )
 
     posts = load_json(
@@ -807,50 +996,28 @@ def get_generated_files():
         if post_file:
 
             files.append(
+
                 os.path.join(
+
                     "posts",
+
                     post_file + ".html"
+
                 ).replace(
                     "\\",
                     "/"
                 )
+
             )
-
-        for attachment in post.get(
-            "attachments",
-            []
-        ):
-
-            if isinstance(
-                attachment,
-                dict
-            ):
-
-                filename = attachment.get(
-                    "file",
-                    ""
-                )
-
-            else:
-
-                filename = attachment
-
-            if filename:
-
-                files.append(
-                    os.path.join(
-                        "attachments",
-                        filename
-                    ).replace(
-                        "\\",
-                        "/"
-                    )
-                )
 
     return list(
         set(files)
     )
 
+
+# ============================================================
+# CLEAN OLD GENERATED FILES
+# ============================================================
 
 def clean_generated_website():
 
@@ -880,8 +1047,11 @@ def clean_generated_website():
         if old_file not in current_files:
 
             path = os.path.join(
+
                 WEBSITE_FOLDER,
+
                 old_file
+
             )
 
             if os.path.isfile(path):
@@ -889,11 +1059,18 @@ def clean_generated_website():
                 os.remove(path)
 
 
+# ============================================================
+# CLEAN UNUSED ATTACHMENTS
+# ============================================================
+
 def clean_unused_attachments():
 
     attachments_folder = os.path.join(
+
         WEBSITE_FOLDER,
+
         "attachments"
+
     )
 
     if not os.path.exists(
@@ -938,28 +1115,45 @@ def clean_unused_attachments():
                     filename
                 )
 
-    for root, dirs, files in os.walk(
+    for filename in os.listdir(
         attachments_folder
     ):
 
-        for filename in files:
+        path = os.path.join(
 
-            if filename not in used_files:
+            attachments_folder,
 
-                os.remove(
-                    os.path.join(
-                        root,
-                        filename
-                    )
-                )
+            filename
 
+        )
+
+        if (
+
+            filename not in used_files
+
+            and
+
+            os.path.isfile(path)
+
+        ):
+
+            os.remove(path)
+
+
+# ============================================================
+# CLEAN UNUSED ALBUM IMAGES
+# ============================================================
 
 def clean_unused_album_images():
 
     albums_folder = os.path.join(
+
         WEBSITE_FOLDER,
+
         "images",
+
         "albums"
+
     )
 
     if not os.path.exists(
@@ -1002,27 +1196,39 @@ def clean_unused_album_images():
             if display:
 
                 used_files.add(
+
                     os.path.join(
+
                         folder,
+
                         "display",
+
                         display
+
                     ).replace(
                         "\\",
                         "/"
                     )
+
                 )
 
             if original:
 
                 used_files.add(
+
                     os.path.join(
+
                         folder,
+
                         "original",
+
                         original
+
                     ).replace(
                         "\\",
                         "/"
                     )
+
                 )
 
         cover = album.get(
@@ -1033,14 +1239,20 @@ def clean_unused_album_images():
         if cover:
 
             used_files.add(
+
                 os.path.join(
+
                     folder,
+
                     "display",
+
                     cover
+
                 ).replace(
                     "\\",
                     "/"
                 )
+
             )
 
     for root, dirs, files in os.walk(
@@ -1050,13 +1262,19 @@ def clean_unused_album_images():
         for filename in files:
 
             full_path = os.path.join(
+
                 root,
+
                 filename
+
             )
 
             relative = os.path.relpath(
+
                 full_path,
+
                 albums_folder
+
             ).replace(
                 "\\",
                 "/"
@@ -1069,12 +1287,20 @@ def clean_unused_album_images():
                 )
 
 
+# ============================================================
+# CLEAN UNUSED ALBUM FOLDERS
+# ============================================================
+
 def clean_unused_album_folders():
 
     albums_folder = os.path.join(
+
         WEBSITE_FOLDER,
+
         "images",
+
         "albums"
+
     )
 
     if not os.path.exists(
@@ -1110,13 +1336,21 @@ def clean_unused_album_folders():
     ):
 
         path = os.path.join(
+
             albums_folder,
+
             folder
+
         )
 
         if (
+
             os.path.isdir(path)
-            and folder not in used
+
+            and
+
+            folder not in used
+
         ):
 
             shutil.rmtree(
@@ -1124,11 +1358,18 @@ def clean_unused_album_folders():
             )
 
 
+# ============================================================
+# CLEAN EMPTY FOLDERS
+# ============================================================
+
 def clean_empty_folders():
 
     for root, dirs, files in os.walk(
+
         WEBSITE_FOLDER,
+
         topdown=False
+
     ):
 
         if root == WEBSITE_FOLDER:
@@ -1139,42 +1380,67 @@ def clean_empty_folders():
 
             try:
 
-                os.rmdir(
-                    root
-                )
+                os.rmdir(root)
 
             except OSError:
 
                 pass
 
 
+# ============================================================
+# SAVE GENERATED FILE LIST
+# ============================================================
+
 def save_generated_files():
 
     os.makedirs(
+
         os.path.dirname(
             GENERATED_LIST
         ),
+
         exist_ok=True
+
     )
 
     with open(
+
         GENERATED_LIST,
+
         "w",
+
         encoding="utf-8"
+
     ) as file:
 
         json.dump(
+
             {
-                "files": get_generated_files()
+
+                "files":
+                    get_generated_files()
+
             },
+
             file,
+
             indent=4
+
         )
 
 
+# ============================================================
+# MAIN GENERATOR
+# ============================================================
+
 def generate_website():
 
+    # Remove files that no longer exist
+    # in the JSON data.
+
     clean_generated_website()
+
+    # Generate website pages.
 
     generate_index()
 
@@ -1186,6 +1452,8 @@ def generate_website():
 
     generate_posts()
 
+    # Remove unused assets.
+
     clean_unused_attachments()
 
     clean_unused_album_images()
@@ -1193,5 +1461,7 @@ def generate_website():
     clean_unused_album_folders()
 
     clean_empty_folders()
+
+    # Save the current generated file list.
 
     save_generated_files()
