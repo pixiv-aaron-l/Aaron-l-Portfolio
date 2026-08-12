@@ -24,7 +24,11 @@ body {
     color:var(--text);
     font-family:Arial,Helvetica,sans-serif;
 
+    /* Force desktop-style layout */
+    min-width:1000px;
+
 }
+
 
 
 /* HEADER */
@@ -87,6 +91,7 @@ nav a.active {
 }
 
 
+
 /* MAIN */
 
 main {
@@ -104,6 +109,7 @@ h2 {
     color:var(--accent-hover);
 
 }
+
 
 
 /* ABOUT */
@@ -139,6 +145,7 @@ h2 {
     color:var(--accent-hover);
 
 }
+
 
 
 /* ALBUM LIST */
@@ -197,6 +204,7 @@ h2 {
 }
 
 
+
 .album-cover {
 
     width:180px;
@@ -219,6 +227,7 @@ h2 {
 }
 
 
+
 /* ALBUM ARTWORK GRID */
 
 .artwork-grid {
@@ -226,6 +235,7 @@ h2 {
     display:grid;
     grid-template-columns:repeat(10,1fr);
     gap:15px;
+
     align-items:stretch;
 
 }
@@ -238,6 +248,7 @@ h2 {
     text-decoration:none;
     border-radius:8px;
     overflow:hidden;
+
     display:flex;
     flex-direction:column;
 
@@ -267,8 +278,10 @@ h2 {
 .artwork-info {
 
     padding:10px;
+
     display:flex;
     flex-direction:column;
+
     flex:1;
 
 }
@@ -285,6 +298,7 @@ h2 {
 .artwork-info-bottom {
 
     margin-top:auto;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -299,6 +313,7 @@ h2 {
     font-size:12px;
 
 }
+
 
 
 /* ARTWORK PAGE */
@@ -324,6 +339,7 @@ h2 {
 .artwork-display img {
 
     width:100%;
+    max-width:100%;
     height:auto;
     display:block;
 
@@ -364,6 +380,7 @@ h2 {
     text-decoration:none;
 
 }
+
 
 
 /* POSTS */
@@ -409,29 +426,8 @@ h2 {
 }
 
 
-/* DOWNLOAD ATTACHMENTS */
 
-.download-button {
-
-    display:inline-block;
-    margin-top:20px;
-    padding:12px 20px;
-    background:var(--accent);
-    color:white;
-    text-decoration:none;
-    border-radius:8px;
-
-}
-
-
-.download-button:hover {
-
-    background:var(--accent-hover);
-
-}
-
-
-/* POST PAGE */
+/* POST CONTENT */
 
 .post-main {
 
@@ -482,7 +478,6 @@ h2 {
     width:100%;
     margin:30px 0;
     text-align:center;
-    overflow:hidden;
 
 }
 
@@ -490,16 +485,40 @@ h2 {
 .post-inline-image img {
 
     display:block;
+
     max-width:100%;
     width:auto;
     height:auto;
+
     margin:0 auto;
+
     border-radius:8px;
 
 }
 
 
-/* ATTACHMENTS */
+
+/* DOWNLOAD ATTACHMENTS */
+
+.download-button {
+
+    display:inline-block;
+    margin-top:20px;
+    padding:12px 20px;
+    background:var(--accent);
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+
+}
+
+
+.download-button:hover {
+
+    background:var(--accent-hover);
+
+}
+
 
 .post-files-card .download-button {
 
@@ -508,6 +527,7 @@ h2 {
     margin-top:15px;
 
 }
+
 
 
 /* POST NAVIGATION */
@@ -537,6 +557,7 @@ h2 {
 }
 
 
+
 /* FOOTER */
 
 footer {
@@ -544,100 +565,5 @@ footer {
     text-align:center;
     padding:30px;
     color:var(--secondary);
-
-}
-
-
-/* RESPONSIVE */
-
-@media(max-width:1000px) {
-
-    .artwork-grid {
-
-        grid-template-columns:repeat(6,1fr);
-
-    }
-
-
-    .artwork-page {
-
-        grid-template-columns:1fr;
-
-    }
-
-}
-
-
-@media(max-width:700px) {
-
-    header {
-
-        flex-direction:column;
-        gap:20px;
-        text-align:center;
-
-    }
-
-
-    nav {
-
-        position:static;
-        transform:none;
-
-    }
-
-
-    .album-card {
-
-        flex-direction:column-reverse;
-        align-items:flex-start;
-
-    }
-
-
-    .album-cover {
-
-        width:100%;
-        height:auto;
-        aspect-ratio:16/9;
-        margin-bottom:20px;
-
-    }
-
-
-    .artwork-grid {
-
-        grid-template-columns:repeat(3,1fr);
-
-    }
-
-
-    .post-page {
-
-        padding:20px;
-
-    }
-
-
-    .post-content-card {
-
-        padding:20px;
-
-    }
-
-
-    .post-inline-image {
-
-        margin:25px 0;
-
-    }
-
-
-    .post-inline-image img {
-
-        max-width:100%;
-        height:auto;
-
-    }
 
 }
