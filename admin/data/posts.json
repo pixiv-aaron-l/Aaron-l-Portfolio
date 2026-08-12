@@ -1,7 +1,7 @@
 {
     "posts": [
         {
-            "title": "bypass nicovideo region restriction",
+            "title": "Bypass nicovideo region restriction",
             "file": "bypass-nicovideo-region-restriction",
             "date": "12/08/2026",
             "content": "alright so the first thing we'll look for is an user agent switcher extension on your web browser, the one I use as an OperaGX is https://addons.opera.com/fr/extensions/details/user-agent-switcher-8/ \n\n[[IMAGE:Capture d'écran 2026-08-12 064712.png]]\n\nthen you'll go in your small extension menu and you should see random bullshits but more importantly your own user agent string \n\n[[IMAGE:Capture d'écran 2026-08-12 074323.png]]\n\nand we will replace this thing with the google bot agent string which is : \n\nMozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/W.X.Y.Z Safari/537.36\n\nand it will allow you to go on nico video and watch their stuffs\n\n[[IMAGE:Capture d'écran 2026-08-12 065230.png]]\n\nwhen you are done with browsing, you should put back your good user agent string, which I can do with the reset button and then you'll be able to browse normal websites again ! I hope this will help people ",
