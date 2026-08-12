@@ -17,28 +17,43 @@
 }
 
 
-body {
+html {
 
-    margin:0;
-    background:var(--background);
-    color:var(--text);
-    font-family:Arial,Helvetica,sans-serif;
-
-    /* Force desktop-style layout */
     min-width:1000px;
 
 }
 
 
+body {
 
-/* HEADER */
+    margin:0;
+    min-width:1000px;
+
+    background:var(--background);
+    color:var(--text);
+
+    font-family:Arial,Helvetica,sans-serif;
+
+}
+
+
+
+/* =========================
+   HEADER
+   ========================= */
 
 header {
 
     position:relative;
+
+    min-width:1000px;
+
     background:#151515;
+
     border-bottom:2px solid var(--accent);
+
     padding:20px 40px;
+
     display:flex;
     align-items:center;
 
@@ -48,9 +63,13 @@ header {
 .site-title {
 
     color:white;
+
     text-decoration:none;
+
     font-size:28px;
+
     font-weight:bold;
+
     z-index:2;
 
 }
@@ -66,10 +85,16 @@ header {
 nav {
 
     position:absolute;
+
     left:50%;
+
     transform:translateX(-50%);
+
     display:flex;
+
     gap:40px;
+
+    white-space:nowrap;
 
 }
 
@@ -77,7 +102,9 @@ nav {
 nav a {
 
     color:var(--text);
+
     text-decoration:none;
+
     font-size:18px;
 
 }
@@ -92,12 +119,18 @@ nav a.active {
 
 
 
-/* MAIN */
+/* =========================
+   MAIN
+   ========================= */
 
 main {
 
-    max-width:1200px;
-    margin:auto;
+    width:1200px;
+
+    max-width:none;
+
+    margin:0 auto;
+
     padding:40px 20px;
 
 }
@@ -112,12 +145,16 @@ h2 {
 
 
 
-/* ABOUT */
+/* =========================
+   ABOUT
+   ========================= */
 
 .box {
 
     background:var(--panel);
+
     padding:25px;
+
     border-radius:12px;
 
 }
@@ -126,7 +163,9 @@ h2 {
 .links {
 
     display:flex;
+
     flex-direction:column;
+
     gap:12px;
 
 }
@@ -135,6 +174,7 @@ h2 {
 .links a {
 
     color:var(--text);
+
     text-decoration:none;
 
 }
@@ -148,12 +188,16 @@ h2 {
 
 
 
-/* ALBUM LIST */
+/* =========================
+   ALBUM LIST
+   ========================= */
 
 .album-list {
 
     display:flex;
+
     flex-direction:column;
+
     gap:25px;
 
 }
@@ -162,13 +206,21 @@ h2 {
 .album-card {
 
     background:var(--panel);
+
     border-radius:12px;
+
     color:var(--text);
+
     text-decoration:none;
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
     padding:25px;
+
     min-height:180px;
 
 }
@@ -184,6 +236,7 @@ h2 {
 .album-info {
 
     flex:1;
+
     padding-right:30px;
 
 }
@@ -204,14 +257,18 @@ h2 {
 }
 
 
-
 .album-cover {
 
     width:180px;
+
     height:180px;
+
     background:#242424;
+
     border-radius:8px;
+
     overflow:hidden;
+
     flex-shrink:0;
 
 }
@@ -220,20 +277,27 @@ h2 {
 .album-cover img {
 
     width:100%;
+
     height:100%;
+
     object-fit:cover;
+
     display:block;
 
 }
 
 
 
-/* ALBUM ARTWORK GRID */
+/* =========================
+   ALBUM ARTWORK GRID
+   ========================= */
 
 .artwork-grid {
 
     display:grid;
+
     grid-template-columns:repeat(10,1fr);
+
     gap:15px;
 
     align-items:stretch;
@@ -244,12 +308,17 @@ h2 {
 .artwork-card {
 
     background:var(--panel);
+
     color:var(--text);
+
     text-decoration:none;
+
     border-radius:8px;
+
     overflow:hidden;
 
     display:flex;
+
     flex-direction:column;
 
 }
@@ -258,8 +327,11 @@ h2 {
 .artwork-thumbnail {
 
     width:100%;
+
     aspect-ratio:1 / 1;
+
     overflow:hidden;
+
     background:#242424;
 
 }
@@ -268,8 +340,11 @@ h2 {
 .artwork-thumbnail img {
 
     width:100%;
+
     height:100%;
+
     object-fit:cover;
+
     display:block;
 
 }
@@ -280,6 +355,7 @@ h2 {
     padding:10px;
 
     display:flex;
+
     flex-direction:column;
 
     flex:1;
@@ -290,6 +366,7 @@ h2 {
 .artwork-info h3 {
 
     margin:0 0 12px 0;
+
     font-size:14px;
 
 }
@@ -300,7 +377,9 @@ h2 {
     margin-top:auto;
 
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
 
 }
@@ -310,18 +389,23 @@ h2 {
 .artwork-date {
 
     color:var(--secondary);
+
     font-size:12px;
 
 }
 
 
 
-/* ARTWORK PAGE */
+/* =========================
+   ARTWORK PAGE
+   ========================= */
 
 .artwork-page {
 
     display:grid;
+
     grid-template-columns:2fr 1fr;
+
     gap:35px;
 
 }
@@ -330,7 +414,9 @@ h2 {
 .artwork-display {
 
     background:var(--panel);
+
     border-radius:12px;
+
     overflow:hidden;
 
 }
@@ -338,10 +424,13 @@ h2 {
 
 .artwork-display img {
 
-    width:100%;
-    max-width:100%;
-    height:auto;
     display:block;
+
+    width:100%;
+
+    max-width:100%;
+
+    height:auto;
 
 }
 
@@ -349,7 +438,9 @@ h2 {
 .artwork-details {
 
     background:var(--panel);
+
     padding:30px;
+
     border-radius:12px;
 
 }
@@ -365,7 +456,9 @@ h2 {
 .artwork-navigation {
 
     margin-top:35px;
+
     display:flex;
+
     justify-content:space-between;
 
 }
@@ -374,21 +467,29 @@ h2 {
 .artwork-navigation a {
 
     background:var(--panel);
+
     padding:12px 20px;
+
     border-radius:8px;
+
     color:var(--text);
+
     text-decoration:none;
 
 }
 
 
 
-/* POSTS */
+/* =========================
+   POSTS
+   ========================= */
 
 .post-list {
 
     display:flex;
+
     flex-direction:column;
+
     gap:25px;
 
 }
@@ -398,6 +499,7 @@ h2 {
 .post-page {
 
     background:var(--panel);
+
     border-radius:12px;
 
 }
@@ -406,7 +508,9 @@ h2 {
 .post-card {
 
     padding:30px;
+
     color:var(--text);
+
     text-decoration:none;
 
 }
@@ -427,11 +531,15 @@ h2 {
 
 
 
-/* POST CONTENT */
+/* =========================
+   POST PAGE
+   ========================= */
 
 .post-main {
 
-    max-width:900px;
+    width:900px;
+
+    max-width:none;
 
 }
 
@@ -439,6 +547,7 @@ h2 {
 .post-hero {
 
     text-align:center;
+
     margin-bottom:40px;
 
 }
@@ -447,6 +556,7 @@ h2 {
 .post-hero h1 {
 
     font-size:42px;
+
     margin-bottom:15px;
 
 }
@@ -456,8 +566,11 @@ h2 {
 .post-files-card {
 
     background:var(--panel);
+
     padding:35px;
+
     border-radius:12px;
+
     margin-bottom:30px;
 
 }
@@ -466,18 +579,30 @@ h2 {
 .post-content {
 
     line-height:1.8;
+
     font-size:18px;
+
+    overflow-wrap:break-word;
 
 }
 
 
-/* INLINE POST IMAGES */
+
+/* =========================
+   INLINE POST IMAGES
+   ========================= */
 
 .post-inline-image {
 
     width:100%;
+
+    max-width:100%;
+
     margin:30px 0;
+
     text-align:center;
+
+    overflow:hidden;
 
 }
 
@@ -486,8 +611,10 @@ h2 {
 
     display:block;
 
-    max-width:100%;
     width:auto;
+
+    max-width:100%;
+
     height:auto;
 
     margin:0 auto;
@@ -498,16 +625,24 @@ h2 {
 
 
 
-/* DOWNLOAD ATTACHMENTS */
+/* =========================
+   ATTACHMENTS
+   ========================= */
 
 .download-button {
 
     display:inline-block;
+
     margin-top:20px;
+
     padding:12px 20px;
+
     background:var(--accent);
+
     color:white;
+
     text-decoration:none;
+
     border-radius:8px;
 
 }
@@ -523,14 +658,18 @@ h2 {
 .post-files-card .download-button {
 
     display:block;
+
     width:max-content;
+
     margin-top:15px;
 
 }
 
 
 
-/* POST NAVIGATION */
+/* =========================
+   POST NAVIGATION
+   ========================= */
 
 .post-navigation {
 
@@ -542,9 +681,13 @@ h2 {
 .post-navigation a {
 
     background:var(--panel);
+
     padding:12px 20px;
+
     border-radius:8px;
+
     color:var(--text);
+
     text-decoration:none;
 
 }
@@ -558,12 +701,18 @@ h2 {
 
 
 
-/* FOOTER */
+/* =========================
+   FOOTER
+   ========================= */
 
 footer {
 
+    min-width:1000px;
+
     text-align:center;
+
     padding:30px;
+
     color:var(--secondary);
 
 }
