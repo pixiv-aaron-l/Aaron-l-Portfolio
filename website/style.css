@@ -232,7 +232,6 @@ h2 {
     display:grid;
     grid-template-columns:repeat(10,1fr);
     gap:15px;
-
     align-items:stretch;
 
 }
@@ -310,6 +309,7 @@ h2 {
     font-size:12px;
 
 }
+
 
 
 /* ARTWORK PAGE */
@@ -486,6 +486,31 @@ h2 {
 }
 
 
+
+/* INLINE POST IMAGES */
+
+.post-inline-image {
+
+    width:100%;
+    margin:25px 0;
+    text-align:center;
+    overflow:hidden;
+
+}
+
+
+.post-inline-image img {
+
+    display:block;
+    max-width:100%;
+    width:auto;
+    height:auto;
+    margin:0 auto;
+
+}
+
+
+
 .post-files-card .download-button {
 
     display:block;
@@ -598,5 +623,33 @@ footer {
 
     }
 
-}
 
+    .post-content-card {
+
+        padding:20px;
+
+    }
+
+
+    .post-content {
+
+        font-size:17px;
+
+    }
+
+
+    .post-inline-image {
+
+        margin:20px 0;
+
+    }
+
+
+    .post-inline-image img {
+
+        max-width:100%;
+        height:auto;
+
+    }
+
+}

@@ -503,7 +503,6 @@ document.addEventListener("keydown", function(event) {{
 
     }}
 
-
     if (
         event.key === "ArrowRight"
         &&
@@ -622,61 +621,129 @@ def format_post_content(content):
 
         return ""
 
-    def convert_links(text):
+    pattern = r"\[\[IMAGE:([^\]]+)\]\]"
 
-        pattern = r"(https?://[^\s<]+)"
-
-        return re.sub(
-
-            pattern,
-
-            r'<a href="\1" target="_blank">\1</a>',
-
-            text
-
-        )
-
-    lines = content.splitlines()
+    parts = re.split(
+        pattern,
+        content
+    )
 
     html = ""
 
-    paragraph = []
+    for index, part in enumerate(parts):
 
-    for line in lines:
+        if not part:
 
-        line = line.strip()
+            continue
 
-        if line:
+        # IMAGE
+        if index % 2 == 1:
 
-            paragraph.append(
-                convert_links(line)
-            )
+            filename = part.strip()
 
+            if not filename:
+
+                continue
+
+            html += f"""
+
+<div class="post-inline-image">
+
+<img
+    src="../images/posts/{filename}"
+    alt=""
+>
+
+</div>
+
+"""
+
+        # TEXT
         else:
 
-            if paragraph:
+            text = part.strip()
+
+            if not text:
+
+                continue
+
+            def convert_links(match):
+
+                url = match.group(1)
+
+                return (
+                    f'<a href="{url}" '
+                    f'target="_blank" '
+                    f'rel="noopener noreferrer">'
+                    f'{url}'
+                    f'</a>'
+                )
+
+            text = re.sub(
+
+                r"(https?://[^\s<]+)",
+
+                convert_links,
+
+                text
+
+            )
+
+            paragraphs = re.split(
+                r"\n\s*\n",
+                text
+            )
+
+            for paragraph in paragraphs:
+
+                paragraph = paragraph.strip()
+
+                if not paragraph:
+
+                    continue
+
+                paragraph = paragraph.replace(
+                    "\n",
+                    "<br>"
+                )
 
                 html += f"""
 
 <p>
-{" ".join(paragraph)}
-</p>
-
-"""
-
-                paragraph = []
-
-    if paragraph:
-
-        html += f"""
-
-<p>
-{" ".join(paragraph)}
+{paragraph}
 </p>
 
 """
 
     return html
+
+
+def get_inline_post_images(content):
+
+    if not content:
+
+        return []
+
+    pattern = r"\[\[IMAGE:([^\]]+)\]\]"
+
+    matches = re.findall(
+        pattern,
+        content
+    )
+
+    images = []
+
+    for filename in matches:
+
+        filename = filename.strip()
+
+        if filename and filename not in images:
+
+            images.append(
+                filename
+            )
+
+    return images
 
 
 def generate_posts():
@@ -964,6 +1031,38 @@ def get_generated_files():
 
         )
 
+        # INLINE POST IMAGES
+
+        inline_images = get_inline_post_images(
+
+            post.get(
+                "content",
+                ""
+            )
+
+        )
+
+        for filename in inline_images:
+
+            files.append(
+
+                os.path.join(
+
+                    "images",
+
+                    "posts",
+
+                    filename
+
+                ).replace(
+                    "\\",
+                    "/"
+                )
+
+            )
+
+        # NORMAL ATTACHMENTS
+
         for attachment in post.get(
             "attachments",
             []
@@ -1101,6 +1200,70 @@ def clean_unused_attachments():
         ):
 
             os.remove(path)
+
+
+def clean_unused_post_images():
+
+    posts_images_folder = os.path.join(
+        WEBSITE_FOLDER,
+        "images",
+        "posts"
+    )
+
+    if not os.path.exists(
+        posts_images_folder
+    ):
+
+        return
+
+    used_files = set()
+
+    posts = load_json(
+        "posts.json"
+    )
+
+    for post in posts.get(
+        "posts",
+        []
+    ):
+
+        for filename in get_inline_post_images(
+
+            post.get(
+                "content",
+                ""
+            )
+
+        ):
+
+            used_files.add(
+                filename
+            )
+
+    for root, dirs, files in os.walk(
+        posts_images_folder
+    ):
+
+        for filename in files:
+
+            full_path = os.path.join(
+                root,
+                filename
+            )
+
+            relative = os.path.relpath(
+                full_path,
+                posts_images_folder
+            ).replace(
+                "\\",
+                "/"
+            )
+
+            if relative not in used_files:
+
+                os.remove(
+                    full_path
+                )
 
 
 def clean_unused_album_images():
@@ -1344,6 +1507,8 @@ def generate_website():
     generate_posts()
 
     clean_unused_attachments()
+
+    clean_unused_post_images()
 
     clean_unused_album_images()
 
