@@ -27,7 +27,6 @@ body {
 }
 
 
-
 /* HEADER */
 
 header {
@@ -88,7 +87,6 @@ nav a.active {
 }
 
 
-
 /* MAIN */
 
 main {
@@ -106,7 +104,6 @@ h2 {
     color:var(--accent-hover);
 
 }
-
 
 
 /* ABOUT */
@@ -142,7 +139,6 @@ h2 {
     color:var(--accent-hover);
 
 }
-
 
 
 /* ALBUM LIST */
@@ -201,7 +197,6 @@ h2 {
 }
 
 
-
 .album-cover {
 
     width:180px;
@@ -224,7 +219,6 @@ h2 {
 }
 
 
-
 /* ALBUM ARTWORK GRID */
 
 .artwork-grid {
@@ -244,7 +238,6 @@ h2 {
     text-decoration:none;
     border-radius:8px;
     overflow:hidden;
-
     display:flex;
     flex-direction:column;
 
@@ -274,10 +267,8 @@ h2 {
 .artwork-info {
 
     padding:10px;
-
     display:flex;
     flex-direction:column;
-
     flex:1;
 
 }
@@ -294,7 +285,6 @@ h2 {
 .artwork-info-bottom {
 
     margin-top:auto;
-
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -309,7 +299,6 @@ h2 {
     font-size:12px;
 
 }
-
 
 
 /* ARTWORK PAGE */
@@ -335,6 +324,7 @@ h2 {
 .artwork-display img {
 
     width:100%;
+    height:auto;
     display:block;
 
 }
@@ -374,7 +364,6 @@ h2 {
     text-decoration:none;
 
 }
-
 
 
 /* POSTS */
@@ -420,6 +409,7 @@ h2 {
 }
 
 
+/* DOWNLOAD ATTACHMENTS */
 
 .download-button {
 
@@ -439,7 +429,6 @@ h2 {
     background:var(--accent-hover);
 
 }
-
 
 
 /* POST PAGE */
@@ -486,13 +475,12 @@ h2 {
 }
 
 
-
 /* INLINE POST IMAGES */
 
 .post-inline-image {
 
     width:100%;
-    margin:25px 0;
+    margin:30px 0;
     text-align:center;
     overflow:hidden;
 
@@ -506,10 +494,12 @@ h2 {
     width:auto;
     height:auto;
     margin:0 auto;
+    border-radius:8px;
 
 }
 
 
+/* ATTACHMENTS */
 
 .post-files-card .download-button {
 
@@ -519,6 +509,8 @@ h2 {
 
 }
 
+
+/* POST NAVIGATION */
 
 .post-navigation {
 
@@ -545,7 +537,6 @@ h2 {
 }
 
 
-
 /* FOOTER */
 
 footer {
@@ -555,7 +546,6 @@ footer {
     color:var(--secondary);
 
 }
-
 
 
 /* RESPONSIVE */
@@ -578,9 +568,7 @@ footer {
 }
 
 
-
 @media(max-width:700px) {
-
 
     header {
 
@@ -624,6 +612,13 @@ footer {
     }
 
 
+    .post-page {
+
+        padding:20px;
+
+    }
+
+
     .post-content-card {
 
         padding:20px;
@@ -631,16 +626,9 @@ footer {
     }
 
 
-    .post-content {
-
-        font-size:17px;
-
-    }
-
-
     .post-inline-image {
 
-        margin:20px 0;
+        margin:25px 0;
 
     }
 

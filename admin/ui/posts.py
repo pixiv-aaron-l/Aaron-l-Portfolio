@@ -55,7 +55,9 @@ class Page(QWidget):
             layout
         )
 
-        # LEFT SIDE
+        # =========================
+        # LEFT
+        # =========================
 
         left = QVBoxLayout()
 
@@ -101,7 +103,9 @@ class Page(QWidget):
             self.move_down_button
         )
 
-        # RIGHT SIDE
+        # =========================
+        # RIGHT
+        # =========================
 
         right = QVBoxLayout()
 
@@ -149,7 +153,9 @@ class Page(QWidget):
             self.content_input
         )
 
-        # INLINE IMAGE BUTTON
+        # =========================
+        # INLINE IMAGE
+        # =========================
 
         self.insert_image_button = QPushButton(
             "Insert Image"
@@ -159,7 +165,9 @@ class Page(QWidget):
             self.insert_image_button
         )
 
+        # =========================
         # ATTACHMENTS
+        # =========================
 
         right.addWidget(
             QLabel("Attachments")
@@ -187,6 +195,10 @@ class Page(QWidget):
             self.remove_attachment_button
         )
 
+        # =========================
+        # SAVE
+        # =========================
+
         self.save_button = QPushButton(
             "Save Post"
         )
@@ -206,6 +218,10 @@ class Page(QWidget):
         )
 
         self.current_post = -1
+
+        # =========================
+        # SIGNALS
+        # =========================
 
         self.refresh()
 
@@ -245,6 +261,9 @@ class Page(QWidget):
             self.insert_image
         )
 
+    # =========================
+    # REFRESH
+    # =========================
 
     def refresh(self):
 
@@ -266,13 +285,20 @@ class Page(QWidget):
                 )
             )
 
+    # =========================
+    # CREATE
+    # =========================
 
     def create_post(self):
 
         title, ok = QInputDialog.getText(
+
             self,
+
             "Create Post",
+
             "Title:"
+
         )
 
         if not ok or not title:
@@ -313,6 +339,13 @@ class Page(QWidget):
 
         self.refresh()
 
+        self.post_list.setCurrentRow(
+            len(data["posts"]) - 1
+        )
+
+    # =========================
+    # LOAD
+    # =========================
 
     def load_post(self, index):
 
@@ -381,6 +414,9 @@ class Page(QWidget):
                     attachment
                 )
 
+    # =========================
+    # MOVE UP
+    # =========================
 
     def move_up(self):
 
@@ -415,6 +451,9 @@ class Page(QWidget):
             index - 1
         )
 
+    # =========================
+    # MOVE DOWN
+    # =========================
 
     def move_down(self):
 
@@ -449,66 +488,9 @@ class Page(QWidget):
             index + 1
         )
 
-
-    def add_attachment(self):
-
-        files, _ = QFileDialog.getOpenFileNames(
-            self,
-            "Select Attachments"
-        )
-
-        if not files:
-
-            return
-
-        os.makedirs(
-            ATTACHMENTS_FOLDER,
-            exist_ok=True
-        )
-
-        for file in files:
-
-            filename = os.path.basename(
-                file
-            )
-
-            destination = os.path.join(
-                ATTACHMENTS_FOLDER,
-                filename
-            )
-
-            shutil.copy2(
-                file,
-                destination
-            )
-
-            existing = [
-
-                self.attachments_list.item(i).text()
-
-                for i in range(
-                    self.attachments_list.count()
-                )
-
-            ]
-
-            if filename not in existing:
-
-                self.attachments_list.addItem(
-                    filename
-                )
-
-
-    def remove_attachment(self):
-
-        row = self.attachments_list.currentRow()
-
-        if row >= 0:
-
-            self.attachments_list.takeItem(
-                row
-            )
-
+    # =========================
+    # INSERT INLINE IMAGE
+    # =========================
 
     def insert_image(self):
 
@@ -529,8 +511,11 @@ class Page(QWidget):
             return
 
         os.makedirs(
+
             POST_IMAGES_FOLDER,
+
             exist_ok=True
+
         )
 
         filename = os.path.basename(
@@ -538,50 +523,152 @@ class Page(QWidget):
         )
 
         destination = os.path.join(
+
             POST_IMAGES_FOLDER,
+
             filename
+
         )
 
         try:
 
             shutil.copy2(
+
                 file,
+
                 destination
 
             )
 
         except Exception as error:
 
-            QMessageBox.critical(
+            QMessageBox.warning(
 
                 self,
 
-                "Image Error",
+                "Error",
 
-                str(error)
+                f"Could not copy image:\n{error}"
 
             )
 
             return
 
-        marker = (
-            "\n\n"
-            "[[IMAGE:"
-            + filename
-            + "]]"
-            "\n\n"
-        )
-
         cursor = self.content_input.textCursor()
 
         cursor.insertText(
-            marker
+
+            f"[[IMAGE:{filename}]]"
+
         )
 
         self.content_input.setTextCursor(
             cursor
         )
 
+    # =========================
+    # ATTACHMENT
+    # =========================
+
+    def add_attachment(self):
+
+        files, _ = QFileDialog.getOpenFileNames(
+
+            self,
+
+            "Select Attachments"
+
+        )
+
+        if not files:
+
+            return
+
+        os.makedirs(
+
+            ATTACHMENTS_FOLDER,
+
+            exist_ok=True
+
+        )
+
+        existing = [
+
+            self.attachments_list.item(i).text()
+
+            for i in range(
+
+                self.attachments_list.count()
+
+            )
+
+        ]
+
+        for file in files:
+
+            filename = os.path.basename(
+                file
+            )
+
+            destination = os.path.join(
+
+                ATTACHMENTS_FOLDER,
+
+                filename
+
+            )
+
+            try:
+
+                shutil.copy2(
+
+                    file,
+
+                    destination
+
+                )
+
+            except Exception as error:
+
+                QMessageBox.warning(
+
+                    self,
+
+                    "Error",
+
+                    f"Could not copy attachment:\n{error}"
+
+                )
+
+                continue
+
+            if filename not in existing:
+
+                self.attachments_list.addItem(
+                    filename
+                )
+
+                existing.append(
+                    filename
+                )
+
+    # =========================
+    # REMOVE ATTACHMENT
+    # =========================
+
+    def remove_attachment(self):
+
+        row = self.attachments_list.currentRow()
+
+        if row >= 0:
+
+            self.attachments_list.takeItem(
+                row
+            )
+
+    # =========================
+    # SAVE
+    # =========================
 
     def save_post(self):
 
@@ -601,15 +688,25 @@ class Page(QWidget):
 
         post["date"] = self.date_input.text()
 
-        post["content"] = self.content_input.toPlainText()
+        post["content"] = (
+            self.content_input.toPlainText()
+        )
 
         post["attachments"] = []
 
         for i in range(
+
             self.attachments_list.count()
+
         ):
 
-            filename = self.attachments_list.item(i).text()
+            filename = (
+
+                self.attachments_list
+                .item(i)
+                .text()
+
+            )
 
             post["attachments"].append({
 
@@ -620,16 +717,32 @@ class Page(QWidget):
             })
 
         save_json(
+
             "posts.json",
+
             data
+
+        )
+
+        self.refresh()
+
+        self.post_list.setCurrentRow(
+            self.current_post
         )
 
         QMessageBox.information(
+
             self,
+
             "Saved",
+
             "Post saved successfully."
+
         )
 
+    # =========================
+    # DELETE
+    # =========================
 
     def delete_post(self):
 
@@ -664,10 +777,26 @@ class Page(QWidget):
             data
         )
 
+        self.current_post = -1
+
+        self.title_input.clear()
+
+        self.file_input.clear()
+
+        self.date_input.clear()
+
+        self.content_input.clear()
+
+        self.attachments_list.clear()
+
         self.refresh()
 
         QMessageBox.information(
+
             self,
+
             "Deleted",
+
             "Post deleted."
+
         )
