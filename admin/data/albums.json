@@ -5,17 +5,27 @@
             "folder": "touhou-artworks",
             "date": "2026 - now",
             "description": "artworks featuring characters from Touhou Project",
-            "cover": "62 ~ traces of Sariel.jpg",
+            "cover": "63 ~ Sekibanki .jpg",
             "artworks": [
                 {
                     "title": "traces of Sariel",
                     "file": "traces-of-sariel",
                     "display": "62 ~ traces of Sariel.jpg",
                     "original": "62 ~ traces of Sariel.png",
-                    "number": "1",
+                    "number": 1,
                     "date": "02/08/26",
                     "time_spent": "6 hours 10",
                     "notes": "this is a design for Sariel inspired by the concept of traces of old gods in the Fear and Hunger video games"
+                },
+                {
+                    "title": "Sekibanki",
+                    "file": "sekibanki",
+                    "display": "63 ~ Sekibanki .jpg",
+                    "original": "63 ~ Sekibanki .png",
+                    "number": "2",
+                    "date": "15/08/26",
+                    "time_spent": "6 hours",
+                    "notes": "my first illustration for Sekibanki ! I am trying to do better on the artstyle and it took only 6 hours but I am lazy and did other things lately. love the headless yokai"
                 }
             ]
         },
