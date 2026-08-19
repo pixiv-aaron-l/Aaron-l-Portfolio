@@ -1,3 +1,7 @@
 if you go in my code maybe your admin crashed over upload. open powershell in your project file (the one with admin and website folder) and you typer this and enter :
 
 git add . ; git commit -m "Manual website update" ; git push
+
+if you want to upload zip enter every of these lines in the project folder 's powershell : 
+
+git lfs install; git lfs track "*.zip"; git add .gitattributes; git add .; git commit -m "Manual website update"; git push
