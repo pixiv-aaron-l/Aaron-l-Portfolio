@@ -2,15 +2,20 @@ import os
 import json
 import re
 import shutil
+
 from datetime import datetime
+from urllib.parse import quote
 
 from tools.json_manager import load_json
 
 
+# ============================================================
+# PATHS
+# ============================================================
+
 BASE_FOLDER = os.path.dirname(
     os.path.dirname(__file__)
 )
-
 
 WEBSITE_FOLDER = os.path.join(
     BASE_FOLDER,
@@ -18,12 +23,10 @@ WEBSITE_FOLDER = os.path.join(
     "website"
 )
 
-
 TEMPLATE_FOLDER = os.path.join(
     BASE_FOLDER,
     "templates"
 )
-
 
 GENERATED_LIST = os.path.join(
     BASE_FOLDER,
@@ -31,6 +34,29 @@ GENERATED_LIST = os.path.join(
     "generated_files.json"
 )
 
+
+# ============================================================
+# GITHUB CONFIGURATION
+# ============================================================
+
+GITHUB_OWNER = "pixiv-aaron-l"
+
+GITHUB_REPOSITORY = "Aaron-l-Portfolio"
+
+GITHUB_BRANCH = "main"
+
+
+GITHUB_MEDIA_BASE = (
+    f"https://media.githubusercontent.com/media/"
+    f"{GITHUB_OWNER}/"
+    f"{GITHUB_REPOSITORY}/"
+    f"{GITHUB_BRANCH}/"
+)
+
+
+# ============================================================
+# TEMPLATE FUNCTIONS
+# ============================================================
 
 def read_template(name):
 
@@ -80,6 +106,51 @@ def get_last_updated():
 
     return datetime.now().strftime(
         "%d/%m/%Y"
+    )
+
+
+# ============================================================
+# ATTACHMENT URL
+# ============================================================
+
+def get_attachment_url(filename):
+
+    if not filename:
+
+        return ""
+
+
+    # ZIP files are served through GitHub's
+    # media/LFS endpoint.
+
+    if filename.lower().endswith(".zip"):
+
+        encoded_filename = quote(
+            filename,
+            safe=""
+        )
+
+        return (
+            GITHUB_MEDIA_BASE
+            +
+            "website/attachments/"
+            +
+            encoded_filename
+        )
+
+
+    # Everything else keeps the normal
+    # GitHub Pages attachment path.
+
+    encoded_filename = quote(
+        filename,
+        safe=""
+    )
+
+    return (
+        "../attachments/"
+        +
+        encoded_filename
     )
 
 
@@ -156,7 +227,7 @@ def generate_index():
 
 
 # ============================================================
-# ARTS LIST
+# ARTS
 # ============================================================
 
 def generate_arts():
@@ -195,16 +266,14 @@ def generate_arts():
 </p>
 
 <p class="album-count">
-{len(album.get('artworks', []))} artworks
+{len(album.get('artworks',[]))} artworks
 </p>
 
 </div>
 
 <div class="album-cover">
 
-<img
-    src="images/albums/{album.get('folder','')}/display/{album.get('cover','')}"
->
+<img src="images/albums/{album.get('folder','')}/display/{album.get('cover','')}">
 
 </div>
 
@@ -314,14 +383,11 @@ def generate_albums():
 
             grid += f"""
 
-<a class="artwork-card"
-   href="../artworks/{artwork.get('file','')}.html">
+<a class="artwork-card" href="../artworks/{artwork.get('file','')}.html">
 
 <div class="artwork-thumbnail">
 
-<img
-    src="../images/albums/{album.get('folder','')}/display/{artwork.get('display','')}"
->
+<img src="../images/albums/{album.get('folder','')}/display/{artwork.get('display','')}">
 
 </div>
 
@@ -377,7 +443,7 @@ def generate_albums():
 
 
 # ============================================================
-# ARTWORK PAGES
+# ARTWORKS
 # ============================================================
 
 def generate_artworks():
@@ -466,7 +532,9 @@ def generate_artworks():
             )
 
             previous = "#"
+
             next_page = "#"
+
 
             if index > 0:
 
@@ -483,6 +551,7 @@ def generate_artworks():
 
                 )
 
+
             if index < len(artworks) - 1:
 
                 next_page = (
@@ -498,6 +567,7 @@ def generate_artworks():
 
                 )
 
+
             html = html.replace(
                 "{{PREVIOUS_ARTWORK}}",
                 previous
@@ -507,6 +577,7 @@ def generate_artworks():
                 "{{NEXT_ARTWORK}}",
                 next_page
             )
+
 
             keyboard_script = f"""
 
@@ -541,6 +612,7 @@ document.addEventListener("keydown", function(event) {{
 
 """
 
+
             if "</body>" in html:
 
                 html = html.replace(
@@ -556,6 +628,7 @@ document.addEventListener("keydown", function(event) {{
             else:
 
                 html += keyboard_script
+
 
             write_file(
 
@@ -580,7 +653,7 @@ document.addEventListener("keydown", function(event) {{
 
 
 # ============================================================
-# ATTACHMENTS
+# POST ATTACHMENTS
 # ============================================================
 
 def generate_attachments(attachments):
@@ -588,6 +661,7 @@ def generate_attachments(attachments):
     if not attachments:
 
         return ""
+
 
     html = """
 
@@ -598,6 +672,7 @@ Attachments
 </h2>
 
 """
+
 
     for attachment in attachments:
 
@@ -622,11 +697,22 @@ Attachments
 
             file = attachment
 
+
+        if not file:
+
+            continue
+
+
+        url = get_attachment_url(
+            file
+        )
+
+
         html += f"""
 
 <a
     class="download-button"
-    href="../attachments/{file}"
+    href="{url}"
 >
 
 {name}
@@ -635,21 +721,19 @@ Attachments
 
 """
 
+
     html += """
 
 </section>
 
 """
 
+
     return html
 
 
 # ============================================================
 # POST CONTENT
-#
-# [[IMAGE:filename.png]]
-#
-# can appear anywhere in the text.
 # ============================================================
 
 def format_post_content(content):
@@ -658,14 +742,18 @@ def format_post_content(content):
 
         return ""
 
+
     pattern = r"\[\[IMAGE:([^\]]+)\]\]"
+
 
     parts = re.split(
         pattern,
         content
     )
 
+
     html = ""
+
 
     for index, part in enumerate(parts):
 
@@ -673,21 +761,26 @@ def format_post_content(content):
 
             continue
 
+
         # IMAGE
+
         if index % 2 == 1:
 
             filename = part.strip()
 
-            if not filename:
 
-                continue
+            encoded_filename = quote(
+                filename,
+                safe=""
+            )
+
 
             html += f"""
 
 <div class="post-inline-image">
 
 <img
-    src="../images/posts/{filename}"
+    src="../images/posts/{encoded_filename}"
     alt=""
 >
 
@@ -695,18 +788,23 @@ def format_post_content(content):
 
 """
 
+
         # TEXT
+
         else:
 
             text = part.strip()
+
 
             if not text:
 
                 continue
 
+
             def convert_links(match):
 
                 url = match.group(1)
+
 
                 return (
 
@@ -718,6 +816,7 @@ def format_post_content(content):
 
                 )
 
+
             text = re.sub(
 
                 r"(https?://[^\s<]+)",
@@ -728,6 +827,7 @@ def format_post_content(content):
 
             )
 
+
             paragraphs = re.split(
 
                 r"\n\s*\n",
@@ -736,18 +836,25 @@ def format_post_content(content):
 
             )
 
+
             for paragraph in paragraphs:
 
                 paragraph = paragraph.strip()
+
 
                 if not paragraph:
 
                     continue
 
+
                 paragraph = paragraph.replace(
+
                     "\n",
+
                     "<br>"
+
                 )
+
 
                 html += f"""
 
@@ -756,6 +863,7 @@ def format_post_content(content):
 </p>
 
 """
+
 
     return html
 
@@ -776,6 +884,7 @@ def generate_posts():
 
     cards = ""
 
+
     for post in posts.get(
         "posts",
         []
@@ -783,10 +892,7 @@ def generate_posts():
 
         cards += f"""
 
-<a
-    class="post-card"
-    href="posts/{post.get('file','')}.html"
->
+<a class="post-card" href="posts/{post.get('file','')}.html">
 
 <h2>
 {post.get('title','')}
@@ -800,6 +906,7 @@ def generate_posts():
 
 """
 
+
     html = html.replace(
         "{{POST_LIST}}",
         cards
@@ -809,6 +916,7 @@ def generate_posts():
         "{{LAST_UPDATED}}",
         get_last_updated()
     )
+
 
     write_file(
 
@@ -821,9 +929,11 @@ def generate_posts():
 
     )
 
+
     template = read_template(
         "post_template.html"
     )
+
 
     for post in posts.get(
         "posts",
@@ -871,6 +981,7 @@ def generate_posts():
 
         )
 
+
         write_file(
 
             os.path.join(
@@ -909,9 +1020,11 @@ def get_generated_files():
 
     ]
 
+
     albums = load_json(
         "albums.json"
     )
+
 
     for album in albums.get(
         "albums",
@@ -922,6 +1035,7 @@ def get_generated_files():
             "folder",
             ""
         )
+
 
         files.append(
 
@@ -934,6 +1048,7 @@ def get_generated_files():
             )
 
         )
+
 
         for artwork in album.get(
             "artworks",
@@ -956,6 +1071,7 @@ def get_generated_files():
                 )
 
             )
+
 
             if artwork.get(
                 "display"
@@ -980,6 +1096,7 @@ def get_generated_files():
 
                 )
 
+
             if artwork.get(
                 "original"
             ):
@@ -1003,10 +1120,12 @@ def get_generated_files():
 
                 )
 
+
         cover = album.get(
             "cover",
             ""
         )
+
 
         if cover:
 
@@ -1027,9 +1146,11 @@ def get_generated_files():
 
             )
 
+
     posts = load_json(
         "posts.json"
     )
+
 
     for post in posts.get(
         "posts",
@@ -1056,8 +1177,9 @@ def get_generated_files():
 
         )
 
-        # Attachments are tracked,
-        # but NEVER deleted automatically.
+
+        # Keep every post attachment in the
+        # generated file list, including ZIPs.
 
         for attachment in post.get(
             "attachments",
@@ -1078,6 +1200,7 @@ def get_generated_files():
 
                 filename = attachment
 
+
             if filename:
 
                 files.append(
@@ -1092,41 +1215,6 @@ def get_generated_files():
 
                 )
 
-        # Inline post images
-
-        content = post.get(
-            "content",
-            ""
-        )
-
-        image_names = re.findall(
-
-            r"\[\[IMAGE:([^\]]+)\]\]",
-
-            content
-
-        )
-
-        for filename in image_names:
-
-            filename = filename.strip()
-
-            if filename:
-
-                files.append(
-
-                    os.path.join(
-
-                        "images",
-                        "posts",
-                        filename
-
-                    ).replace(
-                        "\\",
-                        "/"
-                    )
-
-                )
 
     return list(
         set(files)
@@ -1145,6 +1233,7 @@ def clean_generated_website():
 
         return
 
+
     with open(
         GENERATED_LIST,
         "r",
@@ -1156,7 +1245,9 @@ def clean_generated_website():
             []
         )
 
+
     current_files = get_generated_files()
+
 
     for old_file in old_files:
 
@@ -1167,13 +1258,90 @@ def clean_generated_website():
                 old_file
             )
 
-            if os.path.isfile(
-                path
+
+            if os.path.isfile(path):
+
+                os.remove(path)
+
+
+# ============================================================
+# CLEAN UNUSED ATTACHMENTS
+# ============================================================
+
+def clean_unused_attachments():
+
+    attachments_folder = os.path.join(
+        WEBSITE_FOLDER,
+        "attachments"
+    )
+
+
+    if not os.path.exists(
+        attachments_folder
+    ):
+
+        return
+
+
+    used_files = set()
+
+
+    posts = load_json(
+        "posts.json"
+    )
+
+
+    for post in posts.get(
+        "posts",
+        []
+    ):
+
+        for attachment in post.get(
+            "attachments",
+            []
+        ):
+
+            if isinstance(
+                attachment,
+                dict
             ):
 
-                os.remove(
-                    path
+                filename = attachment.get(
+                    "file",
+                    ""
                 )
+
+            else:
+
+                filename = attachment
+
+
+            if filename:
+
+                used_files.add(
+                    filename
+                )
+
+
+    for filename in os.listdir(
+        attachments_folder
+    ):
+
+        path = os.path.join(
+            attachments_folder,
+            filename
+        )
+
+
+        if (
+
+            filename not in used_files
+
+            and os.path.isfile(path)
+
+        ):
+
+            os.remove(path)
 
 
 # ============================================================
@@ -1183,12 +1351,11 @@ def clean_generated_website():
 def clean_unused_album_images():
 
     albums_folder = os.path.join(
-
         WEBSITE_FOLDER,
         "images",
         "albums"
-
     )
+
 
     if not os.path.exists(
         albums_folder
@@ -1196,11 +1363,14 @@ def clean_unused_album_images():
 
         return
 
+
     used_files = set()
+
 
     albums = load_json(
         "albums.json"
     )
+
 
     for album in albums.get(
         "albums",
@@ -1211,6 +1381,7 @@ def clean_unused_album_images():
             "folder",
             ""
         )
+
 
         for artwork in album.get(
             "artworks",
@@ -1227,33 +1398,31 @@ def clean_unused_album_images():
                 ""
             )
 
+
             if display:
 
                 used_files.add(
 
                     os.path.join(
-
                         folder,
                         "display",
                         display
-
                     ).replace(
                         "\\",
                         "/"
                     )
 
                 )
+
 
             if original:
 
                 used_files.add(
 
                     os.path.join(
-
                         folder,
                         "original",
                         original
-
                     ).replace(
                         "\\",
                         "/"
@@ -1261,27 +1430,28 @@ def clean_unused_album_images():
 
                 )
 
+
         cover = album.get(
             "cover",
             ""
         )
+
 
         if cover:
 
             used_files.add(
 
                 os.path.join(
-
                     folder,
                     "display",
                     cover
-
                 ).replace(
                     "\\",
                     "/"
                 )
 
             )
+
 
     for root, dirs, files in os.walk(
         albums_folder
@@ -1294,16 +1464,15 @@ def clean_unused_album_images():
                 filename
             )
 
+
             relative = os.path.relpath(
-
                 full_path,
-
                 albums_folder
-
             ).replace(
                 "\\",
                 "/"
             )
+
 
             if relative not in used_files:
 
@@ -1319,12 +1488,11 @@ def clean_unused_album_images():
 def clean_unused_album_folders():
 
     albums_folder = os.path.join(
-
         WEBSITE_FOLDER,
         "images",
         "albums"
-
     )
+
 
     if not os.path.exists(
         albums_folder
@@ -1332,11 +1500,14 @@ def clean_unused_album_folders():
 
         return
 
+
     used = set()
+
 
     albums = load_json(
         "albums.json"
     )
+
 
     for album in albums.get(
         "albums",
@@ -1348,11 +1519,13 @@ def clean_unused_album_folders():
             ""
         )
 
+
         if folder:
 
             used.add(
                 folder
             )
+
 
     for folder in os.listdir(
         albums_folder
@@ -1363,13 +1536,12 @@ def clean_unused_album_folders():
             folder
         )
 
+
         if (
 
             os.path.isdir(path)
 
-            and
-
-            folder not in used
+            and folder not in used
 
         ):
 
@@ -1379,7 +1551,7 @@ def clean_unused_album_folders():
 
 
 # ============================================================
-# EMPTY FOLDERS
+# CLEAN EMPTY FOLDERS
 # ============================================================
 
 def clean_empty_folders():
@@ -1396,13 +1568,12 @@ def clean_empty_folders():
 
             continue
 
+
         if not dirs and not files:
 
             try:
 
-                os.rmdir(
-                    root
-                )
+                os.rmdir(root)
 
             except OSError:
 
@@ -1425,6 +1596,7 @@ def save_generated_files():
 
     )
 
+
     with open(
 
         GENERATED_LIST,
@@ -1438,10 +1610,7 @@ def save_generated_files():
         json.dump(
 
             {
-
-                "files":
-                    get_generated_files()
-
+                "files": get_generated_files()
             },
 
             file,
@@ -1452,10 +1621,12 @@ def save_generated_files():
 
 
 # ============================================================
-# GENERATE EVERYTHING
+# MAIN GENERATOR
 # ============================================================
 
 def generate_website():
+
+    clean_generated_website()
 
     generate_index()
 
@@ -1467,7 +1638,7 @@ def generate_website():
 
     generate_posts()
 
-    clean_generated_website()
+    clean_unused_attachments()
 
     clean_unused_album_images()
 

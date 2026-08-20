@@ -14,17 +14,21 @@ PROJECT_FOLDER = os.path.dirname(
 )
 
 
-
 def run_git(command):
 
     result = subprocess.run(
-        command,
-        cwd=PROJECT_FOLDER,
-        shell=True,
-        capture_output=True,
-        text=True
-    )
 
+        command,
+
+        cwd=PROJECT_FOLDER,
+
+        shell=True,
+
+        capture_output=True,
+
+        text=True
+
+    )
 
     if result.returncode != 0:
 
@@ -32,16 +36,20 @@ def run_git(command):
             result.stderr
         )
 
-
     return result.stdout
 
 
+def publish_changes(
+    message="Update website"
+):
+
+    # Make sure Git LFS is installed.
+    run_git(
+        "git lfs install"
+    )
 
 
-
-def publish_changes(message="Update website"):
-
-
+    # Stage everything, including ZIP files.
     run_git(
         "git add ."
     )
@@ -54,18 +62,29 @@ def publish_changes(message="Update website"):
 
     if not status.strip():
 
-        return "No changes to publish."
+        return (
+            "No changes to publish."
+        )
 
 
-
+    # Commit normal files and LFS pointers.
     run_git(
         f'git commit -m "{message}"'
     )
 
 
+    # Push the Git commit.
     run_git(
         "git push"
     )
 
 
-    return "Website published successfully."
+    # Explicitly push the actual LFS objects.
+    run_git(
+        "git lfs push origin --all"
+    )
+
+
+    return (
+        "Website published successfully."
+    )
