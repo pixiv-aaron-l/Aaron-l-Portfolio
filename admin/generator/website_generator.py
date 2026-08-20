@@ -122,77 +122,25 @@ def get_attachment_url(filename):
     if not filename:
         return ""
 
-
-    # --------------------------------------------------------
-    # Normalize path separators
-    # --------------------------------------------------------
-
-    filename = filename.replace(
-        "\\",
-        "/"
+    encoded_filename = quote(
+        filename,
+        safe=""
     )
 
-
-    # --------------------------------------------------------
-    # Encode each path component separately.
-    #
-    # This means:
-    #
-    # "My Archive 2026.7z"
-    #
-    # becomes:
-    #
-    # "My%20Archive%202026.7z"
-    #
-    # while a possible subdirectory slash remains a slash.
-    # --------------------------------------------------------
-
-    encoded_path = "/".join(
-
-        quote(
-            part,
-            safe=""
-        )
-
-        for part in filename.split("/")
-    )
-
-
-    # --------------------------------------------------------
-    # Large archive files
-    #
-    # Git LFS files cannot reliably be served directly from
-    # GitHub Pages.
-    #
-    # Send ZIP and 7Z files through GitHub's media endpoint.
-    # --------------------------------------------------------
-
-    lower_filename = filename.lower()
-
-
-    if (
-        lower_filename.endswith(".zip")
-        or
-        lower_filename.endswith(".7z")
-    ):
+    # Large archive files stored with Git LFS
+    # must be downloaded through GitHub's media endpoint.
+    if filename.lower().endswith((".zip", ".7z")):
 
         return (
             GITHUB_MEDIA_BASE
-            +
-            "website/attachments/"
-            +
-            encoded_path
+            + "website/attachments/"
+            + encoded_filename
         )
 
-
-    # --------------------------------------------------------
     # Normal attachments
-    # --------------------------------------------------------
-
     return (
         "../attachments/"
-        +
-        encoded_path
+        + encoded_filename
     )
 
 
