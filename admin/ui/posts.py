@@ -18,10 +18,13 @@ from PySide6.QtWidgets import (
 from tools.json_manager import load_json, save_json
 
 
+# ============================================================
+# PATHS
+# ============================================================
+
 BASE_FOLDER = os.path.dirname(
     os.path.dirname(__file__)
 )
-
 
 WEBSITE_FOLDER = os.path.join(
     BASE_FOLDER,
@@ -29,12 +32,10 @@ WEBSITE_FOLDER = os.path.join(
     "website"
 )
 
-
 ATTACHMENTS_FOLDER = os.path.join(
     WEBSITE_FOLDER,
     "attachments"
 )
-
 
 POST_IMAGES_FOLDER = os.path.join(
     WEBSITE_FOLDER,
@@ -42,6 +43,10 @@ POST_IMAGES_FOLDER = os.path.join(
     "posts"
 )
 
+
+# ============================================================
+# PAGE
+# ============================================================
 
 class Page(QWidget):
 
@@ -55,9 +60,9 @@ class Page(QWidget):
             layout
         )
 
-        # =========================
-        # LEFT
-        # =========================
+        # ====================================================
+        # LEFT — POST LIST
+        # ====================================================
 
         left = QVBoxLayout()
 
@@ -103,9 +108,9 @@ class Page(QWidget):
             self.move_down_button
         )
 
-        # =========================
-        # RIGHT
-        # =========================
+        # ====================================================
+        # RIGHT — POST EDITOR
+        # ====================================================
 
         right = QVBoxLayout()
 
@@ -153,9 +158,9 @@ class Page(QWidget):
             self.content_input
         )
 
-        # =========================
+        # ====================================================
         # INLINE IMAGE
-        # =========================
+        # ====================================================
 
         self.insert_image_button = QPushButton(
             "Insert Image"
@@ -165,9 +170,9 @@ class Page(QWidget):
             self.insert_image_button
         )
 
-        # =========================
+        # ====================================================
         # ATTACHMENTS
-        # =========================
+        # ====================================================
 
         right.addWidget(
             QLabel("Attachments")
@@ -195,9 +200,9 @@ class Page(QWidget):
             self.remove_attachment_button
         )
 
-        # =========================
+        # ====================================================
         # SAVE
-        # =========================
+        # ====================================================
 
         self.save_button = QPushButton(
             "Save Post"
@@ -206,6 +211,10 @@ class Page(QWidget):
         right.addWidget(
             self.save_button
         )
+
+        # ====================================================
+        # MAIN LAYOUT
+        # ====================================================
 
         layout.addLayout(
             left,
@@ -217,13 +226,19 @@ class Page(QWidget):
             2
         )
 
+        # ====================================================
+        # STATE
+        # ====================================================
+
         self.current_post = -1
 
-        # =========================
-        # SIGNALS
-        # =========================
+        # Prevent list refreshes from accidentally changing
+        # the currently edited post.
+        self.refreshing = False
 
-        self.refresh()
+        # ====================================================
+        # SIGNALS
+        # ====================================================
 
         self.post_list.currentRowChanged.connect(
             self.load_post
@@ -261,22 +276,40 @@ class Page(QWidget):
             self.insert_image
         )
 
-    # =========================
+        # Initial list population.
+        self.refresh()
+
+
+    # ========================================================
     # REFRESH
-    # =========================
+    # ========================================================
 
-    def refresh(self):
-
-        self.post_list.clear()
+    def refresh(self, select_index=None):
 
         data = load_json(
             "posts.json"
         )
 
-        for post in data.get(
+        posts = data.get(
             "posts",
             []
-        ):
+        )
+
+        # If no explicit selection was supplied, preserve the
+        # currently selected post.
+        if select_index is None:
+
+            select_index = self.current_post
+
+        # Prevent currentRowChanged from firing while the list
+        # is being rebuilt.
+        self.refreshing = True
+
+        self.post_list.blockSignals(True)
+
+        self.post_list.clear()
+
+        for post in posts:
 
             self.post_list.addItem(
                 post.get(
@@ -285,9 +318,48 @@ class Page(QWidget):
                 )
             )
 
-    # =========================
-    # CREATE
-    # =========================
+        # Restore the previous selection.
+        if (
+            select_index is not None
+            and 0 <= select_index < len(posts)
+        ):
+
+            self.post_list.setCurrentRow(
+                select_index
+            )
+
+            self.current_post = select_index
+
+        elif posts:
+
+            self.post_list.setCurrentRow(
+                0
+            )
+
+            self.current_post = 0
+
+        else:
+
+            self.current_post = -1
+
+        self.post_list.blockSignals(False)
+
+        self.refreshing = False
+
+        # Explicitly reload the selected post so the editor
+        # remains synchronized with the list.
+        if (
+            0 <= self.current_post < len(posts)
+        ):
+
+            self.load_post(
+                self.current_post
+            )
+
+
+    # ========================================================
+    # CREATE POST
+    # ========================================================
 
     def create_post(self):
 
@@ -337,21 +409,28 @@ class Page(QWidget):
             data
         )
 
-        self.refresh()
+        new_index = len(
+            data["posts"]
+        ) - 1
 
-        self.post_list.setCurrentRow(
-            len(data["posts"]) - 1
+        self.refresh(
+            new_index
         )
 
-    # =========================
-    # LOAD
-    # =========================
+
+    # ========================================================
+    # LOAD POST
+    # ========================================================
 
     def load_post(self, index):
 
-        self.current_post = index
+        if self.refreshing:
+
+            return
 
         if index < 0:
+
+            self.current_post = -1
 
             return
 
@@ -359,7 +438,20 @@ class Page(QWidget):
             "posts.json"
         )
 
-        post = data["posts"][index]
+        posts = data.get(
+            "posts",
+            []
+        )
+
+        if index >= len(posts):
+
+            self.current_post = -1
+
+            return
+
+        self.current_post = index
+
+        post = posts[index]
 
         self.title_input.setText(
             post.get(
@@ -404,7 +496,10 @@ class Page(QWidget):
                 self.attachments_list.addItem(
                     attachment.get(
                         "name",
-                        ""
+                        attachment.get(
+                            "file",
+                            ""
+                        )
                     )
                 )
 
@@ -414,9 +509,10 @@ class Page(QWidget):
                     attachment
                 )
 
-    # =========================
+
+    # ========================================================
     # MOVE UP
-    # =========================
+    # ========================================================
 
     def move_up(self):
 
@@ -445,15 +541,16 @@ class Page(QWidget):
             data
         )
 
-        self.refresh()
+        new_index = index - 1
 
-        self.post_list.setCurrentRow(
-            index - 1
+        self.refresh(
+            new_index
         )
 
-    # =========================
+
+    # ========================================================
     # MOVE DOWN
-    # =========================
+    # ========================================================
 
     def move_down(self):
 
@@ -468,7 +565,10 @@ class Page(QWidget):
             []
         )
 
-        if index < 0 or index >= len(posts) - 1:
+        if (
+            index < 0
+            or index >= len(posts) - 1
+        ):
 
             return
 
@@ -482,15 +582,16 @@ class Page(QWidget):
             data
         )
 
-        self.refresh()
+        new_index = index + 1
 
-        self.post_list.setCurrentRow(
-            index + 1
+        self.refresh(
+            new_index
         )
 
-    # =========================
+
+    # ========================================================
     # INSERT INLINE IMAGE
-    # =========================
+    # ========================================================
 
     def insert_image(self):
 
@@ -511,11 +612,8 @@ class Page(QWidget):
             return
 
         os.makedirs(
-
             POST_IMAGES_FOLDER,
-
             exist_ok=True
-
         )
 
         filename = os.path.basename(
@@ -523,21 +621,15 @@ class Page(QWidget):
         )
 
         destination = os.path.join(
-
             POST_IMAGES_FOLDER,
-
             filename
-
         )
 
         try:
 
             shutil.copy2(
-
                 file,
-
                 destination
-
             )
 
         except Exception as error:
@@ -557,18 +649,17 @@ class Page(QWidget):
         cursor = self.content_input.textCursor()
 
         cursor.insertText(
-
             f"[[IMAGE:{filename}]]"
-
         )
 
         self.content_input.setTextCursor(
             cursor
         )
 
-    # =========================
-    # ATTACHMENT
-    # =========================
+
+    # ========================================================
+    # ADD ATTACHMENT
+    # ========================================================
 
     def add_attachment(self):
 
@@ -585,11 +676,8 @@ class Page(QWidget):
             return
 
         os.makedirs(
-
             ATTACHMENTS_FOLDER,
-
             exist_ok=True
-
         )
 
         existing = [
@@ -597,9 +685,7 @@ class Page(QWidget):
             self.attachments_list.item(i).text()
 
             for i in range(
-
                 self.attachments_list.count()
-
             )
 
         ]
@@ -611,21 +697,15 @@ class Page(QWidget):
             )
 
             destination = os.path.join(
-
                 ATTACHMENTS_FOLDER,
-
                 filename
-
             )
 
             try:
 
                 shutil.copy2(
-
                     file,
-
                     destination
-
                 )
 
             except Exception as error:
@@ -652,9 +732,10 @@ class Page(QWidget):
                     filename
                 )
 
-    # =========================
+
+    # ========================================================
     # REMOVE ATTACHMENT
-    # =========================
+    # ========================================================
 
     def remove_attachment(self):
 
@@ -666,9 +747,10 @@ class Page(QWidget):
                 row
             )
 
-    # =========================
-    # SAVE
-    # =========================
+
+    # ========================================================
+    # SAVE POST
+    # ========================================================
 
     def save_post(self):
 
@@ -676,17 +758,36 @@ class Page(QWidget):
 
             return
 
+        selected_index = self.current_post
+
         data = load_json(
             "posts.json"
         )
 
-        post = data["posts"][self.current_post]
+        posts = data.get(
+            "posts",
+            []
+        )
 
-        post["title"] = self.title_input.text()
+        if selected_index >= len(posts):
 
-        post["file"] = self.file_input.text()
+            self.current_post = -1
 
-        post["date"] = self.date_input.text()
+            return
+
+        post = posts[selected_index]
+
+        post["title"] = (
+            self.title_input.text()
+        )
+
+        post["file"] = (
+            self.file_input.text()
+        )
+
+        post["date"] = (
+            self.date_input.text()
+        )
 
         post["content"] = (
             self.content_input.toPlainText()
@@ -695,18 +796,18 @@ class Page(QWidget):
         post["attachments"] = []
 
         for i in range(
-
             self.attachments_list.count()
-
         ):
 
             filename = (
-
                 self.attachments_list
                 .item(i)
                 .text()
-
             )
+
+            if not filename:
+
+                continue
 
             post["attachments"].append({
 
@@ -717,17 +818,16 @@ class Page(QWidget):
             })
 
         save_json(
-
             "posts.json",
-
             data
-
         )
 
-        self.refresh()
+        # IMPORTANT:
+        # Keep the same post selected after saving.
+        self.current_post = selected_index
 
-        self.post_list.setCurrentRow(
-            self.current_post
+        self.refresh(
+            selected_index
         )
 
         QMessageBox.information(
@@ -740,9 +840,10 @@ class Page(QWidget):
 
         )
 
-    # =========================
-    # DELETE
-    # =========================
+
+    # ========================================================
+    # DELETE POST
+    # ========================================================
 
     def delete_post(self):
 
@@ -764,12 +865,23 @@ class Page(QWidget):
 
             return
 
+        selected_index = self.current_post
+
         data = load_json(
             "posts.json"
         )
 
-        data["posts"].pop(
-            self.current_post
+        posts = data.get(
+            "posts",
+            []
+        )
+
+        if selected_index >= len(posts):
+
+            return
+
+        posts.pop(
+            selected_index
         )
 
         save_json(
@@ -777,7 +889,19 @@ class Page(QWidget):
             data
         )
 
-        self.current_post = -1
+        # Select the nearest remaining post.
+        if posts:
+
+            new_index = min(
+                selected_index,
+                len(posts) - 1
+            )
+
+        else:
+
+            new_index = -1
+
+        self.current_post = new_index
 
         self.title_input.clear()
 
@@ -789,7 +913,9 @@ class Page(QWidget):
 
         self.attachments_list.clear()
 
-        self.refresh()
+        self.refresh(
+            new_index if new_index >= 0 else None
+        )
 
         QMessageBox.information(
 
