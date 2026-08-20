@@ -39,6 +39,10 @@ GENERATED_LIST = os.path.join(
 # GITHUB CONFIGURATION
 # ============================================================
 
+# These are used only for generating GitHub media URLs.
+# They can later be made automatically configurable for
+# people who fork/use this portfolio project.
+
 GITHUB_OWNER = "pixiv-aaron-l"
 
 GITHUB_REPOSITORY = "Aaron-l-Portfolio"
@@ -47,7 +51,7 @@ GITHUB_BRANCH = "main"
 
 
 GITHUB_MEDIA_BASE = (
-    f"https://media.githubusercontent.com/media/"
+    "https://media.githubusercontent.com/media/"
     f"{GITHUB_OWNER}/"
     f"{GITHUB_REPOSITORY}/"
     f"{GITHUB_BRANCH}/"
@@ -116,41 +120,79 @@ def get_last_updated():
 def get_attachment_url(filename):
 
     if not filename:
-
         return ""
 
 
-    # ZIP files are served through GitHub's
-    # media/LFS endpoint.
+    # --------------------------------------------------------
+    # Normalize path separators
+    # --------------------------------------------------------
 
-    if filename.lower().endswith(".zip"):
+    filename = filename.replace(
+        "\\",
+        "/"
+    )
 
-        encoded_filename = quote(
-            filename,
+
+    # --------------------------------------------------------
+    # Encode each path component separately.
+    #
+    # This means:
+    #
+    # "My Archive 2026.7z"
+    #
+    # becomes:
+    #
+    # "My%20Archive%202026.7z"
+    #
+    # while a possible subdirectory slash remains a slash.
+    # --------------------------------------------------------
+
+    encoded_path = "/".join(
+
+        quote(
+            part,
             safe=""
         )
+
+        for part in filename.split("/")
+    )
+
+
+    # --------------------------------------------------------
+    # Large archive files
+    #
+    # Git LFS files cannot reliably be served directly from
+    # GitHub Pages.
+    #
+    # Send ZIP and 7Z files through GitHub's media endpoint.
+    # --------------------------------------------------------
+
+    lower_filename = filename.lower()
+
+
+    if (
+        lower_filename.endswith(".zip")
+        or
+        lower_filename.endswith(".7z")
+    ):
 
         return (
             GITHUB_MEDIA_BASE
             +
             "website/attachments/"
             +
-            encoded_filename
+            encoded_path
         )
 
 
-    # Everything else keeps the normal
-    # GitHub Pages attachment path.
-
-    encoded_filename = quote(
-        filename,
-        safe=""
-    )
+    # --------------------------------------------------------
+    # Normal attachments
+    # --------------------------------------------------------
 
     return (
         "../attachments/"
         +
-        encoded_filename
+        encoded_path
     )
 
 
@@ -708,15 +750,25 @@ Attachments
         )
 
 
+        # Escape the displayed name enough for normal HTML use.
+        # This does not alter the actual filename stored on disk.
+
+        display_name = (
+            str(name)
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace('"', "&quot;")
+        )
+
+
         html += f"""
 
 <a
     class="download-button"
     href="{url}"
 >
-
-{name}
-
+    {display_name}
 </a>
 
 """
@@ -1178,8 +1230,8 @@ def get_generated_files():
         )
 
 
-        # Keep every post attachment in the
-        # generated file list, including ZIPs.
+        # Keep every post attachment in the generated file list.
+        # This includes ZIP, 7Z, and normal attachments.
 
         for attachment in post.get(
             "attachments",
