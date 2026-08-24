@@ -39,16 +39,14 @@ GENERATED_LIST = os.path.join(
 # GITHUB CONFIGURATION
 # ============================================================
 
-# These are used only for generating GitHub media URLs.
-# They can later be made automatically configurable for
-# people who fork/use this portfolio project.
+# Used for generating GitHub media URLs for large files
+# stored through Git LFS.
 
 GITHUB_OWNER = "pixiv-aaron-l"
 
 GITHUB_REPOSITORY = "Aaron-l-Portfolio"
 
 GITHUB_BRANCH = "main"
-
 
 GITHUB_MEDIA_BASE = (
     "https://media.githubusercontent.com/media/"
@@ -120,16 +118,22 @@ def get_last_updated():
 def get_attachment_url(filename):
 
     if not filename:
+
         return ""
+
 
     encoded_filename = quote(
         filename,
         safe=""
     )
 
+
     # Large archive files stored with Git LFS
     # must be downloaded through GitHub's media endpoint.
-    if filename.lower().endswith((".zip", ".7z")):
+
+    if filename.lower().endswith(
+        (".zip", ".7z")
+    ):
 
         return (
             GITHUB_MEDIA_BASE
@@ -137,7 +141,9 @@ def get_attachment_url(filename):
             + encoded_filename
         )
 
+
     # Normal attachments
+
     return (
         "../attachments/"
         + encoded_filename
@@ -232,6 +238,7 @@ def generate_arts():
 
     cards = ""
 
+
     for album in albums.get(
         "albums",
         []
@@ -239,37 +246,38 @@ def generate_arts():
 
         cards += f"""
 
-<a class="album-card" href="albums/{album.get('folder','')}.html">
+<a class="album-card" href="albums/{album.get('folder', '')}.html">
 
 <div class="album-info">
 
 <h2>
-{album.get('title','')}
+{album.get('title', '')}
 </h2>
 
 <p>
-{album.get('description','')}
+{album.get('description', '')}
 </p>
 
 <p class="album-date">
-{album.get('date','')}
+{album.get('date', '')}
 </p>
 
 <p class="album-count">
-{len(album.get('artworks',[]))} artworks
+{len(album.get('artworks', []))} artworks
 </p>
 
 </div>
 
 <div class="album-cover">
 
-<img src="images/albums/{album.get('folder','')}/display/{album.get('cover','')}">
+<img src="images/albums/{album.get('folder', '')}/display/{album.get('cover', '')}">
 
 </div>
 
 </a>
 
 """
+
 
     html = html.replace(
         "{{ALBUM_LIST}}",
@@ -280,6 +288,7 @@ def generate_arts():
         "{{LAST_UPDATED}}",
         get_last_updated()
     )
+
 
     write_file(
 
@@ -306,6 +315,7 @@ def generate_albums():
     template = read_template(
         "album_template.html"
     )
+
 
     for album in albums.get(
         "albums",
@@ -351,7 +361,9 @@ def generate_albums():
 
         )
 
+
         grid = ""
+
 
         artworks = sorted(
 
@@ -369,32 +381,33 @@ def generate_albums():
 
         )
 
+
         for artwork in artworks:
 
             grid += f"""
 
-<a class="artwork-card" href="../artworks/{artwork.get('file','')}.html">
+<a class="artwork-card" href="../artworks/{artwork.get('file', '')}.html">
 
 <div class="artwork-thumbnail">
 
-<img src="../images/albums/{album.get('folder','')}/display/{artwork.get('display','')}">
+<img src="../images/albums/{album.get('folder', '')}/display/{artwork.get('display', '')}">
 
 </div>
 
 <div class="artwork-info">
 
 <h3>
-{artwork.get('title','')}
+{artwork.get('title', '')}
 </h3>
 
 <div class="artwork-info-bottom">
 
 <span class="artwork-number">
-#{artwork.get('number','')}
+#{artwork.get('number', '')}
 </span>
 
 <span class="artwork-date">
-{artwork.get('date','')}
+{artwork.get('date', '')}
 </span>
 
 </div>
@@ -405,10 +418,12 @@ def generate_albums():
 
 """
 
+
         html = html.replace(
             "{{ARTWORK_GRID}}",
             grid
         )
+
 
         write_file(
 
@@ -422,8 +437,7 @@ def generate_albums():
                     "folder",
                     "album"
                 )
-                +
-                ".html"
+                + ".html"
 
             ),
 
@@ -446,6 +460,7 @@ def generate_artworks():
         "artwork_template.html"
     )
 
+
     for album in albums.get(
         "albums",
         []
@@ -455,6 +470,7 @@ def generate_artworks():
             "artworks",
             []
         )
+
 
         for index, artwork in enumerate(
             artworks
@@ -520,6 +536,7 @@ def generate_artworks():
                 }
 
             )
+
 
             previous = "#"
 
@@ -698,9 +715,6 @@ Attachments
         )
 
 
-        # Escape the displayed name enough for normal HTML use.
-        # This does not alter the actual filename stored on disk.
-
         display_name = (
             str(name)
             .replace("&", "&amp;")
@@ -762,7 +776,9 @@ def format_post_content(content):
             continue
 
 
+        # ====================================================
         # IMAGE
+        # ====================================================
 
         if index % 2 == 1:
 
@@ -789,7 +805,9 @@ def format_post_content(content):
 """
 
 
+        # ====================================================
         # TEXT
+        # ====================================================
 
         else:
 
@@ -804,7 +822,6 @@ def format_post_content(content):
             def convert_links(match):
 
                 url = match.group(1)
-
 
                 return (
 
@@ -892,14 +909,14 @@ def generate_posts():
 
         cards += f"""
 
-<a class="post-card" href="posts/{post.get('file','')}.html">
+<a class="post-card" href="posts/{post.get('file', '')}.html">
 
 <h2>
-{post.get('title','')}
+{post.get('title', '')}
 </h2>
 
 <p>
-{post.get('date','')}
+{post.get('date', '')}
 </p>
 
 </a>
@@ -1020,6 +1037,10 @@ def get_generated_files():
 
     ]
 
+
+    # ========================================================
+    # ALBUMS + ARTWORKS + ALBUM IMAGES
+    # ========================================================
 
     albums = load_json(
         "albums.json"
@@ -1147,6 +1168,10 @@ def get_generated_files():
             )
 
 
+    # ========================================================
+    # POSTS
+    # ========================================================
+
     posts = load_json(
         "posts.json"
     )
@@ -1178,8 +1203,9 @@ def get_generated_files():
         )
 
 
-        # Keep every post attachment in the generated file list.
-        # This includes ZIP, 7Z, and normal attachments.
+        # ====================================================
+        # POST ATTACHMENTS
+        # ====================================================
 
         for attachment in post.get(
             "attachments",
@@ -1207,6 +1233,43 @@ def get_generated_files():
 
                     os.path.join(
                         "attachments",
+                        filename
+                    ).replace(
+                        "\\",
+                        "/"
+                    )
+
+                )
+
+
+        # ====================================================
+        # POST INLINE IMAGES
+        #
+        # Images referenced by [[IMAGE:filename]]
+        # are protected from generated-file cleanup.
+        # ====================================================
+
+        content = post.get(
+            "content",
+            ""
+        )
+
+
+        for filename in re.findall(
+            r"\[\[IMAGE:([^\]]+)\]\]",
+            content
+        ):
+
+            filename = filename.strip()
+
+
+            if filename:
+
+                files.append(
+
+                    os.path.join(
+                        "images",
+                        "posts",
                         filename
                     ).replace(
                         "\\",

@@ -22,10 +22,20 @@
                     "file": "sekibanki",
                     "display": "63 ~ Sekibanki .jpg",
                     "original": "63 ~ Sekibanki .png",
-                    "number": "2",
+                    "number": 2,
                     "date": "15/08/26",
                     "time_spent": "6 hours",
                     "notes": "my first illustration for Sekibanki ! I am trying to do better on the artstyle and it took only 6 hours but I am lazy and did other things lately. love the headless yokai"
+                },
+                {
+                    "title": "MacGuya",
+                    "file": "macguya",
+                    "display": "64 ~ Kaguya's burger.jpg",
+                    "original": "64 ~ Kaguya's burger.png",
+                    "number": "3",
+                    "date": "24/08/26",
+                    "time_spent": "5 hours 30",
+                    "notes": "Kaguya started her burger brand in Gensokyo and now rabbit-girls are cooking them everywhere, we are all eating MacGuya touhoday ! this idea actualy comes from silly messages we had in a discord chat, also line-art is on pixiv https://www.pixiv.net/en/artworks/148851816"
                 }
             ]
         },
