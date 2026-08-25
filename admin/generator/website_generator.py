@@ -39,9 +39,6 @@ GENERATED_LIST = os.path.join(
 # GITHUB CONFIGURATION
 # ============================================================
 
-# Used for generating GitHub media URLs for large files
-# stored through Git LFS.
-
 GITHUB_OWNER = "pixiv-aaron-l"
 
 GITHUB_REPOSITORY = "Aaron-l-Portfolio"
@@ -112,6 +109,127 @@ def get_last_updated():
 
 
 # ============================================================
+# HTML HELPERS
+# ============================================================
+
+def escape_html(text):
+
+    if text is None:
+        return ""
+
+    return (
+        str(text)
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
+
+
+def format_text(text):
+
+    """
+    Converts normal text into HTML.
+
+    Features:
+    - clickable http/https links
+    - normal line breaks
+    - paragraphs separated by a line containing *
+    """
+
+    if not text:
+
+        return ""
+
+    text = str(text)
+
+    # --------------------------------------------------------
+    # Temporarily protect URLs
+    # --------------------------------------------------------
+
+    urls = []
+
+    def protect_url(match):
+
+        index = len(urls)
+
+        urls.append(
+            match.group(0)
+        )
+
+        return f"__URL_{index}__"
+
+    text = re.sub(
+        r"https?://[^\s<]+",
+        protect_url,
+        text
+    )
+
+    # --------------------------------------------------------
+    # Escape normal HTML
+    # --------------------------------------------------------
+
+    text = escape_html(
+        text
+    )
+
+    # --------------------------------------------------------
+    # Restore URLs as clickable links
+    # --------------------------------------------------------
+
+    for index, url in enumerate(urls):
+
+        safe_url = escape_html(
+            url
+        )
+
+        link = (
+            f'<a href="{safe_url}" '
+            f'target="_blank" '
+            f'rel="noopener noreferrer">'
+            f'{safe_url}'
+            f'</a>'
+        )
+
+        text = text.replace(
+            f"__URL_{index}__",
+            link
+        )
+
+    # --------------------------------------------------------
+    # Split paragraphs
+    # --------------------------------------------------------
+
+    paragraphs = re.split(
+        r"\n\s*\*\s*\n",
+        text
+    )
+
+    html = ""
+
+    for paragraph in paragraphs:
+
+        paragraph = paragraph.strip()
+
+        if not paragraph:
+
+            continue
+
+        paragraph = paragraph.replace(
+            "\n",
+            "<br>"
+        )
+
+        html += (
+            "<p>\n"
+            + paragraph
+            + "\n</p>\n"
+        )
+
+    return html
+
+
+# ============================================================
 # ATTACHMENT URL
 # ============================================================
 
@@ -121,15 +239,14 @@ def get_attachment_url(filename):
 
         return ""
 
-
     encoded_filename = quote(
         filename,
         safe=""
     )
 
-
-    # Large archive files stored with Git LFS
-    # must be downloaded through GitHub's media endpoint.
+    # --------------------------------------------------------
+    # Git LFS archives
+    # --------------------------------------------------------
 
     if filename.lower().endswith(
         (".zip", ".7z")
@@ -141,8 +258,9 @@ def get_attachment_url(filename):
             + encoded_filename
         )
 
-
+    # --------------------------------------------------------
     # Normal attachments
+    # --------------------------------------------------------
 
     return (
         "../attachments/"
@@ -164,6 +282,13 @@ def generate_index():
         "index_template.html"
     )
 
+    introduction = format_text(
+        about.get(
+            "introduction",
+            ""
+        )
+    )
+
     html = replace_values(
 
         html,
@@ -171,10 +296,7 @@ def generate_index():
         {
 
             "{{ABOUT_INTRODUCTION}}":
-                about.get(
-                    "introduction",
-                    ""
-                ),
+                introduction,
 
             "{{PIXIV_LINK}}":
                 about.get(
@@ -238,28 +360,34 @@ def generate_arts():
 
     cards = ""
 
-
     for album in albums.get(
         "albums",
         []
     ):
 
+        description = format_text(
+            album.get(
+                "description",
+                ""
+            )
+        )
+
         cards += f"""
 
-<a class="album-card" href="albums/{album.get('folder', '')}.html">
+<a class="album-card" href="albums/{quote(album.get('folder', ''), safe='')}.html">
 
 <div class="album-info">
 
 <h2>
-{album.get('title', '')}
+{escape_html(album.get('title', ''))}
 </h2>
 
-<p>
-{album.get('description', '')}
-</p>
+<div>
+{description}
+</div>
 
 <p class="album-date">
-{album.get('date', '')}
+{escape_html(album.get('date', ''))}
 </p>
 
 <p class="album-count">
@@ -270,14 +398,13 @@ def generate_arts():
 
 <div class="album-cover">
 
-<img src="images/albums/{album.get('folder', '')}/display/{album.get('cover', '')}">
+<img src="images/albums/{quote(album.get('folder', ''), safe='')}/display/{quote(album.get('cover', ''), safe='')}">
 
 </div>
 
 </a>
 
 """
-
 
     html = html.replace(
         "{{ALBUM_LIST}}",
@@ -288,7 +415,6 @@ def generate_arts():
         "{{LAST_UPDATED}}",
         get_last_updated()
     )
-
 
     write_file(
 
@@ -316,7 +442,6 @@ def generate_albums():
         "album_template.html"
     )
 
-
     for album in albums.get(
         "albums",
         []
@@ -329,21 +454,27 @@ def generate_albums():
             {
 
                 "{{ALBUM_TITLE}}":
-                    album.get(
-                        "title",
-                        ""
+                    escape_html(
+                        album.get(
+                            "title",
+                            ""
+                        )
                     ),
 
                 "{{ALBUM_DATE}}":
-                    album.get(
-                        "date",
-                        ""
+                    escape_html(
+                        album.get(
+                            "date",
+                            ""
+                        )
                     ),
 
                 "{{ALBUM_DESCRIPTION}}":
-                    album.get(
-                        "description",
-                        ""
+                    format_text(
+                        album.get(
+                            "description",
+                            ""
+                        )
                     ),
 
                 "{{ARTWORK_COUNT}}":
@@ -361,9 +492,7 @@ def generate_albums():
 
         )
 
-
         grid = ""
-
 
         artworks = sorted(
 
@@ -381,33 +510,32 @@ def generate_albums():
 
         )
 
-
         for artwork in artworks:
 
             grid += f"""
 
-<a class="artwork-card" href="../artworks/{artwork.get('file', '')}.html">
+<a class="artwork-card" href="../artworks/{quote(artwork.get('file', ''), safe='')}.html">
 
 <div class="artwork-thumbnail">
 
-<img src="../images/albums/{album.get('folder', '')}/display/{artwork.get('display', '')}">
+<img src="../images/albums/{quote(album.get('folder', ''), safe='')}/display/{quote(artwork.get('display', ''), safe='')}">
 
 </div>
 
 <div class="artwork-info">
 
 <h3>
-{artwork.get('title', '')}
+{escape_html(artwork.get('title', ''))}
 </h3>
 
 <div class="artwork-info-bottom">
 
 <span class="artwork-number">
-#{artwork.get('number', '')}
+#{escape_html(artwork.get('number', ''))}
 </span>
 
 <span class="artwork-date">
-{artwork.get('date', '')}
+{escape_html(artwork.get('date', ''))}
 </span>
 
 </div>
@@ -418,12 +546,10 @@ def generate_albums():
 
 """
 
-
         html = html.replace(
             "{{ARTWORK_GRID}}",
             grid
         )
-
 
         write_file(
 
@@ -460,7 +586,6 @@ def generate_artworks():
         "artwork_template.html"
     )
 
-
     for album in albums.get(
         "albums",
         []
@@ -471,10 +596,16 @@ def generate_artworks():
             []
         )
 
-
         for index, artwork in enumerate(
             artworks
         ):
+
+            notes = format_text(
+                artwork.get(
+                    "notes",
+                    ""
+                )
+            )
 
             html = replace_values(
 
@@ -483,34 +614,39 @@ def generate_artworks():
                 {
 
                     "{{ARTWORK_TITLE}}":
-                        artwork.get(
-                            "title",
-                            ""
+                        escape_html(
+                            artwork.get(
+                                "title",
+                                ""
+                            )
                         ),
 
                     "{{ARTWORK_NUMBER}}":
-                        artwork.get(
-                            "number",
-                            ""
+                        escape_html(
+                            artwork.get(
+                                "number",
+                                ""
+                            )
                         ),
 
                     "{{ARTWORK_DATE}}":
-                        artwork.get(
-                            "date",
-                            ""
+                        escape_html(
+                            artwork.get(
+                                "date",
+                                ""
+                            )
                         ),
 
                     "{{ARTWORK_TIME_SPENT}}":
-                        artwork.get(
-                            "time_spent",
-                            ""
+                        escape_html(
+                            artwork.get(
+                                "time_spent",
+                                ""
+                            )
                         ),
 
                     "{{ARTWORK_NOTES}}":
-                        artwork.get(
-                            "notes",
-                            ""
-                        ),
+                        notes,
 
                     "{{ALBUM_FOLDER}}":
                         album.get(
@@ -537,11 +673,9 @@ def generate_artworks():
 
             )
 
-
             previous = "#"
 
             next_page = "#"
-
 
             if index > 0:
 
@@ -558,7 +692,6 @@ def generate_artworks():
 
                 )
 
-
             if index < len(artworks) - 1:
 
                 next_page = (
@@ -574,7 +707,6 @@ def generate_artworks():
 
                 )
 
-
             html = html.replace(
                 "{{PREVIOUS_ARTWORK}}",
                 previous
@@ -584,7 +716,6 @@ def generate_artworks():
                 "{{NEXT_ARTWORK}}",
                 next_page
             )
-
 
             keyboard_script = f"""
 
@@ -602,7 +733,6 @@ document.addEventListener("keydown", function(event) {{
 
     }}
 
-
     if (
         event.key === "ArrowRight"
         &&
@@ -619,7 +749,6 @@ document.addEventListener("keydown", function(event) {{
 
 """
 
-
             if "</body>" in html:
 
                 html = html.replace(
@@ -635,7 +764,6 @@ document.addEventListener("keydown", function(event) {{
             else:
 
                 html += keyboard_script
-
 
             write_file(
 
@@ -669,7 +797,6 @@ def generate_attachments(attachments):
 
         return ""
 
-
     html = """
 
 <section class="post-files-card">
@@ -679,7 +806,6 @@ Attachments
 </h2>
 
 """
-
 
     for attachment in attachments:
 
@@ -704,25 +830,17 @@ Attachments
 
             file = attachment
 
-
         if not file:
 
             continue
-
 
         url = get_attachment_url(
             file
         )
 
-
-        display_name = (
-            str(name)
-            .replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace('"', "&quot;")
+        display_name = escape_html(
+            name
         )
-
 
         html += f"""
 
@@ -735,13 +853,11 @@ Attachments
 
 """
 
-
     html += """
 
 </section>
 
 """
-
 
     return html
 
@@ -756,18 +872,14 @@ def format_post_content(content):
 
         return ""
 
-
     pattern = r"\[\[IMAGE:([^\]]+)\]\]"
-
 
     parts = re.split(
         pattern,
         content
     )
 
-
     html = ""
-
 
     for index, part in enumerate(parts):
 
@@ -775,21 +887,18 @@ def format_post_content(content):
 
             continue
 
-
-        # ====================================================
-        # IMAGE
-        # ====================================================
+        # ----------------------------------------------------
+        # INLINE IMAGE
+        # ----------------------------------------------------
 
         if index % 2 == 1:
 
             filename = part.strip()
 
-
             encoded_filename = quote(
                 filename,
                 safe=""
             )
-
 
             html += f"""
 
@@ -804,83 +913,15 @@ def format_post_content(content):
 
 """
 
-
-        # ====================================================
+        # ----------------------------------------------------
         # TEXT
-        # ====================================================
+        # ----------------------------------------------------
 
         else:
 
-            text = part.strip()
-
-
-            if not text:
-
-                continue
-
-
-            def convert_links(match):
-
-                url = match.group(1)
-
-                return (
-
-                    f'<a href="{url}" '
-                    f'target="_blank" '
-                    f'rel="noopener noreferrer">'
-                    f'{url}'
-                    f'</a>'
-
-                )
-
-
-            text = re.sub(
-
-                r"(https?://[^\s<]+)",
-
-                convert_links,
-
-                text
-
+            html += format_text(
+                part
             )
-
-
-            paragraphs = re.split(
-
-                r"\n\s*\n",
-
-                text
-
-            )
-
-
-            for paragraph in paragraphs:
-
-                paragraph = paragraph.strip()
-
-
-                if not paragraph:
-
-                    continue
-
-
-                paragraph = paragraph.replace(
-
-                    "\n",
-
-                    "<br>"
-
-                )
-
-
-                html += f"""
-
-<p>
-{paragraph}
-</p>
-
-"""
-
 
     return html
 
@@ -901,7 +942,6 @@ def generate_posts():
 
     cards = ""
 
-
     for post in posts.get(
         "posts",
         []
@@ -909,20 +949,19 @@ def generate_posts():
 
         cards += f"""
 
-<a class="post-card" href="posts/{post.get('file', '')}.html">
+<a class="post-card" href="posts/{quote(post.get('file', ''), safe='')}.html">
 
 <h2>
-{post.get('title', '')}
+{escape_html(post.get('title', ''))}
 </h2>
 
 <p>
-{post.get('date', '')}
+{escape_html(post.get('date', ''))}
 </p>
 
 </a>
 
 """
-
 
     html = html.replace(
         "{{POST_LIST}}",
@@ -933,7 +972,6 @@ def generate_posts():
         "{{LAST_UPDATED}}",
         get_last_updated()
     )
-
 
     write_file(
 
@@ -946,11 +984,9 @@ def generate_posts():
 
     )
 
-
     template = read_template(
         "post_template.html"
     )
-
 
     for post in posts.get(
         "posts",
@@ -964,15 +1000,19 @@ def generate_posts():
             {
 
                 "{{POST_TITLE}}":
-                    post.get(
-                        "title",
-                        ""
+                    escape_html(
+                        post.get(
+                            "title",
+                            ""
+                        )
                     ),
 
                 "{{POST_DATE}}":
-                    post.get(
-                        "date",
-                        ""
+                    escape_html(
+                        post.get(
+                            "date",
+                            ""
+                        )
                     ),
 
                 "{{POST_CONTENT}}":
@@ -997,7 +1037,6 @@ def generate_posts():
             }
 
         )
-
 
         write_file(
 
@@ -1037,15 +1076,13 @@ def get_generated_files():
 
     ]
 
-
-    # ========================================================
-    # ALBUMS + ARTWORKS + ALBUM IMAGES
-    # ========================================================
+    # --------------------------------------------------------
+    # ALBUMS / ARTWORKS
+    # --------------------------------------------------------
 
     albums = load_json(
         "albums.json"
     )
-
 
     for album in albums.get(
         "albums",
@@ -1056,7 +1093,6 @@ def get_generated_files():
             "folder",
             ""
         )
-
 
         files.append(
 
@@ -1069,7 +1105,6 @@ def get_generated_files():
             )
 
         )
-
 
         for artwork in album.get(
             "artworks",
@@ -1092,7 +1127,6 @@ def get_generated_files():
                 )
 
             )
-
 
             if artwork.get(
                 "display"
@@ -1117,7 +1151,6 @@ def get_generated_files():
 
                 )
 
-
             if artwork.get(
                 "original"
             ):
@@ -1141,12 +1174,10 @@ def get_generated_files():
 
                 )
 
-
         cover = album.get(
             "cover",
             ""
         )
-
 
         if cover:
 
@@ -1167,15 +1198,13 @@ def get_generated_files():
 
             )
 
-
-    # ========================================================
+    # --------------------------------------------------------
     # POSTS
-    # ========================================================
+    # --------------------------------------------------------
 
     posts = load_json(
         "posts.json"
     )
-
 
     for post in posts.get(
         "posts",
@@ -1202,10 +1231,48 @@ def get_generated_files():
 
         )
 
+        # ----------------------------------------------------
+        # POST INLINE IMAGES
+        #
+        # IMPORTANT:
+        # These are recorded as generated files, but they are
+        # NEVER cleaned automatically.
+        # ----------------------------------------------------
 
-        # ====================================================
+        content = post.get(
+            "content",
+            ""
+        )
+
+        image_pattern = r"\[\[IMAGE:([^\]]+)\]\]"
+
+        for image_filename in re.findall(
+            image_pattern,
+            content
+        ):
+
+            image_filename = image_filename.strip()
+
+            if image_filename:
+
+                files.append(
+
+                    os.path.join(
+
+                        "images",
+                        "posts",
+                        image_filename
+
+                    ).replace(
+                        "\\",
+                        "/"
+                    )
+
+                )
+
+        # ----------------------------------------------------
         # POST ATTACHMENTS
-        # ====================================================
+        # ----------------------------------------------------
 
         for attachment in post.get(
             "attachments",
@@ -1226,7 +1293,6 @@ def get_generated_files():
 
                 filename = attachment
 
-
             if filename:
 
                 files.append(
@@ -1240,44 +1306,6 @@ def get_generated_files():
                     )
 
                 )
-
-
-        # ====================================================
-        # POST INLINE IMAGES
-        #
-        # Images referenced by [[IMAGE:filename]]
-        # are protected from generated-file cleanup.
-        # ====================================================
-
-        content = post.get(
-            "content",
-            ""
-        )
-
-
-        for filename in re.findall(
-            r"\[\[IMAGE:([^\]]+)\]\]",
-            content
-        ):
-
-            filename = filename.strip()
-
-
-            if filename:
-
-                files.append(
-
-                    os.path.join(
-                        "images",
-                        "posts",
-                        filename
-                    ).replace(
-                        "\\",
-                        "/"
-                    )
-
-                )
-
 
     return list(
         set(files)
@@ -1296,7 +1324,6 @@ def clean_generated_website():
 
         return
 
-
     with open(
         GENERATED_LIST,
         "r",
@@ -1308,19 +1335,37 @@ def clean_generated_website():
             []
         )
 
-
     current_files = get_generated_files()
-
 
     for old_file in old_files:
 
         if old_file not in current_files:
 
+            # ------------------------------------------------
+            # SAFETY:
+            #
+            # NEVER delete anything inside images/posts.
+            #
+            # Old versions of generated_files.json may not
+            # contain these images, so we explicitly protect
+            # this directory.
+            # ------------------------------------------------
+
+            normalized = old_file.replace(
+                "\\",
+                "/"
+            )
+
+            if normalized.startswith(
+                "images/posts/"
+            ):
+
+                continue
+
             path = os.path.join(
                 WEBSITE_FOLDER,
                 old_file
             )
-
 
             if os.path.isfile(path):
 
@@ -1338,21 +1383,17 @@ def clean_unused_attachments():
         "attachments"
     )
 
-
     if not os.path.exists(
         attachments_folder
     ):
 
         return
 
-
     used_files = set()
-
 
     posts = load_json(
         "posts.json"
     )
-
 
     for post in posts.get(
         "posts",
@@ -1378,13 +1419,11 @@ def clean_unused_attachments():
 
                 filename = attachment
 
-
             if filename:
 
                 used_files.add(
                     filename
                 )
-
 
     for filename in os.listdir(
         attachments_folder
@@ -1394,7 +1433,6 @@ def clean_unused_attachments():
             attachments_folder,
             filename
         )
-
 
         if (
 
@@ -1419,21 +1457,17 @@ def clean_unused_album_images():
         "albums"
     )
 
-
     if not os.path.exists(
         albums_folder
     ):
 
         return
 
-
     used_files = set()
-
 
     albums = load_json(
         "albums.json"
     )
-
 
     for album in albums.get(
         "albums",
@@ -1444,7 +1478,6 @@ def clean_unused_album_images():
             "folder",
             ""
         )
-
 
         for artwork in album.get(
             "artworks",
@@ -1461,7 +1494,6 @@ def clean_unused_album_images():
                 ""
             )
 
-
             if display:
 
                 used_files.add(
@@ -1476,7 +1508,6 @@ def clean_unused_album_images():
                     )
 
                 )
-
 
             if original:
 
@@ -1493,12 +1524,10 @@ def clean_unused_album_images():
 
                 )
 
-
         cover = album.get(
             "cover",
             ""
         )
-
 
         if cover:
 
@@ -1515,7 +1544,6 @@ def clean_unused_album_images():
 
             )
 
-
     for root, dirs, files in os.walk(
         albums_folder
     ):
@@ -1527,7 +1555,6 @@ def clean_unused_album_images():
                 filename
             )
 
-
             relative = os.path.relpath(
                 full_path,
                 albums_folder
@@ -1535,7 +1562,6 @@ def clean_unused_album_images():
                 "\\",
                 "/"
             )
-
 
             if relative not in used_files:
 
@@ -1556,21 +1582,17 @@ def clean_unused_album_folders():
         "albums"
     )
 
-
     if not os.path.exists(
         albums_folder
     ):
 
         return
 
-
     used = set()
-
 
     albums = load_json(
         "albums.json"
     )
-
 
     for album in albums.get(
         "albums",
@@ -1582,13 +1604,11 @@ def clean_unused_album_folders():
             ""
         )
 
-
         if folder:
 
             used.add(
                 folder
             )
-
 
     for folder in os.listdir(
         albums_folder
@@ -1598,7 +1618,6 @@ def clean_unused_album_folders():
             albums_folder,
             folder
         )
-
 
         if (
 
@@ -1631,12 +1650,33 @@ def clean_empty_folders():
 
             continue
 
+        # ----------------------------------------------------
+        # NEVER remove the post image directory.
+        # ----------------------------------------------------
+
+        normalized_root = os.path.abspath(
+            root
+        )
+
+        post_images_root = os.path.abspath(
+            os.path.join(
+                WEBSITE_FOLDER,
+                "images",
+                "posts"
+            )
+        )
+
+        if normalized_root == post_images_root:
+
+            continue
 
         if not dirs and not files:
 
             try:
 
-                os.rmdir(root)
+                os.rmdir(
+                    root
+                )
 
             except OSError:
 
@@ -1659,7 +1699,6 @@ def save_generated_files():
 
     )
 
-
     with open(
 
         GENERATED_LIST,
@@ -1678,7 +1717,9 @@ def save_generated_files():
 
             file,
 
-            indent=4
+            indent=4,
+
+            ensure_ascii=False
 
         )
 
