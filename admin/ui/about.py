@@ -1,3 +1,5 @@
+from PySide6.QtCore import Qt
+
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -45,7 +47,7 @@ def normalize_links(links):
     - original format: flat predefined links only
         {"pixiv": "...", "reddit": "...", "discord": "..."}
 
-    Links are now fully manual, so any old "predefined"
+    Links are fully manual, so any old "predefined"
     Pixiv/Reddit/Discord entries are intentionally NOT carried
     over automatically. Only entries that were already manually
     created (the old "custom" list, or the current plain list)
@@ -133,7 +135,8 @@ class LinkRow(QFrame):
 
     """
     One editable row for an About Me link:
-    clickable text + URL + a remove button.
+    clickable text + URL + a remove button. Lives inside the
+    scrollable links box.
     """
 
     def __init__(self, text="", url="", on_remove=None):
@@ -231,45 +234,10 @@ class Page(QWidget):
             outer_layout
         )
 
-        title = QLabel(
-            "About Editor"
-        )
-
-        title.setStyleSheet("""
-            QLabel {
-                font-size:32px;
-                font-weight:bold;
-            }
-        """)
-
-        outer_layout.addWidget(
-            title
-        )
-
-        scroll = QScrollArea()
-
-        scroll.setWidgetResizable(
-            True
-        )
-
-        outer_layout.addWidget(
-            scroll
-        )
-
-        content = QWidget()
-
-        scroll.setWidget(
-            content
-        )
-
-        layout = QVBoxLayout()
-
-        content.setLayout(
-            layout
-        )
-
         # --------------------------------------------------------
-        # Introduction
+        # Introduction — sits at the very top of the page and
+        # keeps a stable amount of space no matter how many
+        # links are added below it.
         # --------------------------------------------------------
 
         intro_label = QLabel(
@@ -280,7 +248,7 @@ class Page(QWidget):
             SECTION_LABEL_STYLE
         )
 
-        layout.addWidget(
+        outer_layout.addWidget(
             intro_label
         )
 
@@ -293,12 +261,17 @@ class Page(QWidget):
             )
         )
 
-        layout.addWidget(
-            self.introduction
+        outer_layout.addWidget(
+            self.introduction,
+            2
         )
 
         # --------------------------------------------------------
-        # Links (fully manual, added one by one from the admin)
+        # Links — fully manual, added one by one from the admin.
+        # The rows live inside their own scrollable box (same
+        # idea as the Introduction text box scrolling on its
+        # own), so adding many links never squeezes the
+        # Introduction box.
         # --------------------------------------------------------
 
         links_label = QLabel(
@@ -309,8 +282,35 @@ class Page(QWidget):
             SECTION_LABEL_STYLE
         )
 
-        layout.addWidget(
+        outer_layout.addWidget(
             links_label
+        )
+
+        self.links_scroll = QScrollArea()
+
+        self.links_scroll.setWidgetResizable(
+            True
+        )
+
+        outer_layout.addWidget(
+            self.links_scroll,
+            3
+        )
+
+        links_content = QWidget()
+
+        self.links_scroll.setWidget(
+            links_content
+        )
+
+        self.links_container = QVBoxLayout()
+
+        links_content.setLayout(
+            self.links_container
+        )
+
+        self.links_container.setAlignment(
+            Qt.AlignTop
         )
 
         links = normalize_links(
@@ -320,18 +320,16 @@ class Page(QWidget):
             )
         )
 
-        self.links_container = QVBoxLayout()
-
-        layout.addLayout(
-            self.links_container
-        )
-
         for entry in links:
 
             self.add_link_row(
                 entry.get("text", ""),
                 entry.get("url", "")
             )
+
+        # --------------------------------------------------------
+        # Add Link + Save, both at the very bottom of the page.
+        # --------------------------------------------------------
 
         add_link_button = QPushButton(
             "Add Link"
@@ -341,15 +339,9 @@ class Page(QWidget):
             lambda: self.add_link_row()
         )
 
-        layout.addWidget(
+        outer_layout.addWidget(
             add_link_button
         )
-
-        layout.addStretch()
-
-        # --------------------------------------------------------
-        # Save button
-        # --------------------------------------------------------
 
         save_button = QPushButton(
             "Save About"

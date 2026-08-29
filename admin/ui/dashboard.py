@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
 
 
 from tools.json_manager import load_json
+from tools.site_config import get_site_name
 
 
 
@@ -71,7 +72,7 @@ class Page(QWidget):
 
 
         description = QLabel(
-            "Welcome to the Aaron-l Portfolio administration panel."
+            f"Welcome to the {get_site_name()} administration panel."
         )
 
 

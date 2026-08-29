@@ -124,6 +124,21 @@ nav a.active {
 }
 
 
+.since-text {
+
+    margin-left:auto;
+
+    color:var(--secondary);
+
+    font-size:16px;
+
+    white-space:nowrap;
+
+    z-index:2;
+
+}
+
+
 
 /* =========================
    MAIN

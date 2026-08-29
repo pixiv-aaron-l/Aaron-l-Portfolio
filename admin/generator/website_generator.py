@@ -7,6 +7,7 @@ from datetime import datetime
 from urllib.parse import quote
 
 from tools.json_manager import load_json
+from tools.site_config import get_site_name, get_since_year
 
 
 # ============================================================
@@ -53,6 +54,60 @@ GITHUB_MEDIA_BASE = (
 )
 
 
+# --------------------------------------------------------
+# GitHub Pages base path.
+#
+# GitHub Pages hosts a repository named "<owner>.github.io"
+# at the domain root ("/"). Any other repository name is
+# hosted as a project site under "/<repository>/" instead.
+#
+# This matters specifically for 404.html: GitHub Pages
+# serves that one file for ANY unmatched URL, no matter how
+# deeply nested the requested path was, but the browser still
+# resolves relative links in it based on the REQUESTED path,
+# not on 404.html's real location. Without a fixed base, a
+# 404 triggered at the site root looks fine while one
+# triggered from e.g. "/albums/some-typo" silently breaks
+# every relative link and the stylesheet.
+#
+# GITHUB_REPOSITORY above already has to be edited by anyone
+# forking this project (it's also used for the attachment/LFS
+# URLs), so reusing it here keeps this correct automatically
+# for other users of this codebase, with no extra config.
+# --------------------------------------------------------
+
+if GITHUB_REPOSITORY.lower().endswith(".github.io"):
+
+    SITE_BASE_PATH = "/"
+
+else:
+
+    SITE_BASE_PATH = f"/{GITHUB_REPOSITORY}/"
+
+
+# ============================================================
+# SITE-WIDE BRANDING CONFIGURATION
+# ============================================================
+
+def build_since_text(since_year):
+
+    """
+    Builds the opposite-corner "since <year>" header text.
+    Returns an empty string if no year has been configured, so
+    the element simply doesn't appear at all.
+    """
+
+    if not since_year:
+
+        return ""
+
+    return (
+        '<span class="since-text">since '
+        + escape_html(since_year)
+        + "</span>"
+    )
+
+
 # ============================================================
 # TEMPLATE FUNCTIONS
 # ============================================================
@@ -70,7 +125,28 @@ def read_template(name):
         encoding="utf-8"
     ) as file:
 
-        return file.read()
+        html = file.read()
+
+    # Every template automatically gets the site branding
+    # placeholders filled in, so no individual generate_*
+    # function needs to remember to do it, and any future
+    # template gets this for free too.
+
+    html = html.replace(
+        "{{SITE_NAME}}",
+        escape_html(
+            get_site_name()
+        )
+    )
+
+    html = html.replace(
+        "{{SINCE_TEXT}}",
+        build_since_text(
+            get_since_year()
+        )
+    )
+
+    return html
 
 
 def write_file(path, content):
@@ -1140,6 +1216,9 @@ def generate_404():
 
         {
 
+            "{{SITE_BASE_PATH}}":
+                SITE_BASE_PATH,
+
             "{{LAST_UPDATED}}":
                 get_last_updated()
 
@@ -1854,3 +1933,5 @@ def generate_website():
     clean_empty_folders()
 
     save_generated_files()
+
+

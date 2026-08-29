@@ -52,7 +52,16 @@ class AdminWindow(QWidget):
 
 
 
+        # --------------------------------------------------------
         # SIDEBAR
+        #
+        # Layout, top to bottom:
+        #   - Dashboard pinned to the top
+        #   - About / Albums / Artworks / Posts grouped in the
+        #     middle
+        #   - Generate Website / Publish Website pinned to the
+        #     bottom
+        # --------------------------------------------------------
 
         sidebar = QVBoxLayout()
 
@@ -94,9 +103,17 @@ class AdminWindow(QWidget):
 
 
 
-        for button in [
+        sidebar.addWidget(
+            self.dashboard_button
+        )
 
-            self.dashboard_button,
+
+        sidebar.addStretch(
+            1
+        )
+
+
+        for button in [
 
             self.about_button,
 
@@ -104,11 +121,7 @@ class AdminWindow(QWidget):
 
             self.artworks_button,
 
-            self.posts_button,
-
-            self.generate_button,
-
-            self.publish_button
+            self.posts_button
 
         ]:
 
@@ -117,8 +130,19 @@ class AdminWindow(QWidget):
             )
 
 
+        sidebar.addStretch(
+            1
+        )
 
-        sidebar.addStretch()
+
+        sidebar.addWidget(
+            self.generate_button
+        )
+
+
+        sidebar.addWidget(
+            self.publish_button
+        )
 
 
 
@@ -134,7 +158,6 @@ class AdminWindow(QWidget):
 
 
         self.pages = QStackedWidget()
-
 
 
         self.dashboard_page = DashboardPage()
@@ -246,7 +269,6 @@ class AdminWindow(QWidget):
 
 
 
-
     def update_website(self):
 
         try:
@@ -283,7 +305,6 @@ class AdminWindow(QWidget):
 
 
 
-
     def publish_website(self):
 
         try:
@@ -293,11 +314,9 @@ class AdminWindow(QWidget):
             generate_website()
 
 
-
             # Commit and push to GitHub
 
             result = publish_changes()
-
 
 
             QMessageBox.information(
@@ -371,7 +390,8 @@ if __name__ == "__main__":
 
         QLineEdit,
         QTextEdit,
-        QListWidget {
+        QListWidget,
+        QScrollArea {
 
             background-color:#1b1b1b;
             color:white;
@@ -386,6 +406,41 @@ if __name__ == "__main__":
             color:#eeeeee;
 
         }
+
+
+        QCheckBox::indicator {
+
+            width:18px;
+            height:18px;
+            border:1px solid #8b2635;
+            border-radius:4px;
+            background-color:#1b1b1b;
+
+        }
+
+
+        QCheckBox::indicator:hover {
+
+            border:1px solid #b3374c;
+
+        }
+
+
+        QCheckBox::indicator:checked {
+
+            background-color:#8b2635;
+            border:1px solid #8b2635;
+
+        }
+
+
+        QCheckBox::indicator:checked:hover {
+
+            background-color:#b3374c;
+            border:1px solid #b3374c;
+
+        }
+
 
     """)
 
