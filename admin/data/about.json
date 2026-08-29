@@ -1,9 +1,18 @@
 {
     "introduction": "Welcome to my personal website ^u^ \n\nThis place is meant for PC users and it hosts my arts and blog posts. My username is Aaron-l and I am a franco-belgian man with current interest in playing danmaku video games, using mathematics/physics/engineering and drawing illustrations.\n\nBeware of R-18 and R-18G content !",
-    "links": {
-        "pixiv": "https://www.pixiv.net/en/users/118023811",
-        "reddit": "https://www.reddit.com/user/guest111i/",
-        "discord": "https://discord.gg/zKXYj62Nh6"
-    },
-    "last_updated": "25/08/2026"
+    "links": [
+        {
+            "text": "Pixiv",
+            "url": "https://www.pixiv.net/en/users/118023811"
+        },
+        {
+            "text": "Reddit",
+            "url": "https://www.reddit.com/user/guest111i/"
+        },
+        {
+            "text": "Discord",
+            "url": "https://discord.gg/zKXYj62Nh6"
+        }
+    ],
+    "last_updated": "29/08/2026"
 }

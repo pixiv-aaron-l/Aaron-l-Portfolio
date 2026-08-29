@@ -272,6 +272,75 @@ def get_attachment_url(filename):
 # INDEX
 # ============================================================
 
+def build_about_links_section(links):
+
+    """
+    Builds the entire "Links" section of the About Me page,
+    including the heading, from the about.json "links" list.
+
+    Links are fully manual: every entry is added directly from
+    the admin as {"text": "...", "url": "..."}. Only entries
+    that have both a non-empty text and a non-empty URL are
+    included.
+
+    If there are no links at all, an empty string is returned
+    so the section (and its heading) simply doesn't appear.
+    """
+
+    if not isinstance(
+        links,
+        list
+    ):
+
+        links = []
+
+    link_tags = ""
+
+    for entry in links:
+
+        if not isinstance(
+            entry,
+            dict
+        ):
+
+            continue
+
+        text = entry.get(
+            "text",
+            ""
+        ).strip()
+
+        url = entry.get(
+            "url",
+            ""
+        ).strip()
+
+        if not text or not url:
+
+            continue
+
+        link_tags += (
+            f'<a href="{escape_html(url)}" '
+            f'target="_blank" '
+            f'rel="noopener noreferrer">\n'
+            f'{escape_html(text)}\n'
+            f'</a>\n\n'
+        )
+
+    if not link_tags:
+
+        return ""
+
+    return (
+        '<section class="box">\n\n\n'
+        "<h2>Links</h2>\n\n\n"
+        '<div class="links">\n\n\n'
+        + link_tags +
+        "</div>\n\n\n"
+        "</section>\n"
+    )
+
+
 def generate_index():
 
     about = load_json(
@@ -289,6 +358,13 @@ def generate_index():
         )
     )
 
+    links_section = build_about_links_section(
+        about.get(
+            "links",
+            []
+        )
+    )
+
     html = replace_values(
 
         html,
@@ -298,32 +374,8 @@ def generate_index():
             "{{ABOUT_INTRODUCTION}}":
                 introduction,
 
-            "{{PIXIV_LINK}}":
-                about.get(
-                    "links",
-                    {}
-                ).get(
-                    "pixiv",
-                    ""
-                ),
-
-            "{{REDDIT_LINK}}":
-                about.get(
-                    "links",
-                    {}
-                ).get(
-                    "reddit",
-                    ""
-                ),
-
-            "{{DISCORD_LINK}}":
-                about.get(
-                    "links",
-                    {}
-                ).get(
-                    "discord",
-                    ""
-                ),
+            "{{ABOUT_LINKS_SECTION}}":
+                links_section,
 
             "{{LAST_UPDATED}}":
                 get_last_updated()
@@ -1061,6 +1113,53 @@ def generate_posts():
 
 
 # ============================================================
+# CUSTOM 404 / LOST ARTWORK PAGE
+# ============================================================
+
+def generate_404():
+
+    """
+    Generates the custom 404 page shown by GitHub Pages for any
+    unmatched URL (nonexistent artwork, post, album, or typo'd
+    link). GitHub Pages automatically serves a file named
+    404.html at the site root for this purpose, so no extra
+    hosting configuration is required.
+
+    Kept deliberately simple: a general "page not found"
+    message. Navigation is handled entirely by the header nav,
+    which is already present on every page including this one.
+    """
+
+    html = read_template(
+        "404_template.html"
+    )
+
+    html = replace_values(
+
+        html,
+
+        {
+
+            "{{LAST_UPDATED}}":
+                get_last_updated()
+
+        }
+
+    )
+
+    write_file(
+
+        os.path.join(
+            WEBSITE_FOLDER,
+            "404.html"
+        ),
+
+        html
+
+    )
+
+
+# ============================================================
 # GENERATED FILE LIST
 # ============================================================
 
@@ -1072,7 +1171,9 @@ def get_generated_files():
 
         "arts.html",
 
-        "posts.html"
+        "posts.html",
+
+        "404.html"
 
     ]
 
@@ -1741,6 +1842,8 @@ def generate_website():
     generate_artworks()
 
     generate_posts()
+
+    generate_404()
 
     clean_unused_attachments()
 

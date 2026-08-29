@@ -7,13 +7,13 @@ from PySide6.QtWidgets import (
     QPushButton,
     QLineEdit,
     QTextEdit,
+    QCheckBox,
     QInputDialog,
     QMessageBox
 )
 
 
 from tools.json_manager import load_json, save_json
-
 
 
 
@@ -167,6 +167,23 @@ class Page(QWidget):
             )
 
 
+        # --------------------------------------------------------
+        # FEATURED ALBUM CHECKBOX
+        #
+        # Featured albums are the pool used later by the random
+        # artwork section on the About Me page. This does not
+        # affect album/artwork generation by itself yet.
+        # --------------------------------------------------------
+
+        self.featured_checkbox = QCheckBox(
+            "Featured album (used for random artwork selection)"
+        )
+
+        right.addWidget(
+            self.featured_checkbox
+        )
+
+
 
         self.save_button = QPushButton(
             "Save Album"
@@ -241,11 +258,20 @@ class Page(QWidget):
             []
         ):
 
+            title = album.get(
+                "title",
+                "Unnamed"
+            )
+
+            if album.get(
+                "featured",
+                False
+            ):
+
+                title = "★ " + title
+
             self.album_list.addItem(
-                album.get(
-                    "title",
-                    "Unnamed"
-                )
+                title
             )
 
 
@@ -299,6 +325,8 @@ class Page(QWidget):
             "description": "",
 
             "cover": "",
+
+            "featured": False,
 
             "artworks": []
 
@@ -377,6 +405,14 @@ class Page(QWidget):
         )
 
 
+        self.featured_checkbox.setChecked(
+            album.get(
+                "featured",
+                False
+            )
+        )
+
+
 
 
     def save_album(self):
@@ -406,6 +442,8 @@ class Page(QWidget):
 
         album["description"] = self.description_input.toPlainText()
 
+        album["featured"] = self.featured_checkbox.isChecked()
+
 
 
         save_json(
@@ -422,6 +460,13 @@ class Page(QWidget):
 
             "Album saved successfully."
 
+        )
+
+
+        self.refresh()
+
+        self.album_list.setCurrentRow(
+            self.current_album
         )
 
 
