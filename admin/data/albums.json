@@ -586,7 +586,8 @@
                     "time_spent": "6 hours",
                     "notes": "kaguya is watching mokou !!! my recent artworks seem to all be at 6 hours, 1 for the sketch and 5 for the rendering."
                 }
-            ]
+            ],
+            "featured": false
         }
     ]
 }

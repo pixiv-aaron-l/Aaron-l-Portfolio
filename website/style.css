@@ -347,6 +347,19 @@ h2 {
 }
 
 
+.random-artwork-grid {
+
+    display:grid;
+
+    grid-template-columns:repeat(5,1fr);
+
+    gap:15px;
+
+    align-items:stretch;
+
+}
+
+
 .artwork-card {
 
     background:var(--panel);

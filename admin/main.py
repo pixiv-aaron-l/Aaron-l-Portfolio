@@ -20,6 +20,7 @@ from ui.posts import Page as PostsPage
 
 from generator.website_generator import generate_website
 from tools.github_manager import publish_changes
+from tools.site_config import get_site_name
 
 
 
@@ -33,7 +34,7 @@ class AdminWindow(QWidget):
 
 
         self.setWindowTitle(
-            "Aaron-l Portfolio Admin"
+            f"{get_site_name()} Admin"
         )
 
 

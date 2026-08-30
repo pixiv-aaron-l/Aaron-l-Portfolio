@@ -417,10 +417,191 @@ def build_about_links_section(links):
     )
 
 
+# ============================================================
+# RANDOM ARTWORK SECTION
+# ============================================================
+
+RANDOM_ART_MINIMUM = 20
+
+RANDOM_ART_COUNT = 20
+
+
+def get_featured_artwork_pool(albums):
+
+    """
+    Returns a flat list of (album, artwork) pairs for every
+    artwork inside every album currently marked "featured" in
+    the admin. Shared between the generator (to build the
+    section) and the admin dashboard (to show pool size/status),
+    so the two never drift out of sync.
+    """
+
+    pool = []
+
+    for album in albums.get(
+        "albums",
+        []
+    ):
+
+        if not album.get(
+            "featured",
+            False
+        ):
+
+            continue
+
+        for artwork in album.get(
+            "artworks",
+            []
+        ):
+
+            pool.append(
+                (album, artwork)
+            )
+
+    return pool
+
+
+def build_random_artwork_section(albums):
+
+    """
+    Builds the optional "Random Artworks" section on the About
+    Me page: a 4-row x 5-column grid of randomly picked
+    artworks drawn from every album marked "featured".
+
+    Only appears once the featured pool has MORE than
+    RANDOM_ART_MINIMUM artworks available, so there's always
+    enough variety and the grid never looks sparse or
+    repetitive.
+
+    The random selection happens client-side, in the browser,
+    every time the page is loaded or refreshed: the ENTIRE
+    featured pool is embedded as JSON, and a small inline script
+    picks RANDOM_ART_COUNT of them at random and fills the grid.
+    This is a static site with no server to re-roll anything on
+    each request, so client-side JS is what makes "changes every
+    time you open/refresh the page" possible at all.
+    """
+
+    pool = get_featured_artwork_pool(
+        albums
+    )
+
+    if len(pool) <= RANDOM_ART_MINIMUM:
+
+        return ""
+
+    pool_data = []
+
+    for album, artwork in pool:
+
+        folder = quote(
+            album.get("folder", ""),
+            safe=""
+        )
+
+        file = quote(
+            artwork.get("file", ""),
+            safe=""
+        )
+
+        display = quote(
+            artwork.get("display", ""),
+            safe=""
+        )
+
+        pool_data.append({
+
+            "url": f"artworks/{file}.html",
+
+            "image":
+                f"images/albums/{folder}/display/{display}",
+
+            "title": artwork.get("title", "")
+
+        })
+
+    # "</" is escaped so a title/filename containing it could
+    # never prematurely close the <script> tag it's embedded in.
+
+    pool_json = json.dumps(
+        pool_data,
+        ensure_ascii=False
+    ).replace(
+        "</",
+        "<\\/"
+    )
+
+    script = f"""
+<script>
+(function() {{
+
+    var randomArtworkPool = {pool_json};
+
+    var RANDOM_ART_COUNT = {RANDOM_ART_COUNT};
+
+    function escapeHtml(text) {{
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }}
+
+    function pickRandomArtworks(pool, count) {{
+        var shuffled = pool.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {{
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = shuffled[i];
+            shuffled[i] = shuffled[j];
+            shuffled[j] = temp;
+        }}
+        return shuffled.slice(0, count);
+    }}
+
+    function renderRandomArtworks() {{
+        var container = document.getElementById(
+            'random-artwork-grid'
+        );
+        if (!container) return;
+        var selection = pickRandomArtworks(
+            randomArtworkPool,
+            RANDOM_ART_COUNT
+        );
+        container.innerHTML = selection.map(function(item) {{
+            return '<a class="artwork-card" href="' + item.url + '">'
+                + '<div class="artwork-thumbnail">'
+                + '<img src="' + item.image + '">'
+                + '</div>'
+                + '<div class="artwork-info">'
+                + '<h3>' + escapeHtml(item.title) + '</h3>'
+                + '</div>'
+                + '</a>';
+        }}).join('');
+    }}
+
+    renderRandomArtworks();
+
+}})();
+</script>
+"""
+
+    return (
+        '<section class="box">\n\n\n'
+        "<h2>Random Artworks</h2>\n\n\n"
+        '<div class="random-artwork-grid" '
+        'id="random-artwork-grid"></div>\n\n\n'
+        "</section>\n"
+        + script
+    )
+
+
 def generate_index():
 
     about = load_json(
         "about.json"
+    )
+
+    albums = load_json(
+        "albums.json"
     )
 
     html = read_template(
@@ -441,6 +622,10 @@ def generate_index():
         )
     )
 
+    random_artwork_section = build_random_artwork_section(
+        albums
+    )
+
     html = replace_values(
 
         html,
@@ -452,6 +637,9 @@ def generate_index():
 
             "{{ABOUT_LINKS_SECTION}}":
                 links_section,
+
+            "{{RANDOM_ARTWORK_SECTION}}":
+                random_artwork_section,
 
             "{{LAST_UPDATED}}":
                 get_last_updated()
