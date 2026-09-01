@@ -1,5 +1,8 @@
 import os
+import re
 import shutil
+
+from PySide6.QtCore import Qt
 
 from PySide6.QtWidgets import (
     QWidget,
@@ -10,6 +13,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QLineEdit,
     QTextEdit,
+    QCheckBox,
     QInputDialog,
     QMessageBox,
     QFileDialog
@@ -22,6 +26,95 @@ from tools.image_manager import (
     create_display_image,
     get_album_image_folder
 )
+
+
+# ============================================================
+# AUTOMATIC PAGE SLUGS
+#
+# Artwork page filenames used to be typed in by hand (a "File
+# name" field), which meant two artworks with the same title
+# (e.g. two pieces both called "Mokou") silently collided --
+# the only way around it was manually typing "mokou2",
+# "mokou3", etc. This makes that fully automatic instead: a
+# slug is derived from the title, and disambiguated the same
+# way if it's already taken by another artwork anywhere in the
+# project (artwork pages all live in one flat website/artworks/
+# folder regardless of album, so uniqueness has to be checked
+# across every album, not just the current one).
+# ============================================================
+
+def slugify(text):
+
+    text = text.lower().strip()
+
+    text = re.sub(
+        r"[^a-z0-9]+",
+        "-",
+        text
+    )
+
+    text = text.strip("-")
+
+    if not text:
+
+        text = "artwork"
+
+    return text
+
+
+def generate_unique_artwork_slug(title, albums_data):
+
+    base_slug = slugify(
+        title
+    )
+
+    existing_slugs = set()
+
+    for album in albums_data.get(
+        "albums",
+        []
+    ):
+
+        for artwork in album.get(
+            "artworks",
+            []
+        ):
+
+            existing_slugs.add(
+                artwork.get(
+                    "file",
+                    ""
+                )
+            )
+
+    if base_slug not in existing_slugs:
+
+        return base_slug
+
+    counter = 2
+
+    while f"{base_slug}{counter}" in existing_slugs:
+
+        counter += 1
+
+    return f"{base_slug}{counter}"
+
+
+def format_album_title(album):
+
+    title = album.get(
+        "title",
+        ""
+    )
+
+    if album.get(
+        "featured",
+        False
+    ):
+
+        title = "★ " + title
+
+    return title
 
 
 class Page(QWidget):
@@ -45,6 +138,14 @@ class Page(QWidget):
 
         self.album_list = QListWidget()
 
+        self.album_list.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarAlwaysOff
+        )
+
+        self.album_list.setTextElideMode(
+            Qt.ElideRight
+        )
+
         left.addWidget(
             self.album_list
         )
@@ -55,6 +156,14 @@ class Page(QWidget):
         )
 
         self.artwork_list = QListWidget()
+
+        self.artwork_list.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarAlwaysOff
+        )
+
+        self.artwork_list.setTextElideMode(
+            Qt.ElideRight
+        )
 
         left.addWidget(
             self.artwork_list
@@ -112,8 +221,6 @@ class Page(QWidget):
 
         self.title_input = QLineEdit()
 
-        self.file_input = QLineEdit()
-
         self.display_input = QLineEdit()
 
         self.original_input = QLineEdit()
@@ -130,8 +237,6 @@ class Page(QWidget):
         fields = [
 
             (self.title_input, "Title"),
-
-            (self.file_input, "File name"),
 
             (self.display_input, "Display image"),
 
@@ -157,6 +262,29 @@ class Page(QWidget):
             right.addWidget(
                 widget
             )
+
+
+        # --------------------------------------------------------
+        # EXCLUDE FROM RANDOM ARTWORKS
+        #
+        # Only meaningful while this artwork's album is featured,
+        # since the random pool only ever draws from featured
+        # albums in the first place. Fully HIDDEN (not just
+        # disabled) whenever the album isn't featured, so it
+        # never shows up as an irrelevant option.
+        # --------------------------------------------------------
+
+        self.exclude_checkbox = QCheckBox(
+            "Exclude from Random Artworks"
+        )
+
+        self.exclude_checkbox.setVisible(
+            False
+        )
+
+        right.addWidget(
+            self.exclude_checkbox
+        )
 
 
         self.image_button = QPushButton(
@@ -186,6 +314,8 @@ class Page(QWidget):
         self.current_album = -1
 
         self.current_artwork = -1
+
+        self.current_album_featured = False
 
 
         self.refresh()
@@ -224,7 +354,36 @@ class Page(QWidget):
         )
 
 
+    def showEvent(self, event):
+
+        """
+        Called by Qt every time this page actually becomes
+        visible (e.g. switching back to the Artworks tab).
+        Re-reads albums.json and rebuilds the album list while
+        keeping the same album selected (which in turn reloads
+        that album's artworks fresh too), so edits made anywhere
+        else in the admin always show up here without restarting
+        the app.
+        """
+
+        super().showEvent(event)
+
+        selected = self.album_list.currentRow()
+
+        self.refresh()
+
+        if 0 <= selected < self.album_list.count():
+
+            self.album_list.setCurrentRow(
+                selected
+            )
+
+
     def refresh(self):
+
+        self.album_list.blockSignals(
+            True
+        )
 
         self.album_list.clear()
 
@@ -235,18 +394,63 @@ class Page(QWidget):
         for album in data.get("albums", []):
 
             self.album_list.addItem(
-                album.get("title", "")
+                format_album_title(
+                    album
+                )
             )
+
+        self.album_list.blockSignals(
+            False
+        )
+
+
+    def format_artwork_title(self, artwork):
+
+        symbols = ""
+
+        if artwork.get(
+            "excluded_from_random",
+            False
+        ):
+
+            symbols += "✕"
+
+        title = artwork.get(
+            "title",
+            ""
+        )
+
+        if symbols:
+
+            title = symbols + " " + title
+
+        return title
+
+
     def load_album(self, index):
 
         self.current_album = index
 
         self.current_artwork = -1
 
+        self.artwork_list.blockSignals(
+            True
+        )
+
         self.artwork_list.clear()
 
 
         if index < 0:
+
+            self.current_album_featured = False
+
+            self.artwork_list.blockSignals(
+                False
+            )
+
+            self.exclude_checkbox.setVisible(
+                False
+            )
 
             return
 
@@ -255,13 +459,30 @@ class Page(QWidget):
             "albums.json"
         )
 
+        album = data["albums"][index]
 
-        for artwork in data["albums"][index].get("artworks", []):
+        self.current_album_featured = album.get(
+            "featured",
+            False
+        )
+
+
+        for artwork in album.get("artworks", []):
 
             self.artwork_list.addItem(
-                artwork.get("title", "")
+                self.format_artwork_title(
+                    artwork
+                )
             )
 
+
+        self.artwork_list.blockSignals(
+            False
+        )
+
+        self.exclude_checkbox.setVisible(
+            self.current_album_featured
+        )
 
 
     def create_artwork(self):
@@ -278,7 +499,7 @@ class Page(QWidget):
         )
 
 
-        if not ok:
+        if not ok or not title:
 
             return
 
@@ -291,14 +512,17 @@ class Page(QWidget):
         artworks = data["albums"][self.current_album]["artworks"]
 
 
+        slug = generate_unique_artwork_slug(
+            title,
+            data
+        )
+
+
         artworks.append({
 
             "title": title,
 
-            "file": title.lower().replace(
-                " ",
-                "-"
-            ),
+            "file": slug,
 
             "display": "",
 
@@ -310,7 +534,9 @@ class Page(QWidget):
 
             "time_spent": "",
 
-            "notes": ""
+            "notes": "",
+
+            "excluded_from_random": False
 
         })
 
@@ -318,6 +544,9 @@ class Page(QWidget):
         self.renumber_artworks(
             artworks
         )
+
+
+        new_index = len(artworks) - 1
 
 
         save_json(
@@ -330,6 +559,9 @@ class Page(QWidget):
             self.current_album
         )
 
+        self.artwork_list.setCurrentRow(
+            new_index
+        )
 
 
     def load_artwork(self, index):
@@ -338,6 +570,10 @@ class Page(QWidget):
 
 
         if index < 0:
+
+            self.exclude_checkbox.setChecked(
+                False
+            )
 
             return
 
@@ -352,10 +588,6 @@ class Page(QWidget):
 
         self.title_input.setText(
             artwork.get("title", "")
-        )
-
-        self.file_input.setText(
-            artwork.get("file", "")
         )
 
         self.display_input.setText(
@@ -385,6 +617,21 @@ class Page(QWidget):
         )
 
 
+        if self.current_album_featured:
+
+            self.exclude_checkbox.setChecked(
+                artwork.get(
+                    "excluded_from_random",
+                    False
+                )
+            )
+
+        else:
+
+            self.exclude_checkbox.setChecked(
+                False
+            )
+
 
     def save_artwork(self):
 
@@ -403,8 +650,6 @@ class Page(QWidget):
 
         artwork["title"] = self.title_input.text()
 
-        artwork["file"] = self.file_input.text()
-
         artwork["display"] = self.display_input.text()
 
         artwork["original"] = self.original_input.text()
@@ -417,11 +662,39 @@ class Page(QWidget):
 
         artwork["notes"] = self.notes_input.toPlainText()
 
+        # The checkbox is hidden (and forced unchecked) whenever
+        # the album isn't featured, so this always saves False in
+        # that case without needing a separate check here.
+        # Note: the page slug ("file") is intentionally never
+        # changed here, even if the title changes -- it's set
+        # once at creation so a published page's URL never moves.
+
+        artwork["excluded_from_random"] = self.exclude_checkbox.isChecked()
+
 
         save_json(
             "albums.json",
             data
         )
+
+
+        # Update the list item's text directly instead of doing
+        # a full clear+rebuild -- this shows the new title/
+        # symbols instantly and can never lose the current
+        # selection, since nothing about the list's row count or
+        # order changed.
+
+        item = self.artwork_list.item(
+            self.current_artwork
+        )
+
+        if item:
+
+            item.setText(
+                self.format_artwork_title(
+                    artwork
+                )
+            )
 
 
         QMessageBox.information(
@@ -431,13 +704,11 @@ class Page(QWidget):
         )
 
 
-
     def renumber_artworks(self, artworks):
 
         for index, artwork in enumerate(artworks):
 
             artwork["number"] = index + 1
-
 
 
     def move_up(self):
@@ -486,6 +757,8 @@ class Page(QWidget):
         self.artwork_list.setCurrentRow(
             index - 1
         )
+
+
     def move_down(self):
 
         data = load_json(
@@ -534,7 +807,6 @@ class Page(QWidget):
         )
 
 
-
     def delete_artwork(self):
 
         if self.current_artwork < 0:
@@ -562,8 +834,11 @@ class Page(QWidget):
         artworks = data["albums"][self.current_album]["artworks"]
 
 
+        deleted_index = self.current_artwork
+
+
         artworks.pop(
-            self.current_artwork
+            deleted_index
         )
 
 
@@ -583,12 +858,28 @@ class Page(QWidget):
         )
 
 
+        remaining = len(
+            artworks
+        )
+
+
+        if remaining:
+
+            new_index = min(
+                deleted_index,
+                remaining - 1
+            )
+
+            self.artwork_list.setCurrentRow(
+                new_index
+            )
+
+
         QMessageBox.information(
             self,
             "Deleted",
             "Artwork deleted successfully."
         )
-
 
 
     def choose_image(self):

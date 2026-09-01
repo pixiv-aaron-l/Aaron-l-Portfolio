@@ -1,3 +1,7 @@
+import re
+
+from PySide6.QtCore import Qt
+
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -14,6 +18,92 @@ from PySide6.QtWidgets import (
 
 
 from tools.json_manager import load_json, save_json
+
+
+# ============================================================
+# AUTOMATIC ALBUM FOLDER SLUGS
+#
+# Mirrors the same automation used for artwork page slugs: the
+# folder is derived from the album title and disambiguated
+# automatically if it's already taken, rather than typed in by
+# hand. It's set once at creation and left stable afterward, so
+# renaming an album later never orphans its already-uploaded
+# images.
+# ============================================================
+
+def slugify(text):
+
+    text = text.lower().strip()
+
+    text = re.sub(
+        r"[^a-z0-9]+",
+        "-",
+        text
+    )
+
+    text = text.strip("-")
+
+    if not text:
+
+        text = "album"
+
+    return text
+
+
+def generate_unique_album_folder(title, albums_data):
+
+    base_slug = slugify(
+        title
+    )
+
+    existing_folders = set()
+
+    for album in albums_data.get(
+        "albums",
+        []
+    ):
+
+        existing_folders.add(
+            album.get(
+                "folder",
+                ""
+            )
+        )
+
+    if base_slug not in existing_folders:
+
+        return base_slug
+
+    counter = 2
+
+    while f"{base_slug}{counter}" in existing_folders:
+
+        counter += 1
+
+    return f"{base_slug}{counter}"
+
+
+def format_album_title(album):
+
+    """
+    Shared so the album list always looks the same whether it
+    was just built from scratch (refresh) or a single item was
+    updated in place (save).
+    """
+
+    title = album.get(
+        "title",
+        "Unnamed"
+    )
+
+    if album.get(
+        "featured",
+        False
+    ):
+
+        title = "★ " + title
+
+    return title
 
 
 
@@ -45,6 +135,14 @@ class Page(QWidget):
 
 
         self.album_list = QListWidget()
+
+        self.album_list.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarAlwaysOff
+        )
+
+        self.album_list.setTextElideMode(
+            Qt.ElideRight
+        )
 
 
         left.addWidget(
@@ -115,8 +213,6 @@ class Page(QWidget):
 
         self.title_input = QLineEdit()
 
-        self.folder_input = QLineEdit()
-
         self.date_input = QLineEdit()
 
         self.cover_input = QLineEdit()
@@ -130,11 +226,6 @@ class Page(QWidget):
             (
                 self.title_input,
                 "Album title"
-            ),
-
-            (
-                self.folder_input,
-                "Folder name"
             ),
 
             (
@@ -170,9 +261,8 @@ class Page(QWidget):
         # --------------------------------------------------------
         # FEATURED ALBUM CHECKBOX
         #
-        # Featured albums are the pool used later by the random
-        # artwork section on the About Me page. This does not
-        # affect album/artwork generation by itself yet.
+        # Featured albums are the pool used by the random artwork
+        # section on the About Me page.
         # --------------------------------------------------------
 
         self.featured_checkbox = QCheckBox(
@@ -242,8 +332,43 @@ class Page(QWidget):
 
 
 
+    def showEvent(self, event):
+
+        """
+        Called by Qt every time this page actually becomes
+        visible (e.g. switching back to the Albums tab).
+        Re-reads albums.json and rebuilds the list while keeping
+        the same album selected, so edits made anywhere else in
+        the admin always show up here without restarting the
+        app.
+        """
+
+        super().showEvent(event)
+
+        selected = self.album_list.currentRow()
+
+        self.refresh()
+
+        if 0 <= selected < self.album_list.count():
+
+            self.album_list.setCurrentRow(
+                selected
+            )
+
+
 
     def refresh(self):
+
+        # Signals are blocked for the whole clear+repopulate
+        # step. Without this, clear() fires currentRowChanged(-1)
+        # mid-rebuild, which clobbers self.current_album before
+        # any caller gets a chance to restore the real selection
+        # afterward -- that was the root cause of saving
+        # sometimes leaving nothing selected.
+
+        self.album_list.blockSignals(
+            True
+        )
 
         self.album_list.clear()
 
@@ -258,21 +383,16 @@ class Page(QWidget):
             []
         ):
 
-            title = album.get(
-                "title",
-                "Unnamed"
-            )
-
-            if album.get(
-                "featured",
-                False
-            ):
-
-                title = "★ " + title
-
             self.album_list.addItem(
-                title
+                format_album_title(
+                    album
+                )
             )
+
+
+        self.album_list.blockSignals(
+            False
+        )
 
 
 
@@ -307,9 +427,9 @@ class Page(QWidget):
 
 
 
-        folder = title.lower().replace(
-            " ",
-            "-"
+        folder = generate_unique_album_folder(
+            title,
+            data
         )
 
 
@@ -333,6 +453,8 @@ class Page(QWidget):
         })
 
 
+        new_index = len(data["albums"]) - 1
+
 
         save_json(
             "albums.json",
@@ -341,6 +463,10 @@ class Page(QWidget):
 
 
         self.refresh()
+
+        self.album_list.setCurrentRow(
+            new_index
+        )
 
 
 
@@ -368,14 +494,6 @@ class Page(QWidget):
         self.title_input.setText(
             album.get(
                 "title",
-                ""
-            )
-        )
-
-
-        self.folder_input.setText(
-            album.get(
-                "folder",
                 ""
             )
         )
@@ -434,8 +552,6 @@ class Page(QWidget):
 
         album["title"] = self.title_input.text()
 
-        album["folder"] = self.folder_input.text()
-
         album["date"] = self.date_input.text()
 
         album["cover"] = self.cover_input.text()
@@ -444,12 +560,47 @@ class Page(QWidget):
 
         album["featured"] = self.featured_checkbox.isChecked()
 
+        # Note: the folder ("folder") is intentionally never
+        # changed here, even if the title changes -- it's set
+        # once at creation so already-uploaded images and any
+        # published album page URL never move.
+
+        if not album["featured"]:
+
+            # Exclusions only make sense while an album is
+            # featured. Un-featuring an album always resets them,
+            # so re-featuring it later starts with a clean slate
+            # instead of silently carrying over old exclusions.
+
+            for artwork in album.get("artworks", []):
+
+                artwork["excluded_from_random"] = False
+
 
 
         save_json(
             "albums.json",
             data
         )
+
+
+        # Update the list item's text directly instead of doing
+        # a full clear+rebuild -- this shows the new title/★
+        # instantly and can never lose the current selection,
+        # since nothing about the list's row count or order
+        # changed.
+
+        item = self.album_list.item(
+            self.current_album
+        )
+
+        if item:
+
+            item.setText(
+                format_album_title(
+                    album
+                )
+            )
 
 
         QMessageBox.information(
@@ -460,13 +611,6 @@ class Page(QWidget):
 
             "Album saved successfully."
 
-        )
-
-
-        self.refresh()
-
-        self.album_list.setCurrentRow(
-            self.current_album
         )
 
 
@@ -517,6 +661,39 @@ class Page(QWidget):
 
 
         self.refresh()
+
+
+        remaining = len(
+            data["albums"]
+        )
+
+
+        if remaining:
+
+            new_index = min(
+                index,
+                remaining - 1
+            )
+
+            self.album_list.setCurrentRow(
+                new_index
+            )
+
+        else:
+
+            self.current_album = -1
+
+            self.title_input.clear()
+
+            self.date_input.clear()
+
+            self.cover_input.clear()
+
+            self.description_input.clear()
+
+            self.featured_checkbox.setChecked(
+                False
+            )
 
 
 

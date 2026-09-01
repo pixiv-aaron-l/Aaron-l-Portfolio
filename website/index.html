@@ -104,6 +104,66 @@ Discord
 <br>
 
 
+<section class="box">
+
+
+<h2>Random Artworks</h2>
+
+
+<div class="random-artwork-grid" id="random-artwork-grid"></div>
+
+
+</section>
+
+<script>
+(function() {
+
+    var randomArtworkPool = [{"url": "artworks/sekibanki.html", "image": "images/albums/touhou-artworks/display/63%20~%20Sekibanki%20.jpg", "title": "Sekibanki"}, {"url": "artworks/macguya.html", "image": "images/albums/touhou-artworks/display/64%20~%20Kaguya%27s%20burger.jpg", "title": "MacGuya"}, {"url": "artworks/orin.html", "image": "images/albums/first-year-of-drawing/display/1%20~%20orin.jpg", "title": "Orin"}, {"url": "artworks/going-postal.html", "image": "images/albums/first-year-of-drawing/display/3%20~%20going%20postal.jpg", "title": "Going postal"}, {"url": "artworks/bullet-hell-rebel.html", "image": "images/albums/first-year-of-drawing/display/7%20~%20bullet%20hell%20rebel.jpg", "title": "Bullet hell rebel"}, {"url": "artworks/the-two-people-beyond-boundaries.html", "image": "images/albums/first-year-of-drawing/display/8%20~%20the%20two%20beyond%20the%20boundarie.jpg", "title": "The two people beyond boundaries"}, {"url": "artworks/yuyuko%27s-ressurection.html", "image": "images/albums/first-year-of-drawing/display/12%20~%20yuyuko%27s%20ressurection.jpg", "title": "Yuyuko's ressurection"}, {"url": "artworks/mokou3.html", "image": "images/albums/first-year-of-drawing/display/15%20~%20Mokou.jpg", "title": "Mokou"}, {"url": "artworks/1998-reimu.html", "image": "images/albums/first-year-of-drawing/display/16%20~%201998%20reimu.jpg", "title": "1998 Reimu"}, {"url": "artworks/wizard.html", "image": "images/albums/first-year-of-drawing/display/17%20~%20Wizard.jpg", "title": "Wizard"}, {"url": "artworks/mokou-pfp.html", "image": "images/albums/first-year-of-drawing/display/my%20picture.jpg", "title": "Mokou pfp"}, {"url": "artworks/ice-fairy-quiet-life.html", "image": "images/albums/first-year-of-drawing/display/19%20~%20Ice%20Fairy%20Lonely%20Life.jpg", "title": "Ice fairy quiet life"}, {"url": "artworks/mokou4.html", "image": "images/albums/first-year-of-drawing/display/21%20~%20Mokou.jpg", "title": "Mokou"}, {"url": "artworks/mamizou.html", "image": "images/albums/first-year-of-drawing/display/23%20~%20mamizou.jpg", "title": "Mamizou"}, {"url": "artworks/happy-mokou.html", "image": "images/albums/first-year-of-drawing/display/25%20~%20happy%20mokou.jpg", "title": "Happy Mokou"}, {"url": "artworks/ebola-chan.html", "image": "images/albums/first-year-of-drawing/display/26%20~%20Ebola%20Chan.jpg", "title": "Ebola Chan"}, {"url": "artworks/blowout-meme.html", "image": "images/albums/first-year-of-drawing/display/28%20~%20blowout%20meme.jpg", "title": "Blowout meme"}, {"url": "artworks/bowap.html", "image": "images/albums/first-year-of-drawing/display/29%20~%20BoWaP.jpg", "title": "BoWaP"}, {"url": "artworks/mokou5.html", "image": "images/albums/first-year-of-drawing/display/30%20~%20mokou.jpg", "title": "Mokou"}, {"url": "artworks/the-imperishable-fight.html", "image": "images/albums/first-year-of-drawing/display/32%20~%20the%20%20imperishable%20fight.jpg", "title": "The imperishable fight"}, {"url": "artworks/cruel-marisa.html", "image": "images/albums/first-year-of-drawing/display/33%20~%20cruel%20marisa%E2%98%86.jpg", "title": "Cruel Marisa"}, {"url": "artworks/ariya.html", "image": "images/albums/first-year-of-drawing/display/34%20~%20ariya.jpg", "title": "Ariya"}, {"url": "artworks/ressurection.html", "image": "images/albums/first-year-of-drawing/display/35%20~%20ressurection.jpg", "title": "Ressurection"}, {"url": "artworks/sanae-with-grub.html", "image": "images/albums/first-year-of-drawing/display/36%20~%20sanae%20with%20grub.jpg", "title": "Sanae with grub"}, {"url": "artworks/mokou-meets-merry.html", "image": "images/albums/first-year-of-drawing/display/37%20~%20Mokou%20meet%20Merry.jpg", "title": "Mokou meets Merry"}, {"url": "artworks/hell-or-heaven.html", "image": "images/albums/first-year-of-drawing/display/38%20~%20hell%20or%20heaven.jpg", "title": "Hell or heaven"}, {"url": "artworks/yorihime.html", "image": "images/albums/first-year-of-drawing/display/39%20~%20yorihime.jpg", "title": "Yorihime"}, {"url": "artworks/shrine-maiden-duality.html", "image": "images/albums/first-year-of-drawing/display/40%20~%20shrine%20maiden%20duality.jpg", "title": "Shrine maiden duality"}, {"url": "artworks/luna-child.html", "image": "images/albums/first-year-of-drawing/display/41%20~%20luna%20child.jpg", "title": "Luna Child"}, {"url": "artworks/kitsune-and-kuda-gitsune.html", "image": "images/albums/first-year-of-drawing/display/43%20~%20kitsune%20and%20kuda-gitsune.jpg", "title": "Kitsune and Kuda-Gitsune"}, {"url": "artworks/eternal-existence.html", "image": "images/albums/first-year-of-drawing/display/45%20~%20eternal%20existence.jpg", "title": "Eternal existence"}, {"url": "artworks/apocalypse.html", "image": "images/albums/first-year-of-drawing/display/46%20~%20apocalypse.jpg", "title": "Apocalypse"}, {"url": "artworks/marisa-plays-touhou.html", "image": "images/albums/first-year-of-drawing/display/47%20~%20Marisa%20plays%20Touhou.jpg", "title": "Marisa plays Touhou"}, {"url": "artworks/clowpiece.html", "image": "images/albums/first-year-of-drawing/display/48%20~%20clownpiece.jpg", "title": "Clowpiece"}, {"url": "artworks/cir-no-brain.html", "image": "images/albums/first-year-of-drawing/display/51%20~%20cir-no-brain.jpg", "title": "Cir-no-brain"}, {"url": "artworks/doorbell-chud.html", "image": "images/albums/first-year-of-drawing/display/52%20~%20doorbell%20chud.jpg", "title": "Doorbell chud"}, {"url": "artworks/koishi-flicker.html", "image": "images/albums/first-year-of-drawing/display/53%20~%20koishi%20flicker.jpg", "title": "Koishi flicker"}, {"url": "artworks/above-eientei.html", "image": "images/albums/first-year-of-drawing/display/55%20~%20above%20eientei.jpg", "title": "Above Eientei"}, {"url": "artworks/the-shrine-tank.html", "image": "images/albums/first-year-of-drawing/display/56%20~%20shrine%20tank.jpg", "title": "The shrine tank"}, {"url": "artworks/fight.html", "image": "images/albums/first-year-of-drawing/display/58%20~%20fight.jpg", "title": "Fight"}, {"url": "artworks/yuuma-clark.html", "image": "images/albums/first-year-of-drawing/display/59%20~%20yuuma%20clark.jpg", "title": "Yuuma Clark"}, {"url": "artworks/gravital.html", "image": "images/albums/first-year-of-drawing/display/60%20~%20gravital.jpg", "title": "Gravital"}, {"url": "artworks/hourai-doll.html", "image": "images/albums/first-year-of-drawing/display/61%20~%20hourai%20doll.jpg", "title": "Hourai doll"}];
+
+    var RANDOM_ART_COUNT = 20;
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function pickRandomArtworks(pool, count) {
+        var shuffled = pool.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = shuffled[i];
+            shuffled[i] = shuffled[j];
+            shuffled[j] = temp;
+        }
+        return shuffled.slice(0, count);
+    }
+
+    function renderRandomArtworks() {
+        var container = document.getElementById(
+            'random-artwork-grid'
+        );
+        if (!container) return;
+        var selection = pickRandomArtworks(
+            randomArtworkPool,
+            RANDOM_ART_COUNT
+        );
+        container.innerHTML = selection.map(function(item) {
+            return '<a class="artwork-card" href="' + item.url + '">'
+                + '<div class="artwork-thumbnail">'
+                + '<img src="' + item.image + '" alt="' + escapeHtml(item.title) + '">'
+                + '</div>'
+                + '<div class="artwork-info">'
+                + '<h3>' + escapeHtml(item.title) + '</h3>'
+                + '</div>'
+                + '</a>';
+        }).join('');
+    }
+
+    renderRandomArtworks();
+
+})();
+</script>
 
 
 
@@ -113,7 +173,7 @@ Discord
 
 <footer>
 
-Last updated: 30/08/2026
+Last updated: 01/09/2026
 
 </footer>
 

@@ -6,7 +6,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1200">
 
-<base href="{{SITE_BASE_PATH}}">
+<script>
+if (window.location.protocol !== 'file:') {
+    document.write('<base href="{{SITE_BASE_PATH}}">');
+}
+</script>
 
 <title>Page Not Found</title>
 

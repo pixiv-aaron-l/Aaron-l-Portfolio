@@ -8,14 +8,15 @@
             "cover": "63 ~ Sekibanki .jpg",
             "artworks": [
                 {
-                    "title": "traces of Sariel",
+                    "title": "Traces of Sariel",
                     "file": "traces-of-sariel",
                     "display": "62 ~ traces of Sariel.jpg",
                     "original": "62 ~ traces of Sariel.png",
-                    "number": 1,
+                    "number": "1",
                     "date": "02/08/26",
                     "time_spent": "6 hours 10",
-                    "notes": "this is a design for Sariel inspired by the concept of traces of old gods in the Fear and Hunger video games"
+                    "notes": "this is a design for Sariel inspired by the concept of traces of old gods in the Fear and Hunger video games",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Sekibanki",
@@ -25,7 +26,8 @@
                     "number": 2,
                     "date": "15/08/26",
                     "time_spent": "6 hours",
-                    "notes": "my first illustration for Sekibanki ! I am trying to do better on the artstyle and it took only 6 hours but I am lazy and did other things lately. love the headless yokai"
+                    "notes": "my first illustration for Sekibanki ! I am trying to do better on the artstyle and it took only 6 hours but I am lazy and did other things lately. love the headless yokai",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "MacGuya",
@@ -35,9 +37,11 @@
                     "number": "3",
                     "date": "24/08/26",
                     "time_spent": "5 hours 30",
-                    "notes": "Kaguya started her burger brand in Gensokyo and now rabbit-girls are cooking them everywhere, we are all eating MacGuya touhoday ! this idea actualy comes from silly messages we had in a discord chat, also line-art is on pixiv https://www.pixiv.net/en/artworks/148851816"
+                    "notes": "Kaguya started her burger brand in Gensokyo and now rabbit-girls are cooking them everywhere, we are all eating MacGuya touhoday ! this idea actualy comes from silly messages we had in a discord chat, also line-art is on pixiv https://www.pixiv.net/en/artworks/148851816",
+                    "excluded_from_random": false
                 }
-            ]
+            ],
+            "featured": true
         },
         {
             "title": "first year of drawing",
@@ -54,7 +58,8 @@
                     "number": "1",
                     "date": "28/07/25",
                     "time_spent": "1 hour",
-                    "notes": "this is the earliest drawing in my pc, I decided to start art on that day and posted it on my pixiv account. a simple paper touhou piece inspired by Waita Uziga 's artstyle"
+                    "notes": "this is the earliest drawing in my pc, I decided to start art on that day and posted it on my pixiv account. a simple paper touhou piece inspired by Waita Uziga 's artstyle",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Mokou",
@@ -64,7 +69,8 @@
                     "number": "2",
                     "date": "14/08/25",
                     "time_spent": "1 hour",
-                    "notes": "this art was my first drawing of Mokou, the immortal girls are my favorite characters in Touhou"
+                    "notes": "this art was my first drawing of Mokou, the immortal girls are my favorite characters in Touhou",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Going postal",
@@ -74,7 +80,8 @@
                     "number": "3",
                     "date": "20/08/25",
                     "time_spent": "1 hour",
-                    "notes": "this is the postal dude from postal 2, dark humor old games and movie"
+                    "notes": "this is the postal dude from postal 2, dark humor old games and movie",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Mokou",
@@ -84,7 +91,8 @@
                     "number": "4",
                     "date": "20/08/25",
                     "time_spent": "2 hours",
-                    "notes": "this is my first time using Krita, when I began to draw with my laptop and mouse"
+                    "notes": "this is my first time using Krita, when I began to draw with my laptop and mouse",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "R-18G Mokou",
@@ -94,7 +102,8 @@
                     "number": "5",
                     "date": "28/08/25",
                     "time_spent": "4 hours",
-                    "notes": "here is my first R-18G piece. it is very poor quality and inspired by Shimo's work, I was still learning my tools here"
+                    "notes": "here is my first R-18G piece. it is very poor quality and inspired by Shimo's work, I was still learning my tools here",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Bullet hell rebel",
@@ -104,7 +113,8 @@
                     "number": "6",
                     "date": "21/09/25",
                     "time_spent": "15 hours",
-                    "notes": "a Touhou scene where Seija is getting arrested by the Yamazanadu. it seems I have spent 15 hours on Krita for this one (?)"
+                    "notes": "a Touhou scene where Seija is getting arrested by the Yamazanadu. it seems I have spent 15 hours on Krita for this one (?)",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "The two people beyond boundaries",
@@ -114,7 +124,8 @@
                     "number": "7",
                     "date": "24/09/25",
                     "time_spent": "5 hours 40",
-                    "notes": "this is inspired by the touhou fan theory (紫=メリー説) which says that yukari is maribel but a thousand years older, I like it but I don't believe in it"
+                    "notes": "this is inspired by the touhou fan theory (紫=メリー説) which says that yukari is maribel but a thousand years older, I like it but I don't believe in it",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Orange fumo",
@@ -124,7 +135,8 @@
                     "number": "8",
                     "date": "25/09/25",
                     "time_spent": "1 hour",
-                    "notes": "this was my first pixiv profile picture, pretty terrible looking but that was the beggining for me"
+                    "notes": "this was my first pixiv profile picture, pretty terrible looking but that was the beggining for me",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Koishi's passion",
@@ -134,7 +146,8 @@
                     "number": "9",
                     "date": "21/10/25",
                     "time_spent": "11 hours 40",
-                    "notes": "another old attempt at drawing characters and bloody effect on my program"
+                    "notes": "another old attempt at drawing characters and bloody effect on my program",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Yuyuko's ressurection",
@@ -144,7 +157,8 @@
                     "number": "10",
                     "date": "25/10/25",
                     "time_spent": "10 hours",
-                    "notes": "this shows the ressurection of Yuyuko at the end of PCB, I remember enjoying drawing this picture"
+                    "notes": "this shows the ressurection of Yuyuko at the end of PCB, I remember enjoying drawing this picture",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Mokou",
@@ -154,7 +168,8 @@
                     "number": "11",
                     "date": "25/11/25",
                     "time_spent": "6 hours 30",
-                    "notes": "Mokou is calmly drinking, it's not like the fire would hurt her"
+                    "notes": "Mokou is calmly drinking, it's not like the fire would hurt her",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "1998 Reimu",
@@ -164,7 +179,8 @@
                     "number": "12",
                     "date": "29/11/25",
                     "time_spent": "6 hours",
-                    "notes": "this picture is the \"old Reimu treatment\" I suppose, one must notice a reference to Logan Paul"
+                    "notes": "this picture is the \"old Reimu treatment\" I suppose, one must notice a reference to Logan Paul",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Wizard",
@@ -174,7 +190,8 @@
                     "number": "13",
                     "date": "01/12/25",
                     "time_spent": "1 hour",
-                    "notes": "this was an attempt at drawing a scary comic face, the wizard's model is a v-tuber avatar"
+                    "notes": "this was an attempt at drawing a scary comic face, the wizard's model is a v-tuber avatar",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Mokou pfp",
@@ -184,7 +201,8 @@
                     "number": "14",
                     "date": "06/12/25",
                     "time_spent": "5 hours",
-                    "notes": "this is my 2nd pixiv profile picture, I really love how this Mokou ended up looking"
+                    "notes": "this is my 2nd pixiv profile picture, I really love how this Mokou ended up looking",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Ice fairy quiet life",
@@ -194,7 +212,8 @@
                     "number": "15",
                     "date": "08/12/25",
                     "time_spent": "30 minutes",
-                    "notes": "this is a small drawing where I tried to represent the misty lake of EoSD"
+                    "notes": "this is a small drawing where I tried to represent the misty lake of EoSD",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "エリック girl",
@@ -204,7 +223,8 @@
                     "number": "16",
                     "date": "08/12/25",
                     "time_spent": "40 minutes",
-                    "notes": "quick fan-art of a guro artist 's OC, I did this as a training on anatomy"
+                    "notes": "quick fan-art of a guro artist 's OC, I did this as a training on anatomy",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Mokou",
@@ -214,7 +234,8 @@
                     "number": "17",
                     "date": "13/12/25",
                     "time_spent": "5 hours",
-                    "notes": "this illustration of Mokou was done with a model in attempt to have more realistic proportions"
+                    "notes": "this illustration of Mokou was done with a model in attempt to have more realistic proportions",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Mamizou",
@@ -224,7 +245,8 @@
                     "number": "18",
                     "date": "26/12/25",
                     "time_spent": "7 hours",
-                    "notes": "this mamizou art was a success at drawing perspective"
+                    "notes": "this mamizou art was a success at drawing perspective",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Happy Mokou",
@@ -234,7 +256,8 @@
                     "number": "19",
                     "date": "01/01/26",
                     "time_spent": "6 hours 30",
-                    "notes": "my first drawing of 2026! I wanted to make my Mokou look joyful for the new year"
+                    "notes": "my first drawing of 2026! I wanted to make my Mokou look joyful for the new year",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Ebola Chan",
@@ -244,7 +267,8 @@
                     "number": "20",
                     "date": "04/01/26",
                     "time_spent": "5 hours 50",
-                    "notes": "this girl is the gijinka design of the ebola diseace, she is standing on hemoglobin. However I don't think this drawing was well-done"
+                    "notes": "this girl is the gijinka design of the ebola diseace, she is standing on hemoglobin. However I don't think this drawing was well-done",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Kkhta Mokou",
@@ -254,7 +278,8 @@
                     "number": "21",
                     "date": "05/01/26",
                     "time_spent": "3 hours",
-                    "notes": "this was an attempt at drawing the madness given to characters in KKHTA, sadly it looks awful in every points"
+                    "notes": "this was an attempt at drawing the madness given to characters in KKHTA, sadly it looks awful in every points",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Blowout meme",
@@ -264,7 +289,8 @@
                     "number": 22,
                     "date": "06/01/26",
                     "time_spent": "2 hours",
-                    "notes": "this picture is a Touhou version I did of the old \"blow-out soon\" meme"
+                    "notes": "this picture is a Touhou version I did of the old \"blow-out soon\" meme",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "BoWaP",
@@ -274,7 +300,8 @@
                     "number": 23,
                     "date": "10/01/26",
                     "time_spent": "4 hours 30",
-                    "notes": "here is a drawing of the Yukari's spellcard that I really enjoy, the border of wave and particle. I love how cute the Yukari is and the danmaku was a little long but funny to make"
+                    "notes": "here is a drawing of the Yukari's spellcard that I really enjoy, the border of wave and particle. I love how cute the Yukari is and the danmaku was a little long but funny to make",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Mokou",
@@ -284,7 +311,8 @@
                     "number": 24,
                     "date": "13/01/26",
                     "time_spent": "3 hours 50",
-                    "notes": "the mirror behind is showing an alternative version of Mokou, it was an okay idea but ended up ugly"
+                    "notes": "the mirror behind is showing an alternative version of Mokou, it was an okay idea but ended up ugly",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "R-18G Mokou",
@@ -294,7 +322,8 @@
                     "number": "25",
                     "date": "15/01/26",
                     "time_spent": "2 hours 30",
-                    "notes": "this is a re-do of my r18g Mokou, this time way more sexy"
+                    "notes": "this is a re-do of my r18g Mokou, this time way more sexy",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "The imperishable fight",
@@ -304,7 +333,8 @@
                     "number": 26,
                     "date": "18/01/26",
                     "time_spent": "5 hours 30",
-                    "notes": "beautiful illustration where the immortal girls are fighting in the sky! also the begining of my first ever art challenge which is to draw Mokou for the days of immortality (=24th day of every month)"
+                    "notes": "beautiful illustration where the immortal girls are fighting in the sky! also the begining of my first ever art challenge which is to draw Mokou for the days of immortality (=24th day of every month)",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Cruel Marisa",
@@ -314,7 +344,8 @@
                     "number": 27,
                     "date": "21/01/26",
                     "time_spent": "5 hours 30",
-                    "notes": "it was inspired by this parody https://www.nicovideo.jp/watch/sm44832761 with cookie star characters of Marisa and Parsee, I would give you this as a resource for cookie : https://yukkuri.shiteitte.net/wiki_pages/cookie_(touhou)/ "
+                    "notes": "it was inspired by this parody https://www.nicovideo.jp/watch/sm44832761 with cookie star characters of Marisa and Parsee, I would give you this as a resource for cookie : https://yukkuri.shiteitte.net/wiki_pages/cookie_(touhou)/ ",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Ariya",
@@ -324,7 +355,8 @@
                     "number": "28",
                     "date": "25/01/26",
                     "time_spent": "9 hours 40",
-                    "notes": "this amazing character design is Ariya from FW, I used a pinterest reference for her posture https://fr.pinterest.com/pin/281543726356358/"
+                    "notes": "this amazing character design is Ariya from FW, I used a pinterest reference for her posture https://fr.pinterest.com/pin/281543726356358/",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Ressurection",
@@ -334,7 +366,8 @@
                     "number": 29,
                     "date": "03/02/26",
                     "time_spent": "4 hours 40",
-                    "notes": "this represents the ressurection non-spell of Fujiwara no Mokou"
+                    "notes": "this represents the ressurection non-spell of Fujiwara no Mokou",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Sanae with grub",
@@ -344,7 +377,8 @@
                     "number": 30,
                     "date": "10/02/26",
                     "time_spent": "3 hours",
-                    "notes": "this tiny Sanae next to a grub is an old touhou jerk meme"
+                    "notes": "this tiny Sanae next to a grub is an old touhou jerk meme",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Mokou meets Merry",
@@ -354,7 +388,8 @@
                     "number": 31,
                     "date": "15/02/26",
                     "time_spent": "4 hours",
-                    "notes": "this is the scene of the 9th song of Changeability of Strange Dream (Touhou hifuu club story) where Merry who's getting more and more stuck in Gensokyo witnesses Mokou getting rid of a youkai in the bamboo forest"
+                    "notes": "this is the scene of the 9th song of Changeability of Strange Dream (Touhou hifuu club story) where Merry who's getting more and more stuck in Gensokyo witnesses Mokou getting rid of a youkai in the bamboo forest",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Hell or heaven",
@@ -364,7 +399,8 @@
                     "number": 32,
                     "date": "23/02/26",
                     "time_spent": "11 hours",
-                    "notes": "this is inspired by Cirno's conclusion in Touhou 9 and a french meme scenery ; the fairy's fate is uncertain, she aknowledges that she might stop existing and fears it"
+                    "notes": "this is inspired by Cirno's conclusion in Touhou 9 and a french meme scenery ; the fairy's fate is uncertain, she aknowledges that she might stop existing and fears it",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Yorihime",
@@ -374,7 +410,8 @@
                     "number": 33,
                     "date": "25/02/26",
                     "time_spent": "2 hours 50",
-                    "notes": "this drawing of Yorihime was inspired by Kam-S very old artstyle, an attempt to reproduce it"
+                    "notes": "this drawing of Yorihime was inspired by Kam-S very old artstyle, an attempt to reproduce it",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Shrine maiden duality",
@@ -384,7 +421,8 @@
                     "number": 34,
                     "date": "26/02/26",
                     "time_spent": "3 hours 30",
-                    "notes": "the duality between two shrine maidens\n>Sanae thinks the lunarian war was a bad thing\n; Reimu will do it again"
+                    "notes": "the duality between two shrine maidens\n>Sanae thinks the lunarian war was a bad thing\n; Reimu will do it again",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Luna Child",
@@ -394,17 +432,19 @@
                     "number": 35,
                     "date": "28/02/26",
                     "time_spent": "5 hours",
-                    "notes": "this is the result of trying a 3D-looking fairy, Luna Child is the only fairy you can live with, even tho I'd like Star Sapphire~ this art hurts my eyes"
+                    "notes": "this is the result of trying a 3D-looking fairy, Luna Child is the only fairy you can live with, even tho I'd like Star Sapphire~ this art hurts my eyes",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Guro girl",
                     "file": "guro-girl",
                     "display": "illustrations censored_compressed.jpg",
                     "original": "illustrations censored_compressed.png",
-                    "number": 36,
+                    "number": "36",
                     "date": "01/03/26",
                     "time_spent": "5 hours 40",
-                    "notes": "a new simple guro scene here, I did 3 panels that shows the girl's death. despite the good anatomu my art were not as arousing as I wanted, causing a break with the nsfw attempts"
+                    "notes": "a new simple guro scene here, I did 3 panels that shows the girl's death. despite the good anatomu my art were not as arousing as I wanted, causing a break with the nsfw attempts",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Kitsune and Kuda-Gitsune",
@@ -414,17 +454,19 @@
                     "number": 37,
                     "date": "08/03/26",
                     "time_spent": "7 hours 30",
-                    "notes": "this is an actual peak of my drawing, I managed to draw the two fox-youkai girls well and this illustration made me proud of my art knowledge at the time"
+                    "notes": "this is an actual peak of my drawing, I managed to draw the two fox-youkai girls well and this illustration made me proud of my art knowledge at the time",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Mechabre Suwako",
                     "file": "mechabre-suwako",
                     "display": "44 ~ mechabre suwako.jpg",
                     "original": "44 ~ mechabre suwako.png",
-                    "number": 38,
+                    "number": "38",
                     "date": "10/03/26",
                     "time_spent": "4 hours 30",
-                    "notes": "here is my first ever mechabre art, with this body horror Suwako concept. the frog is traced"
+                    "notes": "here is my first ever mechabre art, with this body horror Suwako concept. the frog is traced",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Eternal existence",
@@ -434,7 +476,8 @@
                     "number": "39",
                     "date": "22/03/26",
                     "time_spent": "4 hours 50",
-                    "notes": "the history is repeating itself in front of her... this picture have a sequel version for pixiv"
+                    "notes": "the history is repeating itself in front of her... this picture have a sequel version for pixiv",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Apocalypse",
@@ -444,7 +487,8 @@
                     "number": 40,
                     "date": "28/03/26",
                     "time_spent": "9 hours",
-                    "notes": "I wanted to draw every single PC-98 Touhou antagonist on the same picture, it feels like an insane bullet hell is about to happen"
+                    "notes": "I wanted to draw every single PC-98 Touhou antagonist on the same picture, it feels like an insane bullet hell is about to happen",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Marisa plays Touhou",
@@ -454,7 +498,8 @@
                     "number": "41",
                     "date": "28/03/26",
                     "time_spent": "4 hours",
-                    "notes": "Marisa is sitting on a sofa and playing video game, I did this with the big-eyes anime style because at the time I decided to try this path looking for art's beauty"
+                    "notes": "Marisa is sitting on a sofa and playing video game, I did this with the big-eyes anime style because at the time I decided to try this path looking for art's beauty",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Clowpiece",
@@ -464,17 +509,19 @@
                     "number": "42",
                     "date": "31/03/26",
                     "time_spent": "4 hours",
-                    "notes": "Clownpiece hitting her pose on the moon, there is a second version with way more revealing outfit : https://www.pixiv.net/en/artworks/142973845"
+                    "notes": "Clownpiece hitting her pose on the moon, there is a second version with way more revealing outfit : https://www.pixiv.net/en/artworks/142973845",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Meowbah",
                     "file": "meowbah",
                     "display": "50 ~ meowbah.jpg",
                     "original": "50 ~ meowbah.png",
-                    "number": 43,
+                    "number": "43",
                     "date": "08/04/26",
                     "time_spent": "3 hours 20",
-                    "notes": "a quick fan-art of the meowbah character, who is a twitter troll 's OC"
+                    "notes": "a quick fan-art of the meowbah character, who is a twitter troll 's OC",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Cir-no-brain",
@@ -484,7 +531,8 @@
                     "number": 44,
                     "date": "16/04/26",
                     "time_spent": "6 hours 30",
-                    "notes": "this funny illustration idea comes from this 2010 picture : https://www.pixiv.net/en/artworks/8767737"
+                    "notes": "this funny illustration idea comes from this 2010 picture : https://www.pixiv.net/en/artworks/8767737",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Doorbell chud",
@@ -494,7 +542,8 @@
                     "number": 45,
                     "date": "18/04/26",
                     "time_spent": "4 hours 40",
-                    "notes": "that's a parody of the doorbell chud video but with Mokou instead, what a disturbing scene to look at"
+                    "notes": "that's a parody of the doorbell chud video but with Mokou instead, what a disturbing scene to look at",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Koishi flicker",
@@ -504,7 +553,8 @@
                     "number": 46,
                     "date": "26/04/26",
                     "time_spent": "4 hours",
-                    "notes": "this represents Koishi's sprite during her extra stage fight in Touhou 11"
+                    "notes": "this represents Koishi's sprite during her extra stage fight in Touhou 11",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Sad kitten",
@@ -514,7 +564,8 @@
                     "number": "47",
                     "date": "19/05/26",
                     "time_spent": "7 hours",
-                    "notes": "the loss of a kitten to Chen, sadly this ended up very odd looking due to my unusual rendering attempt"
+                    "notes": "the loss of a kitten to Chen, sadly this ended up very odd looking due to my unusual rendering attempt",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Above Eientei",
@@ -524,7 +575,8 @@
                     "number": 48,
                     "date": "24/05/26",
                     "time_spent": "4 hours",
-                    "notes": "Mokou is flying over Eientei, ready to take her revenge! sadly I couldn't finish this illustration in time for my challenge and decided to ignore the background"
+                    "notes": "Mokou is flying over Eientei, ready to take her revenge! sadly I couldn't finish this illustration in time for my challenge and decided to ignore the background",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "The shrine tank",
@@ -534,17 +586,19 @@
                     "number": 49,
                     "date": "15/06/26",
                     "time_spent": "8 hours",
-                    "notes": "this is an illustration with the SoEW shrine tank, I like how Touhou began with litteral tanks involved"
+                    "notes": "this is an illustration with the SoEW shrine tank, I like how Touhou began with litteral tanks involved",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Shion-pai",
                     "file": "shion-pai",
                     "display": "57 ~ shion-pai.jpg",
                     "original": "57 ~ shion-pai.png",
-                    "number": 50,
+                    "number": "50",
                     "date": "19/06/26",
                     "time_spent": "3 hours 20",
-                    "notes": "quick nude illustration with Shion's breast- apparently it looks like an unnatural implant, I was focused on correct body rendering which is a success"
+                    "notes": "quick nude illustration with Shion's breast- apparently it looks like an unnatural implant, I was focused on correct body rendering which is a success",
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Fight",
@@ -554,7 +608,8 @@
                     "number": 51,
                     "date": "24/06/26",
                     "time_spent": "8 hours 30",
-                    "notes": "drawing of Kaguya and Mokou fighting, I did this as an OC for my subreddit, first on paper and then locked in on my PC"
+                    "notes": "drawing of Kaguya and Mokou fighting, I did this as an OC for my subreddit, first on paper and then locked in on my PC",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Yuuma Clark",
@@ -564,7 +619,8 @@
                     "number": 52,
                     "date": "06/07/26",
                     "time_spent": "6 hours",
-                    "notes": "this is a scene from the backroom movie! I love my rendering on this one, but how did Yuuma ended up in the backrooms?"
+                    "notes": "this is a scene from the backroom movie! I love my rendering on this one, but how did Yuuma ended up in the backrooms?",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Gravital",
@@ -574,7 +630,8 @@
                     "number": 53,
                     "date": "09/07/26",
                     "time_spent": "6 hours",
-                    "notes": "this is a re-evolved ruin haunter woman from all tomorrows putting her children into an early gravital, I heavily inspired myself of Zenith's art for this one and believe my art is now good looking. it is after this piece that I began the code of my website, delayed by my laptop's screen breaking which made it unusable for a whole week"
+                    "notes": "this is a re-evolved ruin haunter woman from all tomorrows putting her children into an early gravital, I heavily inspired myself of Zenith's art for this one and believe my art is now good looking. it is after this piece that I began the code of my website, delayed by my laptop's screen breaking which made it unusable for a whole week",
+                    "excluded_from_random": false
                 },
                 {
                     "title": "Hourai doll",
@@ -584,10 +641,11 @@
                     "number": "54",
                     "date": "24/07/26",
                     "time_spent": "6 hours",
-                    "notes": "kaguya is watching mokou !!! my recent artworks seem to all be at 6 hours, 1 for the sketch and 5 for the rendering."
+                    "notes": "kaguya is watching mokou !!! my recent artworks seem to all be at 6 hours, 1 for the sketch and 5 for the rendering.",
+                    "excluded_from_random": false
                 }
             ],
-            "featured": false
+            "featured": true
         }
     ]
 }

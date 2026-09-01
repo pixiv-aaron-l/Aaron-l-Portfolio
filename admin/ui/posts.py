@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from PySide6.QtCore import Qt
+
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -61,7 +63,7 @@ class Page(QWidget):
         )
 
         # ====================================================
-        # LEFT — POST LIST
+        # LEFT - POST LIST
         # ====================================================
 
         left = QVBoxLayout()
@@ -71,6 +73,14 @@ class Page(QWidget):
         )
 
         self.post_list = QListWidget()
+
+        self.post_list.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarAlwaysOff
+        )
+
+        self.post_list.setTextElideMode(
+            Qt.ElideRight
+        )
 
         left.addWidget(
             self.post_list
@@ -109,7 +119,7 @@ class Page(QWidget):
         )
 
         # ====================================================
-        # RIGHT — POST EDITOR
+        # RIGHT - POST EDITOR
         # ====================================================
 
         right = QVBoxLayout()
@@ -179,6 +189,14 @@ class Page(QWidget):
         )
 
         self.attachments_list = QListWidget()
+
+        self.attachments_list.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarAlwaysOff
+        )
+
+        self.attachments_list.setTextElideMode(
+            Qt.ElideRight
+        )
 
         right.addWidget(
             self.attachments_list
@@ -278,6 +296,25 @@ class Page(QWidget):
 
         # Initial list population.
         self.refresh()
+
+
+    # ========================================================
+    # LIVE REFRESH
+    #
+    # Called by Qt every time this page actually becomes
+    # visible (e.g. switching back to the Posts tab). Re-reads
+    # posts.json and rebuilds the list while keeping the same
+    # post selected, so edits made anywhere else in the admin
+    # always show up here without restarting the app.
+    # ========================================================
+
+    def showEvent(self, event):
+
+        super().showEvent(event)
+
+        self.refresh(
+            self.current_post
+        )
 
 
     # ========================================================
@@ -926,3 +963,5 @@ class Page(QWidget):
             "Post deleted."
 
         )
+
+

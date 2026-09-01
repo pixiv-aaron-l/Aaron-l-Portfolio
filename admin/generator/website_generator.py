@@ -8,6 +8,7 @@ from urllib.parse import quote
 
 from tools.json_manager import load_json
 from tools.site_config import get_site_name, get_since_year
+from tools.github_manager import get_github_identity
 
 
 # ============================================================
@@ -38,51 +39,61 @@ GENERATED_LIST = os.path.join(
 
 # ============================================================
 # GITHUB CONFIGURATION
+#
+# Owner/repository/branch are configured from the admin
+# (Dashboard -> Website Settings), not hardcoded here, so
+# forking this project for a different site never requires
+# editing any code.
 # ============================================================
 
-GITHUB_OWNER = "pixiv-aaron-l"
+def get_github_media_base():
 
-GITHUB_REPOSITORY = "Aaron-l-Portfolio"
+    """
+    Base URL for Git LFS raw media (used for large .zip/.7z
+    attachments). Owner/repository/branch are auto-detected from
+    the actual git remote (see tools.github_manager), not
+    entered anywhere -- there is nothing to configure.
+    """
 
-GITHUB_BRANCH = "main"
+    owner, repository, branch = get_github_identity()
 
-GITHUB_MEDIA_BASE = (
-    "https://media.githubusercontent.com/media/"
-    f"{GITHUB_OWNER}/"
-    f"{GITHUB_REPOSITORY}/"
-    f"{GITHUB_BRANCH}/"
-)
+    return (
+        "https://media.githubusercontent.com/media/"
+        f"{owner}/"
+        f"{repository}/"
+        f"{branch}/"
+    )
 
 
-# --------------------------------------------------------
-# GitHub Pages base path.
-#
-# GitHub Pages hosts a repository named "<owner>.github.io"
-# at the domain root ("/"). Any other repository name is
-# hosted as a project site under "/<repository>/" instead.
-#
-# This matters specifically for 404.html: GitHub Pages
-# serves that one file for ANY unmatched URL, no matter how
-# deeply nested the requested path was, but the browser still
-# resolves relative links in it based on the REQUESTED path,
-# not on 404.html's real location. Without a fixed base, a
-# 404 triggered at the site root looks fine while one
-# triggered from e.g. "/albums/some-typo" silently breaks
-# every relative link and the stylesheet.
-#
-# GITHUB_REPOSITORY above already has to be edited by anyone
-# forking this project (it's also used for the attachment/LFS
-# URLs), so reusing it here keeps this correct automatically
-# for other users of this codebase, with no extra config.
-# --------------------------------------------------------
+def get_site_base_path():
 
-if GITHUB_REPOSITORY.lower().endswith(".github.io"):
+    """
+    GitHub Pages base path.
 
-    SITE_BASE_PATH = "/"
+    GitHub Pages hosts a repository named "<owner>.github.io"
+    at the domain root ("/"). Any other repository name is
+    hosted as a project site under "/<repository>/" instead.
 
-else:
+    This matters specifically for 404.html: GitHub Pages
+    serves that one file for ANY unmatched URL, no matter how
+    deeply nested the requested path was, but the browser still
+    resolves relative links in it based on the REQUESTED path,
+    not on 404.html's real location. Without a fixed base, a
+    404 triggered at the site root looks fine while one
+    triggered from e.g. "/albums/some-typo" silently breaks
+    every relative link and the stylesheet.
 
-    SITE_BASE_PATH = f"/{GITHUB_REPOSITORY}/"
+    The repository name is auto-detected from the actual git
+    remote (see tools.github_manager) -- nothing to configure.
+    """
+
+    _, repository, _ = get_github_identity()
+
+    if repository.lower().endswith(".github.io"):
+
+        return "/"
+
+    return f"/{repository}/"
 
 
 # ============================================================
@@ -329,7 +340,7 @@ def get_attachment_url(filename):
     ):
 
         return (
-            GITHUB_MEDIA_BASE
+            get_github_media_base()
             + "website/attachments/"
             + encoded_filename
         )
@@ -431,9 +442,10 @@ def get_featured_artwork_pool(albums):
     """
     Returns a flat list of (album, artwork) pairs for every
     artwork inside every album currently marked "featured" in
-    the admin. Shared between the generator (to build the
-    section) and the admin dashboard (to show pool size/status),
-    so the two never drift out of sync.
+    the admin, excluding any artwork individually marked
+    "excluded_from_random". Shared between the generator (to
+    build the section) and the admin dashboard (to show pool
+    size/status), so the two never drift out of sync.
     """
 
     pool = []
@@ -454,6 +466,13 @@ def get_featured_artwork_pool(albums):
             "artworks",
             []
         ):
+
+            if artwork.get(
+                "excluded_from_random",
+                False
+            ):
+
+                continue
 
             pool.append(
                 (album, artwork)
@@ -569,7 +588,7 @@ def build_random_artwork_section(albums):
         container.innerHTML = selection.map(function(item) {{
             return '<a class="artwork-card" href="' + item.url + '">'
                 + '<div class="artwork-thumbnail">'
-                + '<img src="' + item.image + '">'
+                + '<img src="' + item.image + '" alt="' + escapeHtml(item.title) + '">'
                 + '</div>'
                 + '<div class="artwork-info">'
                 + '<h3>' + escapeHtml(item.title) + '</h3>'
@@ -714,7 +733,7 @@ def generate_arts():
 
 <div class="album-cover">
 
-<img src="images/albums/{quote(album.get('folder', ''), safe='')}/display/{quote(album.get('cover', ''), safe='')}">
+<img src="images/albums/{quote(album.get('folder', ''), safe='')}/display/{quote(album.get('cover', ''), safe='')}" alt="{escape_html(album.get('title', ''))}">
 
 </div>
 
@@ -834,7 +853,7 @@ def generate_albums():
 
 <div class="artwork-thumbnail">
 
-<img src="../images/albums/{quote(album.get('folder', ''), safe='')}/display/{quote(artwork.get('display', ''), safe='')}">
+<img src="../images/albums/{quote(album.get('folder', ''), safe='')}/display/{quote(artwork.get('display', ''), safe='')}" alt="{escape_html(artwork.get('title', ''))}">
 
 </div>
 
@@ -1216,13 +1235,23 @@ def format_post_content(content):
                 safe=""
             )
 
+            # No post title is available in this scope, so the
+            # filename itself (cleaned up a little) is the best
+            # description available for this inline image.
+
+            alt_text = escape_html(
+                os.path.splitext(filename)[0]
+                .replace("-", " ")
+                .replace("_", " ")
+            )
+
             html += f"""
 
 <div class="post-inline-image">
 
 <img
     src="../images/posts/{encoded_filename}"
-    alt=""
+    alt="{alt_text}"
 >
 
 </div>
@@ -1405,7 +1434,7 @@ def generate_404():
         {
 
             "{{SITE_BASE_PATH}}":
-                SITE_BASE_PATH,
+                get_site_base_path(),
 
             "{{LAST_UPDATED}}":
                 get_last_updated()
