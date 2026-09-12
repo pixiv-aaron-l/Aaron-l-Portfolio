@@ -310,6 +310,12 @@ class Page(QWidget):
 
     def showEvent(self, event):
 
+        # // called by Qt every time this tab actually becomes
+        # // visible again. Reusing refresh() here (the same one the
+        # // save/delete/move buttons already call) means posts
+        # // edited indirectly -- or just time passing since this
+        # // page was last open -- always show up fresh.
+
         super().showEvent(event)
 
         self.refresh(
@@ -319,6 +325,12 @@ class Page(QWidget):
 
     # ========================================================
     # REFRESH
+    #
+    # // this was already written the safe way before I touched
+    # // anything else in the admin: block the list's signals while
+    # // clearing and rebuilding it, THEN restore the selection. That
+    # // ordering is exactly what albums.py and artworks.py were
+    # // missing and had to be fixed to match.
     # ========================================================
 
     def refresh(self, select_index=None):

@@ -45,6 +45,9 @@ from tools.image_manager import (
 
 def slugify(text):
 
+    # // lowercase, spaces/punctuation become dashes, no leading or
+    # // trailing dash left over.
+
     text = text.lower().strip()
 
     text = re.sub(
@@ -56,6 +59,9 @@ def slugify(text):
     text = text.strip("-")
 
     if not text:
+
+        # // an empty/symbols-only title would otherwise slugify
+        # // down to nothing, which would be a broken filename.
 
         text = "artwork"
 
@@ -405,6 +411,13 @@ class Page(QWidget):
 
 
     def format_artwork_title(self, artwork):
+
+        # // only the exclude marker shows here -- the featured star
+        # // used to also show on every artwork in a featured album,
+        # // but that got noisy fast (every single artwork in the
+        # // album showing a star isn't really telling you anything
+        # // new). The star still shows on the album itself, just not
+        # // repeated on every artwork underneath it.
 
         symbols = ""
 

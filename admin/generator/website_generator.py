@@ -232,6 +232,14 @@ def format_text(text):
 
     # --------------------------------------------------------
     # Temporarily protect URLs
+    #
+    # // the tricky bit here: URLs get pulled OUT and replaced with
+    # // a plain placeholder like __URL_0__ before the HTML-escaping
+    # // step below runs. If this ran the other way around,
+    # // escape_html would mangle the "&" in any URL that has query
+    # // parameters (turning it into "&amp;" and breaking the link).
+    # // Putting the real, already-escaped URL back in as a proper
+    # // <a> tag only happens after escaping is done.
     # --------------------------------------------------------
 
     urls = []

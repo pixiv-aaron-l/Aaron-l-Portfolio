@@ -54,6 +54,12 @@ def normalize_links(links):
     are preserved.
     """
 
+    # // this whole function only exists because about.json's "links"
+    # // field has changed shape twice now as the feature evolved.
+    # // Once I'm sure every real about.json out there is already in
+    # // the current plain-list shape, this can probably just become
+    # // "return links if it's a list else []".
+
     if isinstance(
         links,
         list
@@ -313,6 +319,11 @@ class Page(QWidget):
             Qt.AlignTop
         )
 
+        # // AlignTop matters here: without it, a handful of link
+        # // rows would get stretched out to fill the whole scroll
+        # // area instead of sitting snugly at the top like a normal
+        # // list would.
+
         links = normalize_links(
             self.data.get(
                 "links",
@@ -390,6 +401,11 @@ class Page(QWidget):
         row.deleteLater()
 
     def save(self):
+
+        # // only links with BOTH a text and a url actually get saved
+        # // -- an empty row you added but never filled in just gets
+        # // quietly dropped instead of ending up as a broken link on
+        # // the live site.
 
         links = []
 

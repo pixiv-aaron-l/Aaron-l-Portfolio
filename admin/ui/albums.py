@@ -29,9 +29,18 @@ from tools.json_manager import load_json, save_json
 # hand. It's set once at creation and left stable afterward, so
 # renaming an album later never orphans its already-uploaded
 # images.
+#
+# // this pair of functions is basically a copy of the one in
+# // artworks.py. Kept it duplicated rather than shared, since these
+# // two files check uniqueness against two different things
+# // (album folders vs artwork file slugs) and I'd rather have two
+# // small obvious functions than one shared one with a flag.
 # ============================================================
 
 def slugify(text):
+
+    # // lowercase, spaces/punctuation become dashes, no leading or
+    # // trailing dash. "Mokou's Painting!!" -> "mokou-s-painting"
 
     text = text.lower().strip()
 
@@ -44,6 +53,9 @@ def slugify(text):
     text = text.strip("-")
 
     if not text:
+
+        # // an empty title would otherwise slugify down to nothing
+        # // at all, which would be a genuinely broken folder name.
 
         text = "album"
 
@@ -73,6 +85,10 @@ def generate_unique_album_folder(title, albums_data):
     if base_slug not in existing_folders:
 
         return base_slug
+
+    # // slug's taken -- keep trying "slug2", "slug3", etc until one
+    # // isn't. This is the exact naming pattern that was previously
+    # // being typed in by hand for duplicate artwork titles.
 
     counter = 2
 

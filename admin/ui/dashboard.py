@@ -18,12 +18,10 @@ from generator.website_generator import (
 )
 
 
-# ============================================================
-# Shared header style for section labels inside the dashboard
-# (Website Settings, Random Artworks), matching the same look
-# used on the About page.
-# ============================================================
-
+# // shared style for the bold little section headers on this page
+# // ("Website Settings", "Random Artworks"). Same look as the ones on
+# // the About page, just kept as its own copy here since these two
+# // pages don't otherwise share any code.
 SECTION_LABEL_STYLE = """
     QLabel {
         font-size:18px;
@@ -82,6 +80,10 @@ class Page(QWidget):
 
         # --------------------------------------------------------
         # Statistics
+        #
+        # // just simple counts, nothing fancy. Real numbers are
+        # // filled in by refresh_data(), these start at "0" as a
+        # // placeholder until that first runs.
         # --------------------------------------------------------
 
         stats_layout = QHBoxLayout()
@@ -162,8 +164,9 @@ class Page(QWidget):
         # --------------------------------------------------------
         # Website Settings (corner branding text + since year)
         #
-        # Lives here, under the stat boxes, rather than as its
-        # own sidebar page, since it's a small amount of config.
+        # // this lives right here instead of on its own sidebar page,
+        # // because it's genuinely small -- two text fields don't
+        # // need a whole dedicated tab.
         # --------------------------------------------------------
 
         settings_label = QLabel(
@@ -216,15 +219,15 @@ class Page(QWidget):
 
 
         # --------------------------------------------------------
-        # Random Artworks status
+        # Random Artworks
         #
-        # The random artworks section on the About Me page is
-        # fully automatic: it draws from every album marked
-        # "featured", and only appears once that pool has more
-        # than RANDOM_ART_MINIMUM artworks. There's nothing to
-        # configure here, but showing the current pool size and
-        # whether the section is currently active helps explain
-        # why it may or may not be showing up on the site.
+        # // read-only on purpose: whether this section shows up is
+        # // fully automatic (compares the featured pool size against
+        # // RANDOM_ART_MINIMUM in website_generator.py), and that
+        # // number is deliberately just a plain constant in code,
+        # // not something exposed here to tweak. This is just a
+        # // status readout so it's obvious why the section may or
+        # // may not currently be showing up on the site.
         # --------------------------------------------------------
 
         random_art_label = QLabel(
@@ -251,9 +254,8 @@ class Page(QWidget):
         layout.addStretch()
 
 
-        # Populate everything with real data right away, then
-        # keep it live from here on (see showEvent below).
-
+        # // fill in real numbers right away, then keep it live
+        # // from here on -- see showEvent below.
         self.refresh_data()
 
 
@@ -405,10 +407,8 @@ class Page(QWidget):
 
         self.refresh_data()
 
-        # Refresh the admin window title immediately too, so a
-        # renamed site doesn't require restarting the app to
-        # see it reflected there.
-
+        # // refresh the window title right away too, so a renamed
+        # // site doesn't need an app restart to show up there.
         self.window().setWindowTitle(
             f"{get_site_name()} Admin"
         )

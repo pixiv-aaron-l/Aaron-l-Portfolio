@@ -6,6 +6,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1200">
 
+<!--
+  Only add the GitHub Pages base path when this is actually being
+  viewed live on the real site (http/https). If left in place while
+  just double-clicking this file locally to check it, an absolute
+  base like "/reponame/" points nowhere on your own computer and the
+  whole page looks unstyled and broken. Skipping it for file:// keeps
+  local previews looking normal while still fixing the real bug this
+  was added for (see get_site_base_path in website_generator.py).
+-->
 <script>
 if (window.location.protocol !== 'file:') {
     document.write('<base href="/Aaron-l-Portfolio/">');
@@ -33,6 +42,8 @@ Aaron-l Gallery
 
 
 
+<!-- Nav is the same three links on every page, just with the
+     current page marked "active" via a CSS class. -->
 <nav>
 
 <a href="index.html">ABOUT ME</a>
@@ -55,6 +66,9 @@ Aaron-l Gallery
 <h1>Page Not Found</h1>
 
 
+<!-- Deliberately simple: no extra buttons here, just a plain
+     message. The header nav above already covers getting back
+     to any real page, so this doesn't need to repeat that. -->
 <section class="box">
 
 
@@ -76,7 +90,7 @@ It may have been moved or removed.
 
 <footer>
 
-Last updated: 01/09/2026
+Last updated: 12/09/2026
 
 </footer>
 

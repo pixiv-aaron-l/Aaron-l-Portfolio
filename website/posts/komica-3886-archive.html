@@ -71,6 +71,10 @@ Komica 3886 archive
 
 21/07/2026 • Aaron-l Gallery
 
+<!-- reusing SITE_NAME here as the "posted by" byline -- there's
+     no separate author name concept in this project, whoever's
+     name is set for the site is the only author. -->
+
 </p>
 
 
@@ -105,6 +109,10 @@ First, let's start with general infos: Komica is a 2005 imageboard for Taiwaness
 
 
 
+<!-- ATTACHMENTS comes out as an empty string if this post has
+     no downloadable files -- generate_attachments() handles
+     normal files and the big .zip/.7z ones differently, LFS
+     ones get routed through get_attachment_url(). -->
 
 
 <section class="post-files-card">
@@ -169,7 +177,7 @@ Attachments
 
 <footer>
 
-Last updated: 01/09/2026
+Last updated: 12/09/2026
 
 </footer>
 

@@ -37,6 +37,11 @@ body {
 
     font-family:Arial,Helvetica,sans-serif;
 
+    /* this + main's "flex:1 0 auto" below is the whole trick for
+       keeping the footer pinned to the bottom on short pages
+       (About Me, an empty Posts list, the 404 page) while still
+       flowing normally below long content -- no fixed positioning
+       involved, just letting main grow to fill leftover space. */
     display:flex;
     flex-direction:column;
 
@@ -126,6 +131,11 @@ nav a.active {
 
 .since-text {
 
+    /* margin-left:auto inside a flex row pushes just this one
+       item all the way to the right edge, while the site title
+       (also a normal flex item here) stays on the left -- the
+       centered nav is unaffected since it's absolutely
+       positioned, outside this flex flow entirely. */
     margin-left:auto;
 
     color:var(--secondary);

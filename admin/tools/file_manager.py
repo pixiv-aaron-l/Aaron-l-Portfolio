@@ -2,6 +2,11 @@ import os
 import shutil
 
 
+# // handles copying downloadable attachment files into a post's own
+# // folder under website/files/posts/<post name>/. Small/normal files
+# // only -- the big .zip/.7z LFS handling lives over in
+# // website_generator.py's get_attachment_url(), this file doesn't
+# // need to know anything about that.
 
 BASE_FOLDER = os.path.dirname(
     os.path.dirname(
@@ -40,6 +45,9 @@ def create_post_folder(post_name):
     )
 
 
+    # // exist_ok=True so calling this again for a post that already
+    # // has a folder is a harmless no-op instead of an error.
+
     os.makedirs(
         folder,
         exist_ok=True
@@ -76,5 +84,9 @@ def copy_file_to_post(
         destination
     )
 
+
+    # // handing back just the filename (not the full path) since
+    # // that's what actually gets stored in posts.json -- the post
+    # // name itself already tells you which folder it's in.
 
     return filename

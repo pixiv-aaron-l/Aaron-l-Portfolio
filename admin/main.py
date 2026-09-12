@@ -23,7 +23,9 @@ from tools.github_manager import publish_changes
 from tools.site_config import get_site_name
 
 
-
+# // this file is just the window shell: sidebar + a stack of pages.
+# // all the actual editing logic lives in ui/*.py, this file doesn't
+# // know or care what's inside each page, it just shows/hides them.
 
 
 class AdminWindow(QWidget):
@@ -33,6 +35,11 @@ class AdminWindow(QWidget):
         super().__init__()
 
 
+        # // the window title pulls the site name from site_config.json
+        # // instead of being hardcoded, so this whole app can be handed
+        # // to someone else without them needing to touch any code --
+        # // they just type their own name into Dashboard -> Website
+        # // Settings and this updates itself.
         self.setWindowTitle(
             f"{get_site_name()} Admin"
         )
@@ -62,6 +69,10 @@ class AdminWindow(QWidget):
         #     middle
         #   - Generate Website / Publish Website pinned to the
         #     bottom
+        #
+        # // the two addStretch(1) calls below are what make this
+        # // grouping happen -- without them every button would just
+        # // stack at the top with empty space left at the bottom.
         # --------------------------------------------------------
 
         sidebar = QVBoxLayout()
@@ -156,7 +167,15 @@ class AdminWindow(QWidget):
 
 
         # PAGES
-
+        #
+        # // each page is a QWidget subclass that manages its own
+        # // content (albums.py, artworks.py, etc). We just create
+        # // one instance of each up front and let QStackedWidget
+        # // swap which one is visible -- so switching tabs never
+        # // rebuilds anything, it just shows a different already-
+        # // built page. That's also why each page has its own
+        # // showEvent() to refresh itself: this file never destroys
+        # // and recreates them.
 
         self.pages = QStackedWidget()
 
@@ -268,9 +287,12 @@ class AdminWindow(QWidget):
 
 
 
-
-
     def update_website(self):
+
+        # // "Generate" just rebuilds the website/ folder locally --
+        # // nothing gets pushed to GitHub from here. That's a
+        # // deliberate separate step (Publish), so you can always
+        # // regenerate and eyeball the result before it goes live.
 
         try:
 
@@ -304,18 +326,17 @@ class AdminWindow(QWidget):
 
 
 
-
-
     def publish_website(self):
+
+        # // publishing always regenerates first, so what actually
+        # // gets pushed to GitHub is guaranteed to match whatever's
+        # // currently in the JSON files -- there's no way to
+        # // accidentally publish a stale build.
 
         try:
 
-            # Create latest website files
-
             generate_website()
 
-
-            # Commit and push to GitHub
 
             result = publish_changes()
 
@@ -347,10 +368,6 @@ class AdminWindow(QWidget):
 
 
 
-
-
-
-
 if __name__ == "__main__":
 
 
@@ -359,6 +376,12 @@ if __name__ == "__main__":
     )
 
 
+
+    # // one global dark-themed stylesheet for the whole app. Colors
+    # // here (#8b2635 / #b3374c) are the exact same red accent used
+    # // on the actual website, just so the admin tool and the site
+    # // it's editing feel like the same project rather than two
+    # // unrelated pieces of software.
 
     app.setStyleSheet("""
 

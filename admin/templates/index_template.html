@@ -70,12 +70,22 @@
 <br>
 
 
+<!-- ABOUT_LINKS_SECTION fills in the whole "Links" box, heading
+     and all, from website_generator.py -- it comes back as an
+     empty string if there are no links yet, so nothing shows up
+     here at all until at least one link is added in the admin. -->
 {{ABOUT_LINKS_SECTION}}
 
 
 <br>
 
 
+<!-- Same idea for RANDOM_ARTWORK_SECTION: only appears once
+     there are enough artworks in featured albums (see
+     get_random_art_minimum in tools/site_config.py). The actual
+     random picking happens client-side in the browser -- this
+     placeholder gets replaced with a script tag, not a fixed
+     list of 20 artworks, so it reshuffles on every page load. -->
 {{RANDOM_ARTWORK_SECTION}}
 
 

@@ -1,6 +1,12 @@
 from tools.json_manager import load_json
 
 
+# // site_config.json is the one file that holds "who is this website for"
+# // type settings, as opposed to the actual content (albums, posts, etc).
+# // Everything in here has a safe fallback, so a totally empty or missing
+# // site_config.json never breaks anything -- it just falls back to a
+# // generic default until someone actually opens the admin and sets it.
+
 DEFAULT_SITE_NAME = "My Portfolio"
 
 

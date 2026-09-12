@@ -71,6 +71,10 @@ POSTS
 
 {{POST_DATE}} • {{SITE_NAME}}
 
+<!-- reusing SITE_NAME here as the "posted by" byline -- there's
+     no separate author name concept in this project, whoever's
+     name is set for the site is the only author. -->
+
 </p>
 
 
@@ -102,6 +106,10 @@ POSTS
 
 
 
+<!-- ATTACHMENTS comes out as an empty string if this post has
+     no downloadable files -- generate_attachments() handles
+     normal files and the big .zip/.7z ones differently, LFS
+     ones get routed through get_attachment_url(). -->
 {{ATTACHMENTS}}
 
 
