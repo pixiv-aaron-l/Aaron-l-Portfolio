@@ -1,3 +1,5 @@
+from PySide6.QtCore import Signal
+
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -32,6 +34,11 @@ SECTION_LABEL_STYLE = """
 
 
 class Page(QWidget):
+
+    # // main.py listens for this and swaps the Hosting Attachments
+    # // page in. The dashboard itself doesn't need to know how.
+    hosting_requested = Signal()
+
 
     def __init__(self):
 
@@ -248,6 +255,43 @@ class Page(QWidget):
 
         layout.addWidget(
             self.random_art_status_label
+        )
+
+
+        # // everything above is the site's own settings and status.
+        # // This heading starts the extra tools.
+
+        other_features_label = QLabel(
+            "Other features"
+        )
+
+        other_features_label.setStyleSheet(
+            SECTION_LABEL_STYLE
+        )
+
+        layout.addWidget(
+            other_features_label
+        )
+
+
+        # // opens the Hosting Attachments page (ui/hosting.py), which
+        # // takes this page's place while the sidebar stays put.
+
+        self.hosting_button = QPushButton(
+            "Hosting Attachments"
+        )
+
+        self.hosting_button.setToolTip(
+            "Host a file on your website without listing it "
+            "anywhere, and get a private link to it."
+        )
+
+        self.hosting_button.clicked.connect(
+            self.hosting_requested.emit
+        )
+
+        layout.addWidget(
+            self.hosting_button
         )
 
 

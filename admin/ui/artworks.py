@@ -29,6 +29,79 @@ from tools.image_manager import (
 
 
 # ============================================================
+# SMALL LABEL HELPERS
+#
+# // headings are a bit bigger/bolder than normal text, and each field
+# // in an editor gets a small grey caption above it. Placeholder text
+# // disappears as soon as you type something, so without the caption
+# // you can't tell which box is which once a form is filled in.
+# ============================================================
+
+HEADING_STYLE = """
+    QLabel {
+        font-size:16px;
+        font-weight:bold;
+    }
+"""
+
+CAPTION_STYLE = """
+    QLabel {
+        color:#aaaaaa;
+        font-size:12px;
+        margin-top:4px;
+    }
+"""
+
+
+def make_heading(text):
+
+    label = QLabel(
+        text
+    )
+
+    label.setStyleSheet(
+        HEADING_STYLE
+    )
+
+    return label
+
+
+def make_caption(text):
+
+    label = QLabel(
+        text
+    )
+
+    label.setStyleSheet(
+        CAPTION_STYLE
+    )
+
+    return label
+
+
+def make_field(caption, widget):
+
+    # // a small caption stacked right on top of its box. Several of these
+    # // side by side in one row is how the editors save vertical space.
+
+    column = QVBoxLayout()
+
+    column.setSpacing(
+        2
+    )
+
+    column.addWidget(
+        make_caption(caption)
+    )
+
+    column.addWidget(
+        widget
+    )
+
+    return column
+
+
+# ============================================================
 # AUTOMATIC PAGE SLUGS
 #
 # Artwork page filenames used to be typed in by hand (a "File
@@ -139,7 +212,7 @@ class Page(QWidget):
         left = QVBoxLayout()
 
         left.addWidget(
-            QLabel("Albums")
+            make_heading("Albums")
         )
 
         self.album_list = QListWidget()
@@ -158,7 +231,7 @@ class Page(QWidget):
 
 
         left.addWidget(
-            QLabel("Artworks")
+            make_heading("Artworks")
         )
 
         self.artwork_list = QListWidget()
@@ -221,7 +294,7 @@ class Page(QWidget):
         right = QVBoxLayout()
 
         right.addWidget(
-            QLabel("Artwork Editor")
+            make_heading("Artwork Editor")
         )
 
 
@@ -231,43 +304,71 @@ class Page(QWidget):
 
         self.original_input = QLineEdit()
 
-        self.number_input = QLineEdit()
-
         self.date_input = QLineEdit()
 
         self.time_input = QLineEdit()
 
         self.notes_input = QTextEdit()
 
+        # // the only hint left is the date's shape. Everything else has
+        # // a caption above it, so no placeholder text is needed.
+        # // (There's no Number box: the number is kept right by adding,
+        # // moving and deleting artworks, nobody types it.)
 
-        fields = [
+        self.date_input.setPlaceholderText(
+            "__/__/__"
+        )
 
-            (self.title_input, "Title"),
+        # // title, date and time spent on one row ...
 
-            (self.display_input, "Display image"),
+        first_row = QHBoxLayout()
 
-            (self.original_input, "Original image"),
+        first_row.addLayout(
+            make_field("Title", self.title_input),
+            3
+        )
 
-            (self.number_input, "Number"),
+        first_row.addLayout(
+            make_field("Date", self.date_input),
+            1
+        )
 
-            (self.date_input, "Date"),
+        first_row.addLayout(
+            make_field("Time spent", self.time_input),
+            1
+        )
 
-            (self.time_input, "Time spent"),
+        right.addLayout(
+            first_row
+        )
 
-            (self.notes_input, "Notes")
+        # // ... and the two image names (filled in by Choose Image) on
+        # // the next one.
 
-        ]
+        second_row = QHBoxLayout()
 
+        second_row.addLayout(
+            make_field("Display image", self.display_input),
+            1
+        )
 
-        for widget, placeholder in fields:
+        second_row.addLayout(
+            make_field("Original image", self.original_input),
+            1
+        )
 
-            widget.setPlaceholderText(
-                placeholder
-            )
+        right.addLayout(
+            second_row
+        )
 
-            right.addWidget(
-                widget
-            )
+        right.addWidget(
+            make_caption("Notes")
+        )
+
+        right.addWidget(
+            self.notes_input,
+            1
+        )
 
 
         # --------------------------------------------------------
@@ -333,6 +434,10 @@ class Page(QWidget):
 
         self.artwork_list.currentRowChanged.connect(
             self.load_artwork
+        )
+
+        self.date_input.textEdited.connect(
+            self.format_date_while_typing
         )
 
         self.create_button.clicked.connect(
@@ -611,12 +716,6 @@ class Page(QWidget):
             artwork.get("original", "")
         )
 
-        self.number_input.setText(
-            str(
-                artwork.get("number", "")
-            )
-        )
-
         self.date_input.setText(
             artwork.get("date", "")
         )
@@ -667,8 +766,6 @@ class Page(QWidget):
 
         artwork["original"] = self.original_input.text()
 
-        artwork["number"] = self.number_input.text()
-
         artwork["date"] = self.date_input.text()
 
         artwork["time_spent"] = self.time_input.text()
@@ -715,6 +812,44 @@ class Page(QWidget):
             "Saved",
             "Artwork saved successfully."
         )
+
+
+    def format_date_while_typing(self, text):
+
+        # // just type the digits and the slashes appear by themselves:
+        # // 280326 becomes 28/03/26. Up to 8 digits are accepted so a
+        # // full year (28/03/2026) still fits. Anything that isn't only
+        # // digits and slashes (an old date written some other way) is
+        # // left exactly as it is, nothing gets cut or rewritten.
+
+        if not re.fullmatch(
+            r"[\d/]*",
+            text
+        ):
+
+            return
+
+        digits = re.sub(
+            r"\D",
+            "",
+            text
+        )[:8]
+
+        formatted = digits[:2]
+
+        if len(digits) > 2:
+
+            formatted += "/" + digits[2:4]
+
+        if len(digits) > 4:
+
+            formatted += "/" + digits[4:]
+
+        if formatted != text:
+
+            self.date_input.setText(
+                formatted
+            )
 
 
     def renumber_artworks(self, artworks):

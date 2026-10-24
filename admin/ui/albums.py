@@ -21,6 +21,57 @@ from tools.json_manager import load_json, save_json
 
 
 # ============================================================
+# SMALL LABEL HELPERS
+#
+# // headings are a bit bigger/bolder than normal text, and each field
+# // in an editor gets a small grey caption above it. Placeholder text
+# // disappears as soon as you type something, so without the caption
+# // you can't tell which box is which once a form is filled in.
+# ============================================================
+
+HEADING_STYLE = """
+    QLabel {
+        font-size:16px;
+        font-weight:bold;
+    }
+"""
+
+CAPTION_STYLE = """
+    QLabel {
+        color:#aaaaaa;
+        font-size:12px;
+        margin-top:4px;
+    }
+"""
+
+
+def make_heading(text):
+
+    label = QLabel(
+        text
+    )
+
+    label.setStyleSheet(
+        HEADING_STYLE
+    )
+
+    return label
+
+
+def make_caption(text):
+
+    label = QLabel(
+        text
+    )
+
+    label.setStyleSheet(
+        CAPTION_STYLE
+    )
+
+    return label
+
+
+# ============================================================
 # AUTOMATIC ALBUM FOLDER SLUGS
 #
 # Mirrors the same automation used for artwork page slugs: the
@@ -146,7 +197,7 @@ class Page(QWidget):
 
 
         left.addWidget(
-            QLabel("Albums")
+            make_heading("Albums")
         )
 
 
@@ -222,7 +273,7 @@ class Page(QWidget):
 
 
         right.addWidget(
-            QLabel("Album Editor")
+            make_heading("Album Editor")
         )
 
 
@@ -265,8 +316,8 @@ class Page(QWidget):
 
         for widget, placeholder in fields:
 
-            widget.setPlaceholderText(
-                placeholder
+            right.addWidget(
+                make_caption(placeholder)
             )
 
             right.addWidget(

@@ -2,6 +2,7 @@ import os
 import json
 import re
 import shutil
+import zipfile
 
 from datetime import datetime
 from urllib.parse import quote
@@ -9,6 +10,8 @@ from urllib.parse import quote
 from tools.json_manager import load_json
 from tools.site_config import get_site_name, get_since_year
 from tools.github_manager import get_github_identity
+from tools.mht_converter import mht_to_html
+from tools.hosted_attachments import list_hosted, VIEW_SUFFIX
 
 
 # ============================================================
@@ -1134,19 +1137,480 @@ document.addEventListener("keydown", function(event) {{
 # POST ATTACHMENTS
 # ============================================================
 
+# ============================================================
+# ATTACHMENT VIEWING
+#
+# // every attachment gets [ Download | View ]. Download is a real
+# // forced download. View opens view.html?f=<file>: ONE shared page
+# // (written once by generate_view_page) that shows the file full
+# // screen with just a Return button. No per-file pages, no preview
+# // folder.
+# //
+# // text, html, pdf and images are shown straight from the file. The
+# // rest (mht, zip, 7z, anything else) can't be shown by a browser as
+# // it is, so a small page about the file is written NEXT TO it as
+# // "<file>.view.html" and that is what the viewer shows instead:
+# // the web page for an .mht, the list of files inside for a zip/7z,
+# // just the name and size for anything else.
+# ============================================================
+
+TEXT_VIEW_TYPES = (".txt", ".md", ".log", ".csv")
+
+HTML_VIEW_TYPES = (".html", ".htm")
+
+PDF_VIEW_TYPES = (".pdf",)
+
+IMAGE_VIEW_TYPES = (".png", ".jpg", ".jpeg", ".gif", ".webp")
+
+MHT_VIEW_TYPES = (".mht", ".mhtml")
+
+# // bump this whenever the look of the generated "<file>.view.html"
+# // pages changes, so pages made by an older version get rebuilt
+# // instead of being kept because they look "up to date".
+VIEW_PAGE_VERSION = 2
+
+# // an archive's top level is normally a handful of items. This only
+# // matters for a weird one with a huge number of items in its root.
+MAX_TOP_LEVEL_ITEMS = 100
+
+
+def get_view_kind(filename):
+
+    # // "page" = needs a generated "<file>.view.html" to be shown.
+    # // Keep these lists in step with the ones in view_template.html.
+
+    extension = os.path.splitext(
+        filename
+    )[1].lower()
+
+    if extension in TEXT_VIEW_TYPES:
+
+        return "text"
+
+    if extension in HTML_VIEW_TYPES:
+
+        return "html"
+
+    if extension in PDF_VIEW_TYPES:
+
+        return "pdf"
+
+    if extension in IMAGE_VIEW_TYPES:
+
+        return "image"
+
+    return "page"
+
+
+def get_view_support_paths(filename):
+
+    # // the generated helper page(s) of an attachment, relative to
+    # // website/, so the file tracking/cleanup knows about them.
+
+    if get_view_kind(filename) == "page":
+
+        return [
+            f"attachments/{filename}{VIEW_SUFFIX}"
+        ]
+
+    return []
+
+
+def format_file_size(size):
+
+    value = float(size)
+
+    for unit in ("B", "KB", "MB"):
+
+        if value < 1024:
+
+            if unit == "B":
+
+                return f"{int(value)} B"
+
+            return f"{value:.1f} {unit}"
+
+        value /= 1024
+
+    return f"{value:.1f} GB"
+
+
+def list_archive_entries(source, extension):
+
+    # // returns [(name, size), ...] or None when it can't be read.
+    # // .zip works out of the box. .7z needs the optional "py7zr"
+    # // package (pip install py7zr), without it the page just shows
+    # // the file's name and size instead of its contents.
+
+    try:
+
+        if extension == ".zip":
+
+            with zipfile.ZipFile(
+                source
+            ) as archive:
+
+                return [
+                    (info.filename, info.file_size)
+                    for info in archive.infolist()
+                    if not info.is_dir()
+                ]
+
+        if extension == ".7z":
+
+            import py7zr
+
+            with py7zr.SevenZipFile(
+                source,
+                mode="r"
+            ) as archive:
+
+                return [
+                    (info.filename, int(info.uncompressed or 0))
+                    for info in archive.list()
+                    if not info.is_directory
+                ]
+
+    except Exception:
+
+        return None
+
+    return None
+
+
+def summarize_archive(entries):
+
+    # // what's actually useful to know about an archive: how big it is,
+    # // how many files, and what's at its top level. NOT a flat list of
+    # // every file inside (that was long and told you nothing).
+
+    paths = [
+        (name.replace("\\", "/").strip("/"), size)
+        for name, size in entries
+    ]
+
+    total_files = len(paths)
+
+    total_size = sum(
+        size
+        for _, size in paths
+    )
+
+    # // very often everything sits inside one single folder
+    # // ("myfolder/..."). Looking at just that folder would be a useless
+    # // one-line summary, so step inside it (a few levels at most).
+
+    inside = ""
+
+    while inside.count("/") < 3:
+
+        has_root_files = any(
+            "/" not in path
+            for path, _ in paths
+        )
+
+        tops = {
+            path.split("/")[0]
+            for path, _ in paths
+            if "/" in path
+        }
+
+        if has_root_files or len(tops) != 1:
+
+            break
+
+        top = next(
+            iter(tops)
+        )
+
+        inside += top + "/"
+
+        paths = [
+            (path[len(top) + 1:], size)
+            for path, size in paths
+        ]
+
+    folders = {}
+
+    files = []
+
+    for path, size in paths:
+
+        if "/" in path:
+
+            top = path.split("/")[0]
+
+            count_and_size = folders.setdefault(
+                top,
+                [0, 0]
+            )
+
+            count_and_size[0] += 1
+
+            count_and_size[1] += size
+
+        else:
+
+            files.append(
+                (path, size)
+            )
+
+    rows = []
+
+    for name in sorted(
+        folders,
+        key=str.lower
+    ):
+
+        count, size = folders[name]
+
+        plural = "" if count == 1 else "s"
+
+        rows.append(
+            (
+                name + "/",
+                f"{count} file{plural}, {format_file_size(size)}"
+            )
+        )
+
+    for name, size in sorted(
+        files,
+        key=lambda item: item[0].lower()
+    ):
+
+        rows.append(
+            (name, format_file_size(size))
+        )
+
+    plural = "" if total_files == 1 else "s"
+
+    details = (
+        f'<p class="note">{total_files} file{plural}, '
+        f"{format_file_size(total_size)} once unpacked</p>"
+    )
+
+    if inside:
+
+        details += (
+            '<p class="note">Everything is inside '
+            f"{escape_html(inside)}</p>"
+        )
+
+    shown = rows[:MAX_TOP_LEVEL_ITEMS]
+
+    table_rows = "".join(
+        "<tr><td>" + escape_html(name) + "</td>"
+        '<td class="size">' + escape_html(info) + "</td></tr>"
+        for name, info in shown
+    )
+
+    details += f"<table>{table_rows}</table>"
+
+    if len(rows) > len(shown):
+
+        details += (
+            '<p class="note">...and '
+            f"{len(rows) - len(shown)} more items.</p>"
+        )
+
+    return details
+
+
+VIEW_SUPPORT_TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>%%TITLE%%</title>
+<style>
+    body {
+        margin:0;
+        padding:30px 30px 90px 30px;
+        background:#111111;
+        color:#eeeeee;
+        font-family:Arial,Helvetica,sans-serif;
+    }
+    h1 {
+        color:#b3374c;
+        overflow-wrap:anywhere;
+    }
+    .note {
+        color:#aaaaaa;
+    }
+    table {
+        border-collapse:collapse;
+        width:100%;
+    }
+    td {
+        padding:8px 12px;
+        border-top:1px solid #2a2a2a;
+        overflow-wrap:anywhere;
+    }
+    td.size {
+        color:#aaaaaa;
+        text-align:right;
+        white-space:nowrap;
+    }
+</style>
+</head>
+<body>
+<h1>%%TITLE%%</h1>
+<p class="note">%%SIZE%%</p>
+%%DETAILS%%
+</body>
+</html>
+"""
+
+
+def build_view_support_html(filename, source):
+
+    extension = os.path.splitext(
+        filename
+    )[1].lower()
+
+    if extension in MHT_VIEW_TYPES:
+
+        # // a saved web page: rebuilt as one normal self-contained
+        # // page (see tools/mht_converter.py).
+
+        converted = mht_to_html(
+            source
+        )
+
+        if converted is not None:
+
+            return converted
+
+    entries = list_archive_entries(
+        source,
+        extension
+    )
+
+    if entries is None:
+
+        details = (
+            '<p class="note">No preview is available for this '
+            "type of file, but it can be downloaded.</p>"
+        )
+
+    elif not entries:
+
+        details = '<p class="note">This archive is empty.</p>'
+
+    else:
+
+        details = summarize_archive(
+            entries
+        )
+
+    page = VIEW_SUPPORT_TEMPLATE
+
+    for marker, value in (
+        ("%%TITLE%%", escape_html(filename)),
+        ("%%SIZE%%", format_file_size(os.path.getsize(source))),
+        ("%%DETAILS%%", details)
+    ):
+
+        page = page.replace(
+            marker,
+            value
+        )
+
+    return page
+
+
+def ensure_view_support(filename):
+
+    if get_view_kind(filename) != "page":
+
+        return
+
+    source = os.path.join(
+        WEBSITE_FOLDER,
+        "attachments",
+        filename
+    )
+
+    if not os.path.isfile(
+        source
+    ):
+
+        return
+
+    target = source + VIEW_SUFFIX
+
+    marker = f"<!-- view-page-version: {VIEW_PAGE_VERSION} -->"
+
+    # // converting a big .mht or reading a big archive is slow-ish, so
+    # // reuse the previous result while the original hasn't changed AND
+    # // the page was made by this version of the generator.
+
+    if (
+        os.path.exists(target)
+        and os.path.getmtime(target) >= os.path.getmtime(source)
+    ):
+
+        with open(
+            target,
+            "r",
+            encoding="utf-8",
+            errors="replace"
+        ) as file:
+
+            if marker in file.read(120):
+
+                return
+
+    write_file(
+        target,
+        marker + "\n" + build_view_support_html(
+            filename,
+            source
+        )
+    )
+
+
+def generate_view_page():
+
+    write_file(
+
+        os.path.join(
+            WEBSITE_FOLDER,
+            "view.html"
+        ),
+
+        read_template(
+            "view_template.html"
+        )
+
+    )
+
+
+def generate_hosted_attachments():
+
+    # // hosted attachments (tools/hosted_attachments.py) aren't in any
+    # // post, but their web link opens the viewer too, so they need the
+    # // same helper pages.
+
+    for entry in list_hosted():
+
+        ensure_view_support(
+            entry["file"]
+        )
+
+
 def generate_attachments(attachments):
 
     if not attachments:
 
         return ""
 
+    # // no heading and no lines between rows: attachments just sit
+    # // under the post, one per line.
+
     html = """
 
 <section class="post-files-card">
-
-<h2>
-Attachments
-</h2>
 
 """
 
@@ -1181,18 +1645,35 @@ Attachments
             file
         )
 
-        display_name = escape_html(
-            name
+        ensure_view_support(
+            file
+        )
+
+        view_link = (
+            "../view.html?f="
+            + quote(file, safe="")
+        )
+
+        # // "[ Download | View ]  name": one rounded pill split in two
+        # // halves, then the attachment's name.
+
+        pill = (
+            f'<a href="{url}" '
+            f'download="{escape_html(file)}">Download</a>'
+            f'<a href="{view_link}">View</a>'
         )
 
         html += f"""
 
-<a
-    class="download-button"
-    href="{url}"
->
-    {display_name}
-</a>
+<div class="attachment-row">
+
+<div class="attachment-actions">{pill}</div>
+
+<span class="attachment-name">
+{escape_html(name)}
+</span>
+
+</div>
 
 """
 
@@ -1477,7 +1958,9 @@ def get_generated_files():
 
         "posts.html",
 
-        "404.html"
+        "404.html",
+
+        "view.html"
 
     ]
 
@@ -1712,6 +2195,31 @@ def get_generated_files():
 
                 )
 
+                # // helper page (if this kind of file needs one)
+                files.extend(
+                    get_view_support_paths(
+                        filename
+                    )
+                )
+
+    # // hosted attachments are normal files in the attachments folder
+    # // that no post uses, so they must be listed here too or the
+    # // cleanup would treat them as strays.
+
+    for entry in list_hosted():
+
+        hosted_name = entry["file"]
+
+        files.append(
+            f"attachments/{hosted_name}"
+        )
+
+        files.extend(
+            get_view_support_paths(
+                hosted_name
+            )
+        )
+
     return list(
         set(files)
     )
@@ -1829,6 +2337,20 @@ def clean_unused_attachments():
                 used_files.add(
                     filename
                 )
+
+    # // hosted attachments stay even though no post uses them
+    for entry in list_hosted():
+
+        used_files.add(
+            entry["file"]
+        )
+
+    # // and so do the helper pages ("<file>.view.html") of whatever stays
+    for filename in list(used_files):
+
+        used_files.add(
+            filename + VIEW_SUFFIX
+        )
 
     for filename in os.listdir(
         attachments_folder
@@ -2148,6 +2670,10 @@ def generate_website():
     generate_posts()
 
     generate_404()
+
+    generate_view_page()
+
+    generate_hosted_attachments()
 
     clean_unused_attachments()
 

@@ -16,6 +16,7 @@ from ui.about import Page as AboutPage
 from ui.albums import Page as AlbumsPage
 from ui.artworks import Page as ArtworksPage
 from ui.posts import Page as PostsPage
+from ui.hosting import Page as HostingPage
 
 
 from generator.website_generator import generate_website
@@ -46,8 +47,8 @@ class AdminWindow(QWidget):
 
 
         self.resize(
-            1000,
-            600
+            1100,
+            700
         )
 
 
@@ -56,6 +57,14 @@ class AdminWindow(QWidget):
 
         self.setLayout(
             main_layout
+        )
+
+        main_layout.setContentsMargins(
+            16, 16, 16, 16
+        )
+
+        main_layout.setSpacing(
+            16
         )
 
 
@@ -76,6 +85,10 @@ class AdminWindow(QWidget):
         # --------------------------------------------------------
 
         sidebar = QVBoxLayout()
+
+        sidebar.setSpacing(
+            8
+        )
 
 
 
@@ -190,6 +203,7 @@ class AdminWindow(QWidget):
 
         self.posts_page = PostsPage()
 
+        self.hosting_page = HostingPage()
 
 
         self.pages.addWidget(
@@ -212,6 +226,9 @@ class AdminWindow(QWidget):
             self.posts_page
         )
 
+        self.pages.addWidget(
+            self.hosting_page
+        )
 
 
         main_layout.addWidget(
@@ -270,6 +287,20 @@ class AdminWindow(QWidget):
             lambda:
             self.pages.setCurrentWidget(
                 self.posts_page
+            )
+
+        )
+
+
+        # // the Hosting Attachments page has no sidebar button of its
+        # // own: the Dashboard opens it, and the Dashboard button in
+        # // the sidebar brings the Dashboard back.
+
+        self.dashboard_page.hosting_requested.connect(
+
+            lambda:
+            self.pages.setCurrentWidget(
+                self.hosting_page
             )
 
         )
@@ -462,6 +493,118 @@ if __name__ == "__main__":
 
             background-color:#b3374c;
             border:1px solid #b3374c;
+
+        }
+
+
+        /* ---- small polish: same look, just less raw ---- */
+
+        QLineEdit,
+        QTextEdit {
+
+            padding:6px;
+
+        }
+
+        QLineEdit:focus,
+        QTextEdit:focus {
+
+            border:1px solid #8b2635;
+
+        }
+
+        QListWidget::item {
+
+            padding:6px 8px;
+
+        }
+
+        QListWidget::item:hover:!selected {
+
+            background-color:#242424;
+
+        }
+
+        QListWidget::item:selected {
+
+            background-color:#8b2635;
+            color:white;
+
+        }
+
+        QListWidget::item:selected:!active {
+
+            background-color:#5a1a25;
+
+        }
+
+        QPushButton:pressed {
+
+            background-color:#b3374c;
+
+        }
+
+        QPushButton:disabled {
+
+            color:#666666;
+            border:1px solid #333333;
+
+        }
+
+        QToolTip {
+
+            background-color:#1b1b1b;
+            color:#eeeeee;
+            border:1px solid #8b2635;
+            padding:4px;
+
+        }
+
+        QScrollBar:vertical {
+
+            background:#111111;
+            width:12px;
+            margin:0;
+
+        }
+
+        QScrollBar:horizontal {
+
+            background:#111111;
+            height:12px;
+            margin:0;
+
+        }
+
+        QScrollBar::handle:vertical,
+        QScrollBar::handle:horizontal {
+
+            background:#333333;
+            border-radius:6px;
+            min-height:30px;
+            min-width:30px;
+
+        }
+
+        QScrollBar::handle:vertical:hover,
+        QScrollBar::handle:horizontal:hover {
+
+            background:#8b2635;
+
+        }
+
+        QScrollBar::add-line,
+        QScrollBar::sub-line {
+
+            width:0;
+            height:0;
+
+        }
+
+        QScrollBar::add-page,
+        QScrollBar::sub-page {
+
+            background:none;
 
         }
 

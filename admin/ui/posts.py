@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 
 from PySide6.QtCore import Qt
@@ -18,6 +19,132 @@ from PySide6.QtWidgets import (
 )
 
 from tools.json_manager import load_json, save_json
+
+
+# ============================================================
+# SMALL LABEL HELPERS
+#
+# // headings are a bit bigger/bolder than normal text, and each field
+# // in an editor gets a small grey caption above it. Placeholder text
+# // disappears as soon as you type something, so without the caption
+# // you can't tell which box is which once a form is filled in.
+# ============================================================
+
+HEADING_STYLE = """
+    QLabel {
+        font-size:16px;
+        font-weight:bold;
+    }
+"""
+
+CAPTION_STYLE = """
+    QLabel {
+        color:#aaaaaa;
+        font-size:12px;
+        margin-top:4px;
+    }
+"""
+
+
+def make_heading(text):
+
+    label = QLabel(
+        text
+    )
+
+    label.setStyleSheet(
+        HEADING_STYLE
+    )
+
+    return label
+
+
+def make_caption(text):
+
+    label = QLabel(
+        text
+    )
+
+    label.setStyleSheet(
+        CAPTION_STYLE
+    )
+
+    return label
+
+
+def make_field(caption, widget):
+
+    # // a small caption stacked right on top of its box. Several of these
+    # // side by side in one row is how the editors save vertical space.
+
+    column = QVBoxLayout()
+
+    column.setSpacing(
+        2
+    )
+
+    column.addWidget(
+        make_caption(caption)
+    )
+
+    column.addWidget(
+        widget
+    )
+
+    return column
+
+
+# ============================================================
+# AUTOMATIC PAGE NAME
+#
+# // posts used to have a "File name" box you had to fill in by hand.
+# // Now the page name is made from the title when the post is created
+# // ("My First Post" -> my-first-post, and my-first-post2 if that's
+# // taken), and it never changes after that, so a published post's
+# // address stays the same even if you rename it later.
+# ============================================================
+
+def slugify(text):
+
+    text = text.lower().strip()
+
+    text = re.sub(
+        r"[^a-z0-9]+",
+        "-",
+        text
+    )
+
+    text = text.strip("-")
+
+    if not text:
+
+        text = "post"
+
+    return text
+
+
+def generate_unique_post_slug(title, posts_data):
+
+    base_slug = slugify(
+        title
+    )
+
+    existing = {
+        post.get("file", "")
+        for post in posts_data.get("posts", [])
+    }
+
+    if base_slug not in existing:
+
+        return base_slug
+
+    counter = 2
+
+    while f"{base_slug}{counter}" in existing:
+
+        counter += 1
+
+    return f"{base_slug}{counter}"
 
 
 # ============================================================
@@ -69,7 +196,7 @@ class Page(QWidget):
         left = QVBoxLayout()
 
         left.addWidget(
-            QLabel("Posts")
+            make_heading("Posts")
         )
 
         self.post_list = QListWidget()
@@ -125,43 +252,37 @@ class Page(QWidget):
         right = QVBoxLayout()
 
         right.addWidget(
-            QLabel("Post Editor")
+            make_heading("Post Editor")
         )
 
         self.title_input = QLineEdit()
-
-        self.file_input = QLineEdit()
 
         self.date_input = QLineEdit()
 
         self.content_input = QTextEdit()
 
-        self.title_input.setPlaceholderText(
-            "Title"
+        # // title, file name and date share one row instead of three
+        # // stacked ones. No placeholder text: the captions above each
+        # // box already say what it is.
+
+        top_row = QHBoxLayout()
+
+        top_row.addLayout(
+            make_field("Title", self.title_input),
+            3
         )
 
-        self.file_input.setPlaceholderText(
-            "File name"
+        top_row.addLayout(
+            make_field("Date", self.date_input),
+            1
         )
 
-        self.date_input.setPlaceholderText(
-            "Date"
-        )
-
-        self.content_input.setPlaceholderText(
-            "Content"
-        )
-
-        right.addWidget(
-            self.title_input
-        )
-
-        right.addWidget(
-            self.file_input
+        right.addLayout(
+            top_row
         )
 
         right.addWidget(
-            self.date_input
+            make_caption("Content")
         )
 
         right.addWidget(
@@ -185,7 +306,7 @@ class Page(QWidget):
         # ====================================================
 
         right.addWidget(
-            QLabel("Attachments")
+            make_heading("Attachments")
         )
 
         self.attachments_list = QListWidget()
@@ -207,15 +328,43 @@ class Page(QWidget):
         )
 
         self.remove_attachment_button = QPushButton(
-            "Remove Selected Attachment"
+            "Remove Attachment"
         )
 
-        right.addWidget(
+        # // one bar split in two halves: the buttons touch each other
+        # // and only the outer corners stay rounded.
+
+        self.add_attachment_button.setStyleSheet("""
+            QPushButton {
+                border-top-right-radius:0;
+                border-bottom-right-radius:0;
+            }
+        """)
+
+        self.remove_attachment_button.setStyleSheet("""
+            QPushButton {
+                border-top-left-radius:0;
+                border-bottom-left-radius:0;
+                border-left:none;
+            }
+        """)
+
+        attachment_bar = QHBoxLayout()
+
+        attachment_bar.setSpacing(
+            0
+        )
+
+        attachment_bar.addWidget(
             self.add_attachment_button
         )
 
-        right.addWidget(
+        attachment_bar.addWidget(
             self.remove_attachment_button
+        )
+
+        right.addLayout(
+            attachment_bar
         )
 
         # ====================================================
@@ -281,7 +430,6 @@ class Page(QWidget):
         self.remove_attachment_button.clicked.connect(
             self.remove_attachment
         )
-
         self.move_up_button.clicked.connect(
             self.move_up
         )
@@ -434,9 +582,9 @@ class Page(QWidget):
 
             data["posts"] = []
 
-        filename = title.lower().replace(
-            " ",
-            "-"
+        filename = generate_unique_post_slug(
+            title,
+            data
         )
 
         data["posts"].append({
@@ -505,13 +653,6 @@ class Page(QWidget):
         self.title_input.setText(
             post.get(
                 "title",
-                ""
-            )
-        )
-
-        self.file_input.setText(
-            post.get(
-                "file",
                 ""
             )
         )
@@ -830,9 +971,16 @@ class Page(QWidget):
             self.title_input.text()
         )
 
-        post["file"] = (
-            self.file_input.text()
-        )
+        # // the page name is never typed in or changed here. It was set
+        # // when the post was created. Only a post that somehow has none
+        # // (an old one) gets one now.
+
+        if not post.get("file"):
+
+            post["file"] = generate_unique_post_slug(
+                post.get("title", ""),
+                data
+            )
 
         post["date"] = (
             self.date_input.text()
@@ -953,8 +1101,6 @@ class Page(QWidget):
         self.current_post = new_index
 
         self.title_input.clear()
-
-        self.file_input.clear()
 
         self.date_input.clear()
 

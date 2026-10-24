@@ -20,6 +20,13 @@ PROJECT_FOLDER = os.path.dirname(
 )
 
 
+# // when the admin runs without a console window (main.pyw), Windows
+# // would pop up a black console for every single git command. This flag
+# // stops that. It's only meaningful on Windows, 0 means "nothing
+# // special" everywhere else.
+NO_WINDOW = 0x08000000 if os.name == "nt" else 0
+
+
 def run_git(command):
 
     # // tiny wrapper so every git call in this file goes through one
@@ -37,7 +44,9 @@ def run_git(command):
 
         capture_output=True,
 
-        text=True
+        text=True,
+
+        creationflags=NO_WINDOW
 
     )
 

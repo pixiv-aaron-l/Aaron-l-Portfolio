@@ -1,0 +1,366 @@
+<!-- view-page-version: 2 -->
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><meta charset="utf-8"><TITLE>萌壹</TITLE>
+
+<SCRIPT language=Javascript>
+function d(){
+postform.send.value = "Please wait...";
+postform.send.disabled = true;
+}
+function c() {
+d_pic.style.visibility = "hidden";
+}
+
+var preview_before = "";
+
+function preview_upload(file) {
+if(preview_before == file) return;
+preview_before = file;
+d_pic.style.visibility = "visible";
+document.getElementById("d_pic").innerHTML = "<img id=pic src=file://" + file + ">";
+window.setTimeout("preview_resize()",1000);
+}
+
+function preview_resize() {
+
+var w = 250 ;
+var h = 250 ;
+
+obj = document.getElementById("pic");
+if(obj.width > w && obj.width > obj.height) {
+obj.height = parseInt(w / obj.width * obj.height);
+obj.width  = w;
+}
+else if (obj.height > h) {
+obj.width  = parseInt(h / obj.height * obj.width);
+obj.height = h;
+}
+}
+
+function ru() {
+document.getElementById("rule").style.display = "none";
+document.getElementById("form").style.display = "";
+}
+function nru() {
+document.getElementById("rule").style.display = "";
+document.getElementById("form").style.display = "none";
+}
+
+</SCRIPT>
+
+<META http-equiv=pragma content=no-cache>
+<STYLE type=text/css>BODY {
+	FONT-SIZE: 15px; FONT-FAMILY: ""
+}
+TR {
+	FONT-SIZE: 15px; FONT-FAMILY: ""
+}
+TD {
+	FONT-SIZE: 15px; FONT-FAMILY: ""
+}
+TH {
+	FONT-SIZE: 15px; FONT-FAMILY: ""
+}
+A:hover {
+	COLOR: #dd0000
+}
+.s {
+	FONT-SIZE: 28px
+}
+SMALL {
+	FONT-SIZE: 13px
+}
+BLOCKQUOTE {
+	BORDER-RIGHT: #aaa 0px dashed; PADDING-RIGHT: 0px; BORDER-TOP: #aaa 0px dashed; PADDING-LEFT: 0px; FONT-SIZE: 15px; PADDING-BOTTOM: 0px; MARGIN: 15px 40px; BORDER-LEFT: #aaa 0px dashed; PADDING-TOP: 0px; BORDER-BOTTOM: #aaa 0px dashed; FONT-FAMILY: "MS UI Gothic"
+}
+TEXTAREA {
+	FONT-SIZE: 15px; FONT-FAMILY: "MS UI Gothic"
+}
+.help {
+	CURSOR: help
+}
+.pointer {
+	CURSOR: pointer
+}
+IMG.pp {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px 15px 0px 0px; PADDING-TOP: 0px
+}
+</STYLE>
+
+<META content="MSHTML 6.00.2900.2873" name=GENERATOR></HEAD>
+<BODY text=#800000 vLink=#0000ee link=#0000ee bgColor=#ffffee>
+<DIV style="Z-INDEX: 2; LEFT: 10px; POSITION: absolute; TOP: 10px"><SMALL>[二次元] 
+[一般向]</SMALL> </DIV>
+<DIV class=pointer id=d_pic 
+style="Z-INDEX: 2; LEFT: 0px; VISIBILITY: hidden; POSITION: absolute; TOP: 0px" 
+onclick=c();><IMG id=pic> </DIV>
+<P align=right>[<A href="http://mail.apol.com.tw/~ag060708/" target=_top>首頁</A>] 
+[<A href="http://2-cat.twbbs.org/~kirur/img2/imgboard.php?mode=admin">管理用</A>] 
+<A href="http://2-cat.twbbs.org/~kirur/img2/imgboard.php?res=3875#bottom" 
+name=top>▼Bottom</A> </P>
+<P align=center><B><SPAN class=s>萌壹</SPAN></B></FONT> 
+<HR>
+
+<DIV align=right>[<A 
+href="http://2-cat.twbbs.org/~kirur/img2/index.htm">回到討論板</A>]</DIV>
+<TABLE width="100%">
+  <TBODY>
+  <TR>
+    <TH bgColor=#e04000><FONT color=#ffffff>Res送信模式</FONT> 
+</TH></TR></TBODY></TABLE>
+<DIV id=form style="DISPLAY: none">
+<CENTER>
+<FORM name=postform onsubmit=d(); action=imgboard.php method=post 
+encType=multipart/form-data><INPUT type=hidden value=regist name=mode> <INPUT 
+type=hidden value=524288 name=MAX_FILE_SIZE> <INPUT type=hidden value=3875 
+name=resto> 
+<TABLE cellSpacing=2 cellPadding=2 border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#eeaa88><B>名　字</B></TD>
+    <TD><INPUT size=28 name=name> <ACRONYM title=可以再看一次版規。>[<A class=help 
+      onclick=nru(); 
+      href="http://2-cat.twbbs.org/~kirur/img2/imgboard.php?res=3875#">再看一次版規</A>] 
+      <ACRONYM></ACRONYM></ACRONYM></TD></TR>
+  <TR>
+    <TD bgColor=#eeaa88><B>E-mail</B></TD>
+    <TD><INPUT size=28 name=email> <ACRONYM 
+      title=可以輕鬆的更新LOG檔，LOG發生問題時可以使用。>[<A class=help 
+      href="http://2-cat.twbbs.org/~kirur/img2/imgboard.php">Refresh</A>] 
+      <ACRONYM></ACRONYM></ACRONYM></TD></TR>
+  <TR>
+    <TD bgColor=#eeaa88><B>標　題</B></TD>
+    <TD><INPUT size=35 name=sub> 
+  <INPUT type=submit value=submit name=send></TD></TR>
+  <TR>
+    <TD bgColor=#eeaa88><B>內　文</B></TD>
+    <TD><TEXTAREA name=com rows=6 cols=60></TEXTAREA></TD></TR>
+  <TR>
+    <TD bgColor=#eeaa88><B>刪除用密碼</B></TD>
+    <TD><INPUT type=password maxLength=8 size=8 name=pwd> 
+      <SMALL>(刪除用。請用八個英、數以內的文字)</SMALL></TD></TR>
+  <TR>
+    <TD colSpan=2><SMALL>
+      <LI>可夾帶的檔案！GIF, JPG, PNG 這樣瀏覽器才能正常的夾檔 
+      <LI>最大的投搞量為512 KB。當回文時E-mail填入sage不會推圖 
+      <LI>超過 寬:250、高:250 的圖片會自動產生瀏覽用的縮圖 
+</SMALL></LI></TD></TR></TBODY></TABLE></FORM></CENTER></DIV>
+<DIV id=rule><SMALL>
+<LI>這個版面是拿來貼萌圖用的 
+<LI>本版面附有 <A 
+href="http://2-cat.twbbs.org/~kirur/chat/read.php?key=1147531952&amp;ls=50#saigo" 
+target=_blank>萌版討論串</A> </SMALL>
+<HR>
+<SMALL>
+<LI>若已了解<A href="http://mail.apol.com.tw/~ag060708/" 
+target=_blank>版規</A>而且同意遵守才可以<SPAN onclick=ru();><A 
+href="http://2-cat.twbbs.org/~kirur/img2/imgboard.php?res=3875#">發文</A></SPAN>。 
+</SMALL></LI></DIV>
+<HR>
+
+<FORM action=imgboard.php method=post>FileName: <A 
+href="http://2-cat.twbbs.org/~kirur/img2/src/1149338384206.jpg" 
+target=_blank>1149338384206.jpg</A>-(35952B 
+423x540)<BR><SMALL><B>▼已表示縮圖，按下滑鼠後會顯示原本的大小.</B></SMALL><BR><A 
+href="http://2-cat.twbbs.org/~kirur/img2/src/1149338384206.jpg" 
+target=_blank><IMG class=pp height=250 alt="35952 B" hspace=0 
+src="data:image/jpeg;base64,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" width=196 
+align=left border=0></A><INPUT type=checkbox value=delete name=3875><FONT 
+color=#cc1105><B> </B></FONT><FONT color=#117743><B></B></FONT>Sat060603203944 
+No.3875 
+<BLOCKQUOTE>返しないよ～</BLOCKQUOTE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3878><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sat060603213615 No.3878 
+      <BLOCKQUOTE>不還，不還，哭沒用的啦。(奸笑)</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3880><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sat060603220143 No.3880 
+      <BLOCKQUOTE>拿內褲來換(死</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3881><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sat060603224921 No.3881 
+      <BLOCKQUOTE>拿貞操來換吧(默</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3883><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sat060603225603 No.3883 
+      <BLOCKQUOTE>不哭,不哭,棒棒糖給你(脫褲)</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3886><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sat060603231645 No.3886 
+      <BLOCKQUOTE>男生們真是沒血沒淚= 
+=<BR><BR>姊姊惜惜唷~~(抱)</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3887><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sat060603232359 No.3887 
+      <BLOCKQUOTE><FONT 
+      color=#789922>&gt;&gt;3886</FONT><BR>噗!!(鼻血暴死...)</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3889><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sat060603233023 No.3889 
+      <BLOCKQUOTE>姊姊也一起來吧</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3893><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604001251 No.3893 
+      <BLOCKQUOTE>3886真是讓我整個萌起來=////=</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3895><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604001501 No.3895 
+      <BLOCKQUOTE>3886 的出現一瞬間讓萌度爆表了..</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3897><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604003104 No.3897 
+      <BLOCKQUOTE>為什麼我覺得3886比圖還萌=.="</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3900><FONT 
+      color=#cc1105><B> </B></FONT><FONT color=#117743><B>Robusta</B></FONT> 
+      Sun060604005745 No.3900 
+      <BLOCKQUOTE>看完No.3886 發言<BR>腦袋開始有共鳴的聲音 囧</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3905><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604015954 No.3905 
+      <BLOCKQUOTE>3886比圖還萌啊.......<BR>不過我腦中閃過一個畫面..........</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3906><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604020850 No.3906 
+      <BLOCKQUOTE>3886讓我右鍵了..</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3907><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604021417 No.3907 
+      <BLOCKQUOTE>3886已經存成TIFF了!</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3910><FONT 
+      color=#cc1105><B> </B></FONT><FONT color=#117743><B>農夫男 子徹</B></FONT> 
+      Sun060604054356 No.3910 
+      <BLOCKQUOTE>誰來脫我的褲子讓3886也來襲我...<BR>我覺得我被殺的機率高達八成...<BR>謎之音1：我要修正你...<BR>謎之音1：我要修改你...<BR>謎之音3：我要修剪你...</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3915><FONT 
+      color=#cc1105><B> </B></FONT><FONT color=#117743><B>もえたか</B></FONT> 
+      Sun060604092131 No.3915 
+      <BLOCKQUOTE>3886怎麼還未成為傳說?</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3918><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604100648 No.3918 
+      <BLOCKQUOTE>嗯嗯......<BR>看來自從KOMICA系列男都歸入列表之後~<BR>終於出現了第一個"女性"<BR>只是....要給啥稱號勒?(燦笑~<BR>(百合屬性爆(抱)炸中~~)</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3927><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604120852 No.3927 
+      <BLOCKQUOTE>不知道3886看到上面這串會有啥感想?</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3934><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604130207 No.3934 
+      <BLOCKQUOTE>3886萌死我了!!</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3959><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604174642 No.3959 
+      <BLOCKQUOTE>把3886收進精華吧~</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3961><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604182858 No.3961 
+      <BLOCKQUOTE>我無法停止想像啊~</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3968><FONT 
+      color=#cc1105><B>那個....我是No.3886= =a</B></FONT> <FONT 
+      color=#117743><B></B></FONT>Sun060604185126 No.3968 
+      <BLOCKQUOTE>這邊到底發生了什麼大事?....@@|||<BR><BR>當初只是直覺反應....<BR>看到被欺侮的可憐小蘿莉自然想呵護一下說(汗)</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3974><FONT 
+      color=#cc1105><B>ｷﾀ━━━━━━(ﾟ∀ﾟ)━━━━━━ !!!!!</B></FONT> <FONT 
+      color=#117743><B></B></FONT>Sun060604191659 No.3974 
+      <BLOCKQUOTE>因為你解碰到糟糕島民的萌穴了~<BR>姊姊抱抱~~~~(毆飛)</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3978><FONT 
+      color=#cc1105><B>還是No.3886</B></FONT> <FONT 
+      color=#117743><B></B></FONT>Sun060604193418 No.3978 
+      <BLOCKQUOTE><FONT 
+        color=#789922>&gt;3974</FONT><BR><BR>-口-....<BR>我只抱萌萌蘿莉和正太的說~</BLOCKQUOTE></TD></TR></TBODY></TABLE>
+<TABLE border=0>
+  <TBODY>
+  <TR>
+    <TD bgColor=#f0e0d6><INPUT type=checkbox value=delete name=3998><FONT 
+      color=#cc1105><B> </B></FONT><FONT 
+      color=#117743><B></B></FONT>Sun060604222656 No.3998 
+      <BLOCKQUOTE>我不是故意拿走的喔<BR>"抱"歉 "抱"歉</BLOCKQUOTE></TD></TR></TBODY></TABLE><BR 
+clear=left>
+<HR>
+
+<DIV align=right>
+<TABLE align=right>
+  <TBODY>
+  <TR>
+    <TD noWrap align=middle><INPUT type=hidden value=usrdel name=mode> 
+      刪除用密碼<INPUT type=password maxLength=8 size=8 name=pwd> <INPUT type=submit value=刪除> [<INPUT type=checkbox value=on 
+      name=onlyimgdel>只將圖片刪除] <A 
+      href="http://2-cat.twbbs.org/~kirur/img2/imgboard.php?res=3875#top" 
+      name=bottom>▲Top</A> </FORM></TD></TR></TBODY></TABLE></DIV><BR clear=all>
+<DIV align=center><SMALL>- <A href="http://php.s3.to/" target=_top>GazouBBS</A> 
++ <A href="http://www.2chan.net/" target=_top>futaba</A> / 中文化 By sogetsu - 
+<BR>imgboard.php v0.8 lot.030105 (sogetsu)</SMALL><BR></DIV>
+<SCRIPT src="data:application/octet-stream;base64,ZG9jdW1lbnQud3JpdGUoJzxhIGhyZWY9aHR0cDovL3NtYWlsLm1pbmdkYW8uZWR1LnR3L2NvdW50LyB0YXJnZXQ9X2JsYW5rPicpO2RvY3VtZW50LndyaXRlKCc8aW1nIHNyYz1odHRwOi8vc21haWwubWluZ2Rhby5lZHUudHcvY291bnQvbnVtcy8wMDkvMS5naWYgYm9yZGVyPTAgYWx0Pan6uUSkpL7HrXC8xr65oUGnS7ZPpdO90CBhbGlnbj1hYnNtaWRkbGU+Jyk7ZG9jdW1lbnQud3JpdGUoJzxpbWcgc3JjPWh0dHA6Ly9zbWFpbC5taW5nZGFvLmVkdS50dy9jb3VudC9udW1zLzAwOS8zLmdpZiBib3JkZXI9MCBhbHQ9qfq5RKSkvsetcLzGvrmhQadLtk+l073QIGFsaWduPWFic21pZGRsZT4nKTtkb2N1bWVudC53cml0ZSgnPGltZyBzcmM9aHR0cDovL3NtYWlsLm1pbmdkYW8uZWR1LnR3L2NvdW50L251bXMvMDA5LzYuZ2lmIGJvcmRlcj0wIGFsdD2p+rlEpKS+x61wvMa+uaFBp0u2T6XTvdAgYWxpZ249YWJzbWlkZGxlPicpO2RvY3VtZW50LndyaXRlKCc8aW1nIHNyYz1odHRwOi8vc21haWwubWluZ2Rhby5lZHUudHcvY291bnQvbnVtcy8wMDkvNi5naWYgYm9yZGVyPTAgYWx0Pan6uUSkpL7HrXC8xr65oUGnS7ZPpdO90CBhbGlnbj1hYnNtaWRkbGU+Jyk7ZG9jdW1lbnQud3JpdGUoJzxpbWcgc3JjPWh0dHA6Ly9zbWFpbC5taW5nZGFvLmVkdS50dy9jb3VudC9udW1zLzAwOS82LmdpZiBib3JkZXI9MCBhbHQ9qfq5RKSkvsetcLzGvrmhQadLtk+l073QIGFsaWduPWFic21pZGRsZT4nKTtkb2N1bWVudC53cml0ZSgnPGltZyBzcmM9aHR0cDovL3NtYWlsLm1pbmdkYW8uZWR1LnR3L2NvdW50L251bXMvMDA5LzEuZ2lmIGJvcmRlcj0wIGFsdD2p+rlEpKS+x61wvMa+uaFBp0u2T6XTvdAgYWxpZ249YWJzbWlkZGxlPicpO2RvY3VtZW50LndyaXRlKCc8aW1nIHNyYz1odHRwOi8vc21haWwubWluZ2Rhby5lZHUudHcvY291bnQvbnVtcy8wMDkvNi5naWYgYm9yZGVyPTAgYWx0Pan6uUSkpL7HrXC8xr65oUGnS7ZPpdO90CBhbGlnbj1hYnNtaWRkbGU+Jyk7ZG9jdW1lbnQud3JpdGUoJzwvYT4nKTs="></SCRIPT>
+</BODY></HTML>

@@ -781,3 +781,74 @@ footer {
     color:var(--secondary);
 
 }
+
+
+
+/* =========================
+   ATTACHMENTS: [ DOWNLOAD | VIEW ]  NAME
+   ========================= */
+
+/* one line per attachment under a post: a rounded red pill split into
+   two halves (Download | View), then the attachment's name. No heading
+   and no lines between them. */
+
+.attachment-row {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    padding:6px 0;
+
+}
+
+
+.attachment-actions {
+
+    display:inline-flex;
+
+    flex-shrink:0;
+
+    overflow:hidden;
+
+    border-radius:8px;
+
+    background:var(--accent);
+
+}
+
+
+.attachment-actions a {
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:10px 18px;
+
+    font-size:15px;
+
+}
+
+
+.attachment-actions a + a {
+
+    border-left:1px solid rgba(255,255,255,0.3);
+
+}
+
+
+.attachment-actions a:hover {
+
+    background:var(--accent-hover);
+
+}
+
+
+.attachment-name {
+
+    overflow-wrap:anywhere;
+
+}
