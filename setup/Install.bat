@@ -35,7 +35,7 @@ git lfs install
 
 echo.
 echo installing the python packages...
-%PY% -m pip install PySide6 Pillow py7zr
+%PY% -m pip install PySide6 Pillow
 if errorlevel 1 (
     echo.
     echo something went wrong with the packages, check your internet and run this again

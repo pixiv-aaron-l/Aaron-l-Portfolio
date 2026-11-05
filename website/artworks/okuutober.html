@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1200">
+
+<title>Okuutober</title>
+
+<link rel="stylesheet" href="../style.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+
+<a class="site-title" href="../index.html">
+
+Aaron-l Gallery
+
+</a>
+
+
+
+<nav>
+
+<a href="../index.html">
+ABOUT ME
+</a>
+
+<a href="../arts.html" class="active">
+ARTS
+</a>
+
+<a href="../posts.html">
+POSTS
+</a>
+
+</nav>
+
+<span class="since-text">since 2025</span>
+
+
+</header>
+
+
+
+
+
+<main>
+
+
+<section class="artwork-page">
+
+
+
+<div class="artwork-display">
+
+
+<img src="../images/albums/touhou-artworks/display/67 ~ okuutober.jpg" alt="Okuutober">
+
+
+</div>
+
+
+
+
+
+<div class="artwork-details">
+
+
+
+<h1>
+
+Okuutober
+
+</h1>
+
+
+
+
+
+<div class="artwork-meta">
+
+
+<p>
+
+Artwork number: #4
+
+</p>
+
+
+<p>
+
+Date: 27/30/26
+
+</p>
+
+
+<p>
+
+Time spent: 7 hours 30
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div class="artwork-note">
+
+
+<h2>
+
+Notes
+
+</h2>
+
+
+<p>
+
+<p>
+Nice Utsuho + All Tomorrows drawing for a friend, I plan to come back and learn actual poses after my break
+</p>
+
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<div class="artwork-navigation">
+
+
+
+<!-- PREVIOUS_ARTWORK / NEXT_ARTWORK are worked out in
+     generate_artworks() based on each artwork's position within
+     its album, so these arrows always cycle through the same
+     album the artwork belongs to, not the whole site. -->
+<a href="../artworks/kaguya-day-2026.html">
+
+← Previous
+
+</a>
+
+
+
+
+<a href="../albums/touhou-artworks.html">
+
+Back to album
+
+</a>
+
+
+
+
+<a href="#">
+
+Next →
+
+</a>
+
+
+
+
+</div>
+
+
+
+
+
+</main>
+
+
+
+
+
+<footer>
+
+Last updated: 05/11/2026
+
+</footer>
+
+
+
+
+<script>
+
+document.addEventListener("keydown", function(event) {
+
+    if (
+        event.key === "ArrowLeft"
+        &&
+        "../artworks/kaguya-day-2026.html" !== "#"
+    ) {
+
+        window.location.href = "../artworks/kaguya-day-2026.html";
+
+    }
+
+    if (
+        event.key === "ArrowRight"
+        &&
+        "#" !== "#"
+    ) {
+
+        window.location.href = "#";
+
+    }
+
+});
+
+</script>
+
+
+</body>
+
+</html>
+
+

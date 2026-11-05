@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 )
 
 from tools.json_manager import load_json, save_json
+from tools.unique_names import find_free_stem
 
 from tools.image_manager import (
     create_album_folders,
@@ -310,8 +311,10 @@ class Page(QWidget):
 
         self.notes_input = QTextEdit()
 
-        # // the only hint left is the date's shape. Everything else has
-        # // a caption above it, so no placeholder text is needed.
+        # // the date is free text: write it however you like (28/03/26,
+        # // 2026/01/01, March 2026...). "__/__/__" is only the hint shown
+        # // while the box is empty, nothing is forced or reformatted.
+        # // Everything else has a caption above it, so no placeholder.
         # // (There's no Number box: the number is kept right by adding,
         # // moving and deleting artworks, nobody types it.)
 
@@ -434,10 +437,6 @@ class Page(QWidget):
 
         self.artwork_list.currentRowChanged.connect(
             self.load_artwork
-        )
-
-        self.date_input.textEdited.connect(
-            self.format_date_while_typing
         )
 
         self.create_button.clicked.connect(
@@ -814,44 +813,6 @@ class Page(QWidget):
         )
 
 
-    def format_date_while_typing(self, text):
-
-        # // just type the digits and the slashes appear by themselves:
-        # // 280326 becomes 28/03/26. Up to 8 digits are accepted so a
-        # // full year (28/03/2026) still fits. Anything that isn't only
-        # // digits and slashes (an old date written some other way) is
-        # // left exactly as it is, nothing gets cut or rewritten.
-
-        if not re.fullmatch(
-            r"[\d/]*",
-            text
-        ):
-
-            return
-
-        digits = re.sub(
-            r"\D",
-            "",
-            text
-        )[:8]
-
-        formatted = digits[:2]
-
-        if len(digits) > 2:
-
-            formatted += "/" + digits[2:4]
-
-        if len(digits) > 4:
-
-            formatted += "/" + digits[4:]
-
-        if formatted != text:
-
-            self.date_input.setText(
-                formatted
-            )
-
-
     def renumber_artworks(self, artworks):
 
         for index, artwork in enumerate(artworks):
@@ -1068,45 +1029,58 @@ class Page(QWidget):
         )
 
 
-        filename = os.path.basename(
-            file
-        )
-
-
-        original_path = os.path.join(
-
+        original_folder = os.path.join(
             get_album_image_folder(
                 album["folder"]
             ),
-
-            "original",
-
-            filename
-
+            "original"
         )
 
+        display_folder = os.path.join(
+            get_album_image_folder(
+                album["folder"]
+            ),
+            "display"
+        )
+
+        stem, extension = os.path.splitext(
+            os.path.basename(
+                file
+            )
+        )
+
+        # // never replace an existing image. The original is saved as
+        # // a.png and the display image as a.jpg, so BOTH names have to be
+        # // free. If either is taken it tries a2, then a3... re-checking
+        # // both every time (a loop) until they are, and the artwork then
+        # // stores those final names.
+
+        free_stem = find_free_stem(
+            stem,
+            [
+                (original_folder, extension),
+                (display_folder, ".jpg")
+            ]
+        )
+
+        filename = free_stem + extension
+
+        display_name = free_stem + ".jpg"
+
+        original_path = os.path.join(
+            original_folder,
+            filename
+        )
+
+        display_path = os.path.join(
+            display_folder,
+            display_name
+        )
 
         shutil.copy(
             file,
             original_path
         )
-
-
-        display_name = os.path.splitext(filename)[0] + ".jpg"
-
-
-        display_path = os.path.join(
-
-            get_album_image_folder(
-                album["folder"]
-            ),
-
-            "display",
-
-            display_name
-
-        )
-
 
         create_display_image(
 
@@ -1115,7 +1089,6 @@ class Page(QWidget):
             display_path
 
         )
-
 
         self.original_input.setText(
             filename

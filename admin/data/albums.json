@@ -39,6 +39,17 @@
                     "time_spent": "5 hours 30",
                     "notes": "This is my art for the lunatic princess day, I love how this scene is looking",
                     "excluded_from_random": false
+                },
+                {
+                    "title": "Okuutober",
+                    "file": "okuutober",
+                    "display": "67 ~ okuutober.jpg",
+                    "original": "67 ~ okuutober.png",
+                    "number": 4,
+                    "date": "27/30/26",
+                    "time_spent": "7 hours 30",
+                    "notes": "Nice Utsuho + All Tomorrows drawing for a friend, I plan to come back and learn actual poses after my break",
+                    "excluded_from_random": false
                 }
             ],
             "featured": true
@@ -114,7 +125,7 @@
                     "date": "21/09/25",
                     "time_spent": "15 hours",
                     "notes": "A Touhou scene where Seija is getting arrested by the Yamazanadu. It seems I have spent 15 hours on Krita for this one (?)",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "The two people beyond boundaries",
@@ -169,7 +180,7 @@
                     "date": "25/11/25",
                     "time_spent": "6 hours 30",
                     "notes": "Mokou is calmly drinking, it's not like the fire would hurt her",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "1998 Reimu",
@@ -180,7 +191,7 @@
                     "date": "29/11/25",
                     "time_spent": "6 hours",
                     "notes": "This picture is the \"old Reimu treatment\" I suppose, one must notice a reference to Logan Paul",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Wizard",
@@ -191,7 +202,7 @@
                     "date": "01/12/25",
                     "time_spent": "1 hour",
                     "notes": "This was an attempt at drawing a scary comic face, the wizard's model is a v-tuber avatar",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Mokou pfp",
@@ -213,7 +224,7 @@
                     "date": "08/12/25",
                     "time_spent": "30 minutes",
                     "notes": "This is a small drawing where I tried to represent the misty lake of EoSD",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "エリック girl",
@@ -235,7 +246,7 @@
                     "date": "13/12/25",
                     "time_spent": "5 hours",
                     "notes": "This illustration of Mokou was done with a model in attempt to have more realistic proportions",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Mamizou",
@@ -246,7 +257,7 @@
                     "date": "26/12/25",
                     "time_spent": "7 hours",
                     "notes": "This Mamizou art was a try at drawing perspective",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Happy Mokou",
@@ -257,7 +268,7 @@
                     "date": "01/01/26",
                     "time_spent": "6 hours 30",
                     "notes": "My first drawing of 2026! I wanted to make my Mokou look joyful for the new year",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Ebola Chan",
@@ -268,7 +279,7 @@
                     "date": "04/01/26",
                     "time_spent": "5 hours 50",
                     "notes": "This girl is the gijinka design of the ebola diseace, she is standing on hemoglobin. However I don't think this drawing was well-done",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Kkhta Mokou",
@@ -290,7 +301,7 @@
                     "date": "06/01/26",
                     "time_spent": "2 hours",
                     "notes": "This picture is a Touhou version I did of the old \"blow-out soon\" meme",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "BoWaP",
@@ -345,7 +356,7 @@
                     "date": "21/01/26",
                     "time_spent": "5 hours 30",
                     "notes": "It was inspired by this parody https://www.nicovideo.jp/watch/sm44832761 with cookie star characters of Marisa and Parsee, I would give you this as a resource for cookie : https://yukkuri.shiteitte.net/wiki_pages/cookie_(touhou)/ ",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Ariya",
@@ -367,7 +378,7 @@
                     "date": "03/02/26",
                     "time_spent": "4 hours 40",
                     "notes": "This represents the ressurection non-spell of Fujiwara no Mokou",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Sanae with grub",
@@ -378,7 +389,7 @@
                     "date": "10/02/26",
                     "time_spent": "3 hours",
                     "notes": "This tiny Sanae next to a grub is an old touhou jerk meme",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Mokou meets Merry",
@@ -389,7 +400,7 @@
                     "date": "15/02/26",
                     "time_spent": "4 hours",
                     "notes": "This is the scene of the 9th song of Changeability of Strange Dream (Touhou hifuu club story) where Merry who's getting more and more stuck in Gensokyo witnesses Mokou getting rid of a youkai in the bamboo forest",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Hell or heaven",
@@ -411,7 +422,7 @@
                     "date": "25/02/26",
                     "time_spent": "2 hours 50",
                     "notes": "This drawing of Yorihime was inspired by Kam-S very old artstyle, an attempt to reproduce its rendering",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Shrine maiden duality",
@@ -422,7 +433,7 @@
                     "date": "26/02/26",
                     "time_spent": "3 hours 30",
                     "notes": "The duality between two shrine maidens\n>Sanae thinks the lunarian war was a bad thing\n; Reimu will do it again",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Luna Child",
@@ -433,7 +444,7 @@
                     "date": "28/02/26",
                     "time_spent": "5 hours",
                     "notes": "This is the result of trying a 3D-looking fairy, Luna Child is the only fairy you can live with, even tho I'd like Star Sapphire~ this art hurts my eyes",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Guro girl",
@@ -477,7 +488,7 @@
                     "date": "22/03/26",
                     "time_spent": "4 hours 50",
                     "notes": "The history is repeating itself in front of her... This picture have a sequel version for Pixiv",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Apocalypse",
@@ -488,7 +499,7 @@
                     "date": "28/03/26",
                     "time_spent": "9 hours",
                     "notes": "I wanted to draw every single PC-98 Touhou antagonist on the same picture, it feels like an insane bullet hell is about to happen",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Marisa plays Touhou",
@@ -499,7 +510,7 @@
                     "date": "28/03/26",
                     "time_spent": "4 hours",
                     "notes": "Marisa is sitting on a sofa and playing video game, I did this with the big-eyes anime style because at the time I decided to try this path looking for art's beauty",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Clowpiece",
@@ -510,7 +521,7 @@
                     "date": "31/03/26",
                     "time_spent": "4 hours",
                     "notes": "Clownpiece hitting her pose on the moon, there is a second version with way more revealing outfit : https://www.pixiv.net/en/artworks/142973845",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Meowbah",
@@ -554,7 +565,7 @@
                     "date": "26/04/26",
                     "time_spent": "4 hours",
                     "notes": "This represents Koishi's sprite during her extra stage fight in Touhou 11",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Sad kitten",
@@ -576,7 +587,7 @@
                     "date": "24/05/26",
                     "time_spent": "4 hours",
                     "notes": "Mokou is flying over Eientei, ready to take her revenge! sadly I couldn't finish this illustration in time for my challenge and decided to ignore the background",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "The shrine tank",
@@ -587,7 +598,7 @@
                     "date": "15/06/26",
                     "time_spent": "8 hours",
                     "notes": "This is an illustration with the SoEW shrine tank, I like how Touhou began with litteral tanks involved",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Shion-pai",
@@ -631,7 +642,7 @@
                     "date": "09/07/26",
                     "time_spent": "6 hours",
                     "notes": "This is a re-evolved ruin haunter woman from All Tomorrows putting her children into an early gravital, I heavily inspired myself of Zenith's art for this one and believe my art is now good looking. It is after this piece that I began the code of my website, delayed by my laptop's screen breaking which made it unusable for a whole week",
-                    "excluded_from_random": false
+                    "excluded_from_random": true
                 },
                 {
                     "title": "Hourai doll",
@@ -650,7 +661,7 @@
                     "display": "62 ~ traces of Sariel.jpg",
                     "original": "62 ~ traces of Sariel.png",
                     "number": 55,
-                    "date": "02/08/2026",
+                    "date": "02/08/26",
                     "time_spent": "6 hours 10",
                     "notes": "This is a design for Sariel inspired by the concept of traces of old gods in the Fear and Hunger video games",
                     "excluded_from_random": true

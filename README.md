@@ -10,6 +10,7 @@ A personal portfolio website generator and local administration application.
 - Blog/post system
 - Attachments on posts, each with **Download** and **View** buttons
 - Hosting attachments: put a file on the website without a post, and get a web link for it
+- Files are never overwritten: if a file with the same name already exists, the new one is renamed (name2, name3...) automatically
 - JSON-based content storage
 - Static website generation
 - Automatic cleanup of removed content
@@ -151,7 +152,7 @@ After making changes:
 Every attachment on a post shows **Download** and **View**.
 
 - **Download** always downloads the file.
-- **View** opens the file on a full page with just a **Return** button: text, HTML, PDF and images are shown as they are, a saved web page (`.mht`) is shown as a normal page, and `.zip` / `.7z` show a short summary (size, how many files, what is at the top level; for `.7z` this needs the optional `py7zr` package, which the installer adds).
+- **View** opens the file on a full page with just a **Return** button: text, HTML, PDF and images are shown as they are, and a saved web page (`.mht`) is shown as a normal page. Files a browser can't show (like `.zip` and `.7z`) only have **Download**.
 
 ### Hosting attachments
 

@@ -1,10 +1,11 @@
 import os
-import shutil
 
 from urllib.parse import quote
 
 from tools.json_manager import load_json, save_json
-from tools.github_manager import PROJECT_FOLDER, get_github_identity
+from tools.github_manager import PROJECT_FOLDER, get_github_identity, run_git
+from tools.unique_names import copy_unique
+from tools.view_types import get_view_kind
 
 
 # // "hosted attachments" are just normal attachments that don't belong
@@ -101,42 +102,6 @@ def get_post_filenames():
     return names
 
 
-def make_unique_filename(name):
-
-    # // keep the normal name whenever possible. If something already
-    # // uses it (another hosted file, a post's attachment, or any file
-    # // already sitting in the attachments folder), add a number:
-    # // report.pdf -> report2.pdf -> report3.pdf
-
-    taken = get_hosted_filenames() | get_post_filenames()
-
-    if os.path.isdir(
-        ATTACHMENTS_FOLDER
-    ):
-
-        taken |= set(
-            os.listdir(
-                ATTACHMENTS_FOLDER
-            )
-        )
-
-    if name not in taken:
-
-        return name
-
-    stem, extension = os.path.splitext(
-        name
-    )
-
-    counter = 2
-
-    while f"{stem}{counter}{extension}" in taken:
-
-        counter += 1
-
-    return f"{stem}{counter}{extension}"
-
-
 def add_hosted(source_path):
 
     if not os.path.isfile(
@@ -147,24 +112,35 @@ def add_hosted(source_path):
             "That file couldn't be found."
         )
 
-    filename = make_unique_filename(
-        os.path.basename(
-            source_path
-        )
-    )
+    # // keeps the file's own name when it's free. If anything already
+    # // uses it (another hosted file, a post's attachment, a file already
+    # // in the folder) it becomes name2, name3... (re-checked in a loop)
+    # // and that final name is what gets remembered.
 
-    os.makedirs(
-        ATTACHMENTS_FOLDER,
-        exist_ok=True
-    )
+    try:
 
-    shutil.copy(
-        source_path,
-        os.path.join(
+        filename = copy_unique(
+            source_path,
             ATTACHMENTS_FOLDER,
-            filename
+            get_hosted_filenames() | get_post_filenames()
         )
-    )
+
+    except OSError as error:
+
+        raise HostedAttachmentsError(
+            f"Couldn't copy that file:\n{error}"
+        )
+
+    if filename in get_hosted_filenames():
+
+        # // picked a file that's already hosted (from inside the folder)
+        return {
+
+            "name": filename,
+
+            "file": filename
+
+        }
 
     data = load_json(
         DATA_FILE
@@ -257,13 +233,14 @@ def delete_hosted(filename):
 def get_web_link(entry):
 
     """
-    The link to share: the site's full-page viewer showing this
-    file. Built from the real git remote (same automatic detection
-    the rest of the project uses), so there's nothing to type in.
-    Returns "" if no remote is set up yet.
+    The link to share. For files a browser can show it's the site's
+    full-page viewer, for anything else (zip, 7z, ...) it's the file
+    itself. Built from the real git remote (same automatic detection the
+    rest of the project uses), so there's nothing to type in. Returns ""
+    if no remote is set up yet.
     """
 
-    owner, repository, _ = get_github_identity()
+    owner, repository, branch = get_github_identity()
 
     if repository.lower().endswith(
         ".github.io"
@@ -279,7 +256,74 @@ def get_web_link(entry):
 
         return ""
 
-    return (
-        f"{base}view.html?f="
-        f"{quote(entry['file'], safe='')}"
+    filename = entry["file"]
+
+    encoded = quote(
+        filename,
+        safe=""
     )
+
+    if get_view_kind(
+        filename
+    ):
+
+        return f"{base}view.html?f={encoded}"
+
+    # // nothing to show in a browser: link straight to the file.
+    # // Big archives are stored with git lfs, which the site itself can't
+    # // serve, so they use the same github address as the Download
+    # // buttons do.
+
+    if filename.lower().endswith(
+        (".zip", ".7z")
+    ):
+
+        return (
+            "https://media.githubusercontent.com/media/"
+            f"{owner}/{repository}/{branch}/website/attachments/{encoded}"
+        )
+
+    return f"{base}attachments/{encoded}"
+
+
+def is_live(entry):
+
+    """
+    Is this file already on the website, so its web link works? A file is
+    live once it's committed AND pushed. Used only to tell the person
+    whether the link they just copied works yet, never to block anything.
+    Returns False when it isn't (or when git can't tell).
+    """
+
+    path = f"website/attachments/{entry['file']}"
+
+    try:
+
+        run_git(
+            f'git ls-files --error-unmatch -- "{path}"'
+        )
+
+        if run_git(
+            f'git status --porcelain -- "{path}"'
+        ).strip():
+
+            return False
+
+        try:
+
+            ahead = int(
+                run_git(
+                    "git rev-list --count @{upstream}..HEAD"
+                ).strip()
+            )
+
+        except Exception:
+
+            # // no upstream branch set yet: can't tell, assume pushed
+            ahead = 0
+
+        return ahead == 0
+
+    except Exception:
+
+        return False

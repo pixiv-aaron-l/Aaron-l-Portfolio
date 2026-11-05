@@ -86,32 +86,41 @@ def save_json(filename, data):
     )
 
 
+    # // the whole file is prepared in memory FIRST and written to a
+    # // temporary file, and only swapped in once that worked. Writing
+    # // straight into the real file meant that an error halfway through
+    # // (or the app being closed at the wrong moment) left it cut off and
+    # // broken, with the old content gone. Now the old file stays exactly
+    # // as it was unless the new one is complete.
+
     try:
 
+        text = json.dumps(
+
+            data,
+
+            indent=4,
+
+            ensure_ascii=False
+
+        )
+
+        temporary_path = path + ".tmp"
+
         with open(
-            path,
+            temporary_path,
             "w",
             encoding="utf-8"
         ) as file:
 
-
-            # // indent=4 so the file stays readable if you ever open
-            # // it by hand. ensure_ascii=False keeps accented
-            # // letters, curly quotes, etc. written as actual
-            # // characters instead of \uXXXX escape codes.
-
-            json.dump(
-
-                data,
-
-                file,
-
-                indent=4,
-
-                ensure_ascii=False
-
+            file.write(
+                text
             )
 
+        os.replace(
+            temporary_path,
+            path
+        )
 
 
     except Exception as error:

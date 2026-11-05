@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 )
 
 from tools.json_manager import load_json, save_json
+from tools.unique_names import copy_unique
 
 
 # ============================================================
@@ -148,6 +149,107 @@ def generate_unique_post_slug(title, posts_data):
 
 
 # ============================================================
+# CLEANING UP POST IMAGES
+#
+# // taking an [[IMAGE:name]] marker out of a post used to leave the
+# // picture sitting in website/images/posts/ forever. Now it's removed
+# // when the marker goes (on Save, or when the post is deleted) BUT ONLY
+# // if no other post still uses it.
+# //
+# // this is deliberately NOT a "delete everything that isn't used"
+# // sweep: that kind of sweep is what once wiped this whole folder. Only
+# // pictures that were just dropped from this post are ever candidates,
+# // so a picture you put in the folder yourself is never touched.
+# ============================================================
+
+IMAGE_MARKER = re.compile(
+    r"\[\[IMAGE:([^\]]+)\]\]"
+)
+
+
+def get_image_names(content):
+
+    return {
+        name.strip()
+        for name in IMAGE_MARKER.findall(content or "")
+    }
+
+
+def remove_unused_post_images(candidates, posts):
+
+    still_used = set()
+
+    for post in posts:
+
+        still_used |= {
+            name.lower()
+            for name in get_image_names(
+                post.get("content", "")
+            )
+        }
+
+    removed = []
+
+    for name in candidates:
+
+        # // only plain file names, nothing that could point elsewhere
+        if not name or name != os.path.basename(name):
+
+            continue
+
+        if name.lower() in still_used:
+
+            continue
+
+        path = os.path.join(
+            POST_IMAGES_FOLDER,
+            name
+        )
+
+        if os.path.isfile(path):
+
+            try:
+
+                os.remove(path)
+
+                removed.append(name)
+
+            except OSError:
+
+                pass
+
+    return removed
+
+
+def get_used_attachment_names():
+
+    # // every attachment name a post or the hosting page already uses,
+    # // so a new file can never be given the same name as one of them.
+
+    names = set()
+
+    for post in load_json("posts.json").get("posts", []):
+
+        for attachment in post.get("attachments", []):
+
+            if isinstance(attachment, dict):
+
+                names.add(attachment.get("file", ""))
+
+            else:
+
+                names.add(attachment)
+
+    for entry in load_json("hosted_attachments.json").get("files", []):
+
+        names.add(entry.get("file", ""))
+
+    names.discard("")
+
+    return names
+
+
+# ============================================================
 # PATHS
 # ============================================================
 
@@ -182,6 +284,9 @@ class Page(QWidget):
     def __init__(self):
 
         super().__init__()
+
+        # // images inserted into the text editor but not saved yet
+        self.pending_images = set()
 
         layout = QHBoxLayout()
 
@@ -801,25 +906,16 @@ class Page(QWidget):
 
             return
 
-        os.makedirs(
-            POST_IMAGES_FOLDER,
-            exist_ok=True
-        )
-
-        filename = os.path.basename(
-            file
-        )
-
-        destination = os.path.join(
-            POST_IMAGES_FOLDER,
-            filename
-        )
+        # // the image keeps its own name when that's free. If another image
+        # // already has it, this one becomes name2, name3... (checked in a
+        # // loop until free) instead of replacing it, and the marker put in
+        # // the text uses the FINAL name.
 
         try:
 
-            shutil.copy2(
+            filename = copy_unique(
                 file,
-                destination
+                POST_IMAGES_FOLDER
             )
 
         except Exception as error:
@@ -835,6 +931,12 @@ class Page(QWidget):
             )
 
             return
+
+        # // remembered until the post is saved: if the marker is deleted
+        # // again before saving, the picture is cleaned up at that point.
+        self.pending_images.add(
+            filename
+        )
 
         cursor = self.content_input.textCursor()
 
@@ -865,11 +967,6 @@ class Page(QWidget):
 
             return
 
-        os.makedirs(
-            ATTACHMENTS_FOLDER,
-            exist_ok=True
-        )
-
         existing = [
 
             self.attachments_list.item(i).text()
@@ -880,22 +977,19 @@ class Page(QWidget):
 
         ]
 
+        used_names = get_used_attachment_names() | set(existing)
+
         for file in files:
 
-            filename = os.path.basename(
-                file
-            )
-
-            destination = os.path.join(
-                ATTACHMENTS_FOLDER,
-                filename
-            )
+            # // same rule as images: never replace a file with the same
+            # // name, use name2, name3... and keep the final name.
 
             try:
 
-                shutil.copy2(
+                filename = copy_unique(
                     file,
-                    destination
+                    ATTACHMENTS_FOLDER,
+                    used_names
                 )
 
             except Exception as error:
@@ -919,6 +1013,10 @@ class Page(QWidget):
                 )
 
                 existing.append(
+                    filename
+                )
+
+                used_names.add(
                     filename
                 )
 
@@ -986,6 +1084,12 @@ class Page(QWidget):
             self.date_input.text()
         )
 
+        # // what the text said before this save, to know which pictures
+        # // were just taken out of it
+        old_images = get_image_names(
+            post.get("content", "")
+        )
+
         post["content"] = (
             self.content_input.toPlainText()
         )
@@ -1018,6 +1122,16 @@ class Page(QWidget):
             "posts.json",
             data
         )
+
+        # // a picture whose marker was just removed from this post (or
+        # // that was inserted and removed again before saving) goes away
+        # // now, unless another post still uses it.
+        remove_unused_post_images(
+            old_images | self.pending_images,
+            posts
+        )
+
+        self.pending_images = set()
 
         # IMPORTANT:
         # Keep the same post selected after saving.
@@ -1077,6 +1191,10 @@ class Page(QWidget):
 
             return
 
+        deleted_images = get_image_names(
+            posts[selected_index].get("content", "")
+        )
+
         posts.pop(
             selected_index
         )
@@ -1085,6 +1203,14 @@ class Page(QWidget):
             "posts.json",
             data
         )
+
+        # // pictures only this post used are removed with it
+        remove_unused_post_images(
+            deleted_images | self.pending_images,
+            posts
+        )
+
+        self.pending_images = set()
 
         # Select the nearest remaining post.
         if posts:

@@ -121,13 +121,14 @@
 
 // BEGIN-VIEWER
 
-// // keep these lists in step with the ones in website_generator.py
-// // (TEXT_VIEW_TYPES and friends): they decide what is shown straight
-// // from the file and what needs the generated "<file>.view.html".
+// // keep these lists in step with tools/view_types.py: they decide what
+// // is shown straight from the file, and what is a saved web page (.mht)
+// // that needs the generated "<file>.view.html".
 var TEXT_TYPES = [".txt", ".md", ".log", ".csv"];
 var HTML_TYPES = [".html", ".htm"];
 var PDF_TYPES = [".pdf"];
 var IMAGE_TYPES = [".png", ".jpg", ".jpeg", ".gif", ".webp"];
+var MHT_TYPES = [".mht", ".mhtml"];
 var VIEW_SUFFIX = ".view.html";
 
 function getExtension(filename) {
@@ -141,7 +142,8 @@ function getKind(filename) {
     if (HTML_TYPES.indexOf(extension) >= 0) return "html";
     if (PDF_TYPES.indexOf(extension) >= 0) return "pdf";
     if (IMAGE_TYPES.indexOf(extension) >= 0) return "image";
-    return "page";
+    if (MHT_TYPES.indexOf(extension) >= 0) return "page";
+    return "none";
 }
 
 // // the file name comes from the address bar, so only ever accept a
@@ -169,10 +171,12 @@ function isSafeName(name) {
 
     function showFrame(address, locked) {
         var frame = document.createElement("iframe");
-        // // locked = no permissions at all: the page is shown but its
-        // // scripts can't run and it can't touch anything of ours.
+        // // locked = the page may run its own scripts (many saved or
+        // // hand-made pages draw nothing without them) but it's still
+        // // walled off: it can't reach our page, our storage, or navigate
+        // // the window away.
         if (locked) {
-            frame.setAttribute("sandbox", "");
+            frame.setAttribute("sandbox", "allow-scripts allow-popups allow-forms allow-modals");
         }
         frame.src = address;
         stage.appendChild(frame);
@@ -259,11 +263,16 @@ function isSafeName(name) {
         wrapper.appendChild(image);
         stage.appendChild(wrapper);
 
+    } else if (kind === "page") {
+
+        // // a saved web page (.mht): the generator rebuilt it as a normal
+        // // page right next to the file.
+        showFrame(address + VIEW_SUFFIX, true);
+
     } else {
 
-        // // mht / zip / 7z / anything else: the generator wrote a small
-        // // page about this file right next to it.
-        showFrame(address + VIEW_SUFFIX, true);
+        // // zip, 7z, anything a browser can't show: nothing to display.
+        showMessage("There is nothing to show for this type of file.");
 
     }
 

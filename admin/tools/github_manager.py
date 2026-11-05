@@ -1,4 +1,5 @@
 import subprocess
+import shutil
 import os
 import re
 
@@ -27,7 +28,53 @@ PROJECT_FOLDER = os.path.dirname(
 NO_WINDOW = 0x08000000 if os.name == "nt" else 0
 
 
+def find_git():
+
+    # // normally "git" just works. But a program started from the desktop
+    # // shortcut right after Git was installed can still be running with
+    # // an old PATH that doesn't know about it yet, so look in the usual
+    # // install places too instead of failing until the next restart.
+
+    found = shutil.which(
+        "git"
+    )
+
+    if found:
+
+        return found
+
+    for candidate in (
+
+        r"C:\Program Files\Git\cmd\git.exe",
+
+        r"C:\Program Files (x86)\Git\cmd\git.exe",
+
+        os.path.join(
+            os.environ.get("LOCALAPPDATA", ""),
+            "Programs",
+            "Git",
+            "cmd",
+            "git.exe"
+        )
+
+    ):
+
+        if os.path.isfile(
+            candidate
+        ):
+
+            return candidate
+
+    return None
+
+
 def run_git(command):
+
+    git_path = find_git()
+
+    if git_path and command.startswith("git "):
+
+        command = f'"{git_path}"' + command[3:]
 
     # // tiny wrapper so every git call in this file goes through one
     # // place. If git fails (bad command, no repo, whatever), this
@@ -222,6 +269,12 @@ def get_github_identity():
         # // above rather than blowing up website generation over it.
         pass
 
-    _cached_identity = (owner, repository, branch)
+    # // only remember a lookup that actually worked. A failed one (git
+    # // not found yet, no remote yet) used to be remembered too, which is
+    # // why links stayed broken until the app was restarted.
 
-    return _cached_identity
+    if owner and repository:
+
+        _cached_identity = (owner, repository, branch)
+
+    return (owner, repository, branch)

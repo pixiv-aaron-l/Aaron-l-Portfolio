@@ -20,7 +20,8 @@ from tools.hosted_attachments import (
     add_hosted,
     delete_hosted,
     list_hosted,
-    get_web_link
+    get_web_link,
+    is_live
 )
 
 
@@ -351,14 +352,28 @@ class Page(QWidget):
         )
 
         # // no popup and no status line: the button itself says it
-        # // worked for a moment, then goes back to normal.
+        # // worked for a moment, then goes back to normal. A link only
+        # // works online once the file has been published, so say so when
+        # // it hasn't been yet.
+
+        if is_live(entry):
+
+            message = "Copied!"
+
+            delay = 1500
+
+        else:
+
+            message = "Copied, works after Publish"
+
+            delay = 3000
 
         self.copy_button.setText(
-            "Copied!"
+            message
         )
 
         QTimer.singleShot(
-            1500,
+            delay,
             lambda: self.copy_button.setText(
                 COPY_TEXT
             )
